@@ -8,11 +8,11 @@ export interface PostHeader {
 }
 
 export enum PostStatus {
-    Draft = "draft",
-    Publish = "publish",
-    Published = "published",
+    Draft = 'draft',
+    Publish = 'publish',
+    Published = 'published',
 }
 
 export enum PostTemplate {
-    Post = "post"
+    Post = 'post'
 }

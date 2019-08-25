@@ -1,15 +1,15 @@
-import * as cliSelect from "cli-select";
-import * as fs from "fs";
-import * as moment from "moment";
-import filterAsync from "node-filter-async";
-import { EOL } from "os";
-import { promisify } from "util";
-import rootFolder from "../utils/root-folder";
-import { jsonToYaml, yamlToJson } from "../utils/yaml";
-import { PostHeader, PostStatus } from "../common/types";
+import * as cliSelect from 'cli-select';
+import * as fs from 'fs';
+import * as moment from 'moment';
+import filterAsync from 'node-filter-async';
+import { EOL } from 'os';
+import { promisify } from 'util';
+import rootFolder from '../utils/root-folder';
+import { jsonToYaml, yamlToJson } from '../utils/yaml';
+import { PostHeader, PostStatus } from '../common/types';
 
-/** This script will set the selected post "status" property to "publish" and update the file date. 
- *  Publish will happen when the change is pushed to the master branch with "status": "publish" */
+/** This script will set the selected post 'status' property to 'publish' and update the file date. 
+ *  Publish will happen when the change is pushed to the master branch with 'status': 'publish' */
 (async (): Promise<void> => {
 
     const rootDir = await rootFolder();
@@ -21,11 +21,11 @@ import { PostHeader, PostStatus } from "../common/types";
     }
 
     const readPost = async (fileName: string): Promise<string> => {
-        return await readFile(getPostPath(fileName), "utf8");
+        return await readFile(getPostPath(fileName), 'utf8');
     }
 
     const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
-        data = data.split("---")[1]; // yaml is just in the header of the markdown post
+        data = data.split('---')[1]; // yaml is just in the header of the markdown post
         return yamlToJson(data) as PostHeader;
     }
 
@@ -36,16 +36,16 @@ import { PostHeader, PostStatus } from "../common/types";
     });
 
     if (posts.length === 0) {
-        console.info("There are no posts to publish.");
+        console.info('There are no posts to publish.');
         return;
     }
 
     // show options to select the file to edit
     const selected = await cliSelect({
-        values: ["None", ...posts],
+        values: ['None', ...posts],
     });
 
-    if (selected.value === "None") {
+    if (selected.value === 'None') {
         console.info('Option "None" was selected.');
         return;
     }
@@ -57,11 +57,11 @@ import { PostHeader, PostStatus } from "../common/types";
 
     // recreate the markdown file
     const yml = jsonToYaml(obj);
-    const splitted = data.split("---");
-    const md = [splitted[0], EOL + yml + EOL, splitted[2]].join("---").trim();
+    const splitted = data.split('---');
+    const md = [splitted[0], EOL + yml + EOL, splitted[2]].join('---').trim();
 
-    const currentDate = moment().format("YYYY-MM-DD");
-    const fileDate = selected.value.substring(0, 10); // format "YYYY-MM-DD"
+    const currentDate = moment().format('YYYY-MM-DD');
+    const fileDate = selected.value.substring(0, 10); // format 'YYYY-MM-DD'
     let publishFile;
     if (currentDate === fileDate) {
         // overwrite current file
