@@ -1,13 +1,13 @@
-import * as yaml from 'js-yaml';
+import * as yaml from "js-yaml";
 
-export const yamlToJson = (data: string): any => {
+export const yamlToJson = (data: string): object => {
     return yaml.safeLoad(data);
 }
 
 export const jsonToYaml = (data: object): string => {
-    let yamlStyle = {
-        'styles': {
-            '!!null': 'canonical' // dump null as ~
+    const yamlStyle = {
+        "styles": {
+            "!!null": "canonical" // dump null as ~
         }
     };
 
