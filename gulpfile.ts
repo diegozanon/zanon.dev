@@ -2,6 +2,7 @@ import * as browserify from 'browserify';
 import * as fancyLog from 'fancy-log';
 import * as gulp from 'gulp';
 import * as connect from 'gulp-connect';
+import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as tsify from 'tsify';
 import * as uglify from 'gulp-uglify';
@@ -14,7 +15,7 @@ const watchedBrowserify = watchify(browserify({
     debug: true
 }).plugin(tsify));
 
-const buildSite = (): NodeJS.ReadWriteStream => {
+const buildTS = (): NodeJS.ReadWriteStream => {
     return watchedBrowserify
         .transform('babelify', {
             presets: ['@babel/preset-env'],
@@ -30,6 +31,22 @@ const buildSite = (): NodeJS.ReadWriteStream => {
         .pipe(connect.reload());
 }
 
+gulp.task('reload', done => {
+    connect.reload();
+    done();
+});
+
+gulp.task('build-sass', () => {
+    return gulp.src('./site/css/*.scss')
+        .pipe(sass.sync().on('error', sass.logError))
+        .pipe(gulp.dest('./site/dist'))
+        .pipe(connect.reload());
+});
+
+gulp.task('build-sass:watch', () => {
+    gulp.watch('./site/css/*.scss', gulp.series(['build-sass']));
+});
+
 gulp.task('serve', done => {
     connect.server({
         root: 'site',
@@ -40,6 +57,6 @@ gulp.task('serve', done => {
     done();
 });
 
-gulp.task('default', gulp.series([buildSite, 'serve']));
+gulp.task('default', gulp.series([buildTS, 'build-sass', 'serve', 'sass:watch']));
 watchedBrowserify.on('log', fancyLog);
-watchedBrowserify.on('update', buildSite);
+watchedBrowserify.on('update', buildTS);
