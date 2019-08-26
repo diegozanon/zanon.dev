@@ -1,11 +1,13 @@
 import * as browserify from 'browserify';
 import * as fancyLog from 'fancy-log';
 import * as gulp from 'gulp';
+import * as cleanCSS from 'gulp-clean-css';
 import * as connect from 'gulp-connect';
+import * as rename from 'gulp-rename';
 import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
-import * as tsify from 'tsify';
 import * as uglify from 'gulp-uglify';
+import * as tsify from 'tsify';
 import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
@@ -38,13 +40,18 @@ gulp.task('reload', done => {
 
 gulp.task('build-sass', () => {
     return gulp.src('./site/css/*.scss')
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(sass.sync().on('error', sass.logError))
+        .pipe(rename({ extname: ".min.css" }))
+        .pipe(cleanCSS())
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./site/dist'))
         .pipe(connect.reload());
 });
 
-gulp.task('build-sass:watch', () => {
+gulp.task('build-sass:watch', done => {
     gulp.watch('./site/css/*.scss', gulp.series(['build-sass']));
+    done();
 });
 
 gulp.task('serve', done => {
@@ -57,6 +64,6 @@ gulp.task('serve', done => {
     done();
 });
 
-gulp.task('default', gulp.series([buildTS, 'build-sass', 'serve', 'sass:watch']));
+gulp.task('default', gulp.series([buildTS, 'build-sass', 'serve', 'build-sass:watch']));
 watchedBrowserify.on('log', fancyLog);
 watchedBrowserify.on('update', buildTS);
