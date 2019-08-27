@@ -33,6 +33,8 @@ const buildTS = (): NodeJS.ReadWriteStream => {
         .pipe(connect.reload());
 }
 
+gulp.task('build-ts', buildTS);
+
 gulp.task('reload', done => {
     connect.reload();
     done();
@@ -64,6 +66,6 @@ gulp.task('serve', done => {
     done();
 });
 
-gulp.task('default', gulp.series([buildTS, 'build-sass', 'serve', 'build-sass:watch']));
+gulp.task('default', gulp.series(['build-ts', 'build-sass', 'serve', 'build-sass:watch']));
 watchedBrowserify.on('log', fancyLog);
 watchedBrowserify.on('update', buildTS);
