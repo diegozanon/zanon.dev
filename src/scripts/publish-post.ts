@@ -4,54 +4,44 @@ import * as moment from 'moment';
 import filterAsync from 'node-filter-async';
 import { EOL } from 'os';
 import { promisify } from 'util';
-import rootFolder from '../utils/root-folder';
+import rootDir from '../utils/root-dir';
 import { jsonToYaml, yamlToJson } from '../utils/yaml';
 import { PostHeader, PostStatus } from '../common/types';
 
-/** This script will set the selected post 'status' property to 'publish' and update the file date. 
- *  Publish will happen when the change is pushed to the master branch with 'status': 'publish' */
-(async (): Promise<void> => {
+const readFile = promisify(fs.readFile);
 
-    const rootDir = await rootFolder();
-    let posts = await promisify(fs.readdir)(`${rootDir}/posts`);
-    const readFile = promisify(fs.readFile);
+const getPostPath = (rootDir: string, fileName: string): string => {
+    return `${rootDir}/posts/${fileName}`;
+}
 
-    const getPostPath = (fileName: string): string => {
-        return `${rootDir}/posts/${fileName}`;
-    }
+const readPost = async (rootDir: string, fileName: string): Promise<string> => {
+    return await readFile(getPostPath(rootDir, fileName), 'utf8');
+}
 
-    const readPost = async (fileName: string): Promise<string> => {
-        return await readFile(getPostPath(fileName), 'utf8');
-    }
+const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
+    data = data.split('---')[1]; // yaml is just in the header of the markdown post
+    return yamlToJson(data) as PostHeader;
+}
 
-    const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
-        data = data.split('---')[1]; // yaml is just in the header of the markdown post
-        return yamlToJson(data) as PostHeader;
-    }
+/** Select only files where status is draft */
+export const getDraftPosts = async (rootDir: string): Promise<Array<string>> => {
+    const posts = await promisify(fs.readdir)(`${rootDir}/posts`);
 
-    // select only files where status is draft
-    posts = await filterAsync(posts, async post => {
-        const data = await readPost(post);
+    return await filterAsync(posts, async post => {
+        const data = await readPost(rootDir, post);
         return (await convertHeaderToJson(data)).status === PostStatus.Draft;
     });
+}
 
-    if (posts.length === 0) {
-        console.info('There are no posts to publish.');
-        return;
-    }
-
-    // show options to select the file to edit
-    const selected = await cliSelect({
-        values: ['None', ...posts],
-    });
-
-    if (selected.value === 'None') {
-        console.info('Option "None" was selected.');
-        return;
-    }
+/** 
+ * This function will set the selected post 'status' property to 'publish' and update the file date. 
+ * Publish will happen when the change is pushed to the master branch with 'status': 'publish' 
+ * @returns new file name, which will be the same if the date hasn't changed
+ */
+export const publishPost = async (rootDir: string, name: string): Promise<string> => {
 
     // set status to publish
-    const data = await readPost(selected.value);
+    const data = await readPost(rootDir, name);
     const obj = await convertHeaderToJson(data);
     obj.status = PostStatus.Publish;
 
@@ -61,23 +51,46 @@ import { PostHeader, PostStatus } from '../common/types';
     const md = [splitted[0], EOL + yml + EOL, splitted[2]].join('---').trim();
 
     const currentDate = moment().format('YYYY-MM-DD');
-    const fileDate = selected.value.substring(0, 10); // format 'YYYY-MM-DD'
-    let publishFile;
+    const fileDate = name.substring(0, 10); // format 'YYYY-MM-DD'
     if (currentDate === fileDate) {
         // overwrite current file
-        publishFile = selected.value;
-        await promisify(fs.writeFile)(getPostPath(publishFile), md);
+        await promisify(fs.writeFile)(getPostPath(rootDir, name), md);
+        return name;
     } else {
         // create a new file to use current date
-        const postName = selected.value.substring(10);
-        const fileName = currentDate + postName;
-        publishFile = fileName;
-        await promisify(fs.writeFile)(getPostPath(publishFile), md);
+        const newName = currentDate + name.substring(10);
+        await promisify(fs.writeFile)(getPostPath(rootDir, newName), md);
 
         // delete previous file
-        await promisify(fs.unlink)(getPostPath(selected.value));
+        await promisify(fs.unlink)(getPostPath(rootDir, name));
+
+        return newName;
     }
+}
 
-    console.info(`Post ${publishFile} was marked to be published.`);
+// Executes the function if executed through the command line
+if (require.main === module) {
 
-})().catch(console.error);
+    (async (): Promise<void> => {
+        const root = await rootDir();
+        const posts = await getDraftPosts(root);
+
+        if (posts.length === 0) {
+            console.info('There are no posts to publish.');
+            return;
+        }
+
+        // show options to select the file to edit
+        const selected = await cliSelect({
+            values: ['None', ...posts],
+        });
+
+        if (selected.value === 'None') {
+            console.info('Option "None" was selected.');
+            return;
+        }
+
+        const newName = await publishPost(root, selected.value);
+        console.info(`Post ${newName} was marked to be published.`);
+    })().catch(console.error);
+}
