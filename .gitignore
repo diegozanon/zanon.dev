@@ -4,3 +4,6 @@ node_modules/
 # Deployment files
 site/dist/
 src/dist/
+
+# macOS
+.DS_Store
