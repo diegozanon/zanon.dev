@@ -41,10 +41,10 @@ gulp.task('reload', done => {
 });
 
 gulp.task('build-sass', () => {
-    return gulp.src('./site/css/*.scss')
+    return gulp.src('./site/css/main.scss')
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(sass.sync().on('error', sass.logError))
-        .pipe(rename({ extname: ".min.css" }))
+        .pipe(rename('bundle.min.css'))
         .pipe(cleanCSS())
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./site/dist'))

@@ -1,0 +1,24 @@
+@mixin font-face($family, $file, $style, $weight) {
+    @font-face {
+        font-family: $family;
+        font-style: $style;
+        font-weight: $weight;
+        font-display: swap;
+        src:
+            local($family),
+            local($file),
+            url('../fonts/'+ $file + '.woff2') format('woff2'),
+            url('../fonts/'+ $file + '.woff') format('woff'),
+            url('../fonts/'+ $file + '.ttf') format('truetype');
+    }
+}
+
+@include font-face('Roboto', 'Roboto-Regular', normal, 400);
+@include font-face('Roboto', 'Roboto-RegularItalic', italic, 400);
+@include font-face('Roboto', 'Roboto-Bold', normal, 700);
+@include font-face('RobotoMono', 'RobotoMono-Regular', normal, 400);
+@include font-face('RobotoMono', 'RobotoMono-RegularItalic', italic, 400);
+
+body {
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
+}
