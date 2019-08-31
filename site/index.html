@@ -22,7 +22,11 @@
 
     <link rel="preload" href="/fonts/Roboto-Regular.woff2" as="font">
     <link rel="stylesheet" href="dist/bundle.min.css">
+    <script defer src="dist/bundle.min.js"></script>
 
+</head>
+
+<body class="dark-theme">
     <nav>
         <div class="author">
             <a href="/">
@@ -33,22 +37,12 @@
             <a href="/blog">Blog</a>
             <a href="/me">About Me</a>
             <div>
-                <!-- TODO: alt text must change on click -->
-                <button class="dark-switcher">
-                    <span>
-                        <img src="dark" class="theme-icon" alt="Light Mode">
-                    </span>
-                </button>
+                <img id="theme-icon" src="imgs/layout/moon.png">
             </div>
         </div>
     </nav>
 
     <div id="content"></div>
-
-</head>
-
-<body>
-    <script src="dist/bundle.min.js"></script>
 </body>
 
 </html>
