@@ -25,17 +25,13 @@ const setTheme = (lightTheme: boolean): void => {
     storage.set('theme', currentTheme.class);
 }
 
-if (storage.isAvailable()) {
-    let lightTheme = storage.get('theme') as Theme === Theme.Light;
+let lightTheme = storage.get('theme') as Theme === Theme.Light;
+setTheme(lightTheme);
+
+theme.addEventListener('click', () => {
+    // toggle
+    lightTheme = !lightTheme;
+
+    // set the theme        
     setTheme(lightTheme);
-
-    theme.addEventListener('click', () => {
-        // toggle
-        lightTheme = !lightTheme;
-
-        // set the theme        
-        setTheme(lightTheme);
-    });
-} else {
-    theme.outerHTML = ''; // remove the theme switcher icon
-}
+});
