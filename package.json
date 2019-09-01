@@ -27,7 +27,7 @@
         "preset": "ts-jest",
         "testEnvironment": "node",
         "testMatch": [
-            "<rootDir>/tests/*.ts"
+            "<rootDir>/tests/**/*.ts"
         ],
         "testRunner": "jest-circus/runner",
         "globals": {
