@@ -1,0 +1,17 @@
+@import './variables';
+
+.light-theme {
+    background-color: white;
+
+    nav a {
+        color: $black;
+    }
+}
+
+.dark-theme {
+    background-color: $black;
+
+    nav a {
+        color: white;
+    }
+}

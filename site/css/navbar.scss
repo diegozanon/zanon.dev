@@ -1,3 +1,53 @@
-#theme-icon {
-    cursor: pointer;
+@import './mobile';
+
+nav {
+
+    div {
+        display: inline;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    img {
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    .page-links {
+        float: right;
+    }
+}
+
+@mixin set-nav-size($height, $font-size, $padding, $img-size) {
+    nav {
+        height: $height;
+        font-size: $font-size;
+        padding: $padding;
+
+        a {
+            line-height: $height;
+            padding: $padding;
+        }
+
+        img {
+            height: $img-size;
+        }
+
+        // avoiding double padding in the 'div > a > img' case
+        div>img {
+            padding: $padding;
+        }
+    }
+}
+
+@include for-mobile {
+    // $height, $font-size, $padding, $img-size
+    @include set-nav-size(40px, 16px, 0px 7px, 24px);
+}
+
+@include for-desktop {
+    // $height, $font-size, $padding, $img-size
+    @include set-nav-size(60px, 20px, 0px 10px, 32px);
 }
