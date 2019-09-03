@@ -1,17 +1,19 @@
 @import './variables';
 
-.light-theme {
-    background-color: white;
+@mixin theme($background, $font-color) {
+    background-color: $background;
 
     nav a {
-        color: $black;
+        color: $font-color;
     }
 }
 
-.dark-theme {
-    background-color: $black;
+.light-theme {
+    // $background, $font-color
+    @include theme(white, $black);
+}
 
-    nav a {
-        color: white;
-    }
+.dark-theme {
+    // $background, $font-color
+    @include theme($black, white);
 }
