@@ -1,6 +1,6 @@
 export interface ThemeElement {
-    src: string;
     alt: string;
+    background: string;
     class: Theme;
 }
 

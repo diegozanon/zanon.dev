@@ -11,6 +11,10 @@
     <meta name="description" content="A blog about programming tips and tutorials">
     <meta name="author" content="Diego Zanon">
 
+    <link rel="preload" href="/fonts/Roboto-Regular.woff2" as="font">
+    <link rel="stylesheet" href="dist/bundle.min.css">
+    <script defer src="dist/bundle.min.js"></script>
+
     <!-- favicon data -->
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="theme-color" content="#ffffff">
@@ -19,10 +23,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5">
-
-    <link rel="preload" href="/fonts/Roboto-Regular.woff2" as="font">
-    <link rel="stylesheet" href="dist/bundle.min.css">
-    <script defer src="dist/bundle.min.js"></script>
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
     <meta property="og:description" content="A blog about programming tips and tutorials">
 </head>
 
-<body class="dark-theme">
+<body>
     <nav>
         <div class="author">
             <a href="/">Diego Zanon</a>
@@ -49,14 +49,35 @@
         <div class="page-links">
             <a href="/blog">blog</a>
             <a href="/me">me</a>
-            <img id="theme-icon" src="imgs/layout/moon.png">
             <a target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/diegozanon">
                 <img src="imgs/layout/ko-fi.png" alt="Ko-fi">
             </a>
+            <svg id="theme-switcher" width="72px" heigth="32px" viewBox="0 0 450 200">
+                <title id="theme-title">Theme</title>
+                <rect id="theme-background" x="0" y="0" rx="100" ry="100" width="450" height="200" fill="#595DDD" />
+                <g id="sun">
+                    <circle cx="100" cy="100" r="70" fill="#F4C000" />
+                    <circle cx="100" cy="100" r="55" fill="#FFE000" />
+                </g>
+                <g id="moon">
+                    <circle cx="350" cy="100" r="70" fill="white" />
+                    <circle cx="350" cy="100" r="55" fill="#595DDD" />
+                    <circle cx="350" cy="100" r="40" fill="white" />
+                    <circle cx="337" cy="87" r="33" fill="#595DDD" />
+                </g>
+                <g id="stars">
+                    <circle cx="50" cy="80" r="3" fill="white" />
+                    <circle cx="120" cy="50" r="5" fill="white" />
+                    <circle cx="135" cy="170" r="10" fill="white" />
+                    <circle cx="170" cy="100" r="5" fill="white" />
+                    <circle cx="220" cy="40" r="10" fill="white" />
+                    <circle cx="240" cy="160" r="3" fill="white" />
+                </g>
+            </svg>
         </div>
     </nav>
 
-    <div id="content"></div>
+    <main></main>
 
     <footer>
 
