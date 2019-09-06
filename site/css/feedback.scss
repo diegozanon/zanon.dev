@@ -1,0 +1,60 @@
+#feedback {
+    cursor: pointer;
+    display: flex;
+    text-align: center;
+
+    figure {
+        margin: 0px;
+        padding: 0px 5px;
+    }
+
+    .heart:hover {
+        animation: 1.5s pulsate infinite alternate ease-in-out;
+    }
+
+    .broken-heart:hover {
+        animation: 1s shake infinite alternate ease-in-out;
+    }
+}
+
+@keyframes pulsate {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    20%,
+    60% {
+        transform: scale(1.1);
+    }
+
+    40%,
+    80% {
+        transform: scale(0.8);
+    }
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate(-1px, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate(1px, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate(-5px, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate(5px, 0);
+    }
+}
