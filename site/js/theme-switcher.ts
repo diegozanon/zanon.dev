@@ -16,13 +16,14 @@ const dark: ThemeElement = {
 const body = document.getElementsByTagName('body')[0];
 const switcher = document.getElementById('theme-switcher');
 const sun = document.getElementById('sun');
+const clouds = document.getElementById('clouds');
 const moon = document.getElementById('moon');
 const stars = document.getElementById('stars');
 const themeBackground = document.getElementById('theme-background');
 const title = document.getElementById('theme-title');
 
-const setTheme = (lightTheme: boolean): void => {
-    const [currentTheme, oppositeTheme] = lightTheme ? [light, dark] : [dark, light];
+const setTheme = (isLightTheme: boolean): void => {
+    const [currentTheme, oppositeTheme] = isLightTheme ? [light, dark] : [dark, light];
 
     body.classList.add(currentTheme.class);
     body.classList.remove(oppositeTheme.class);
@@ -31,36 +32,40 @@ const setTheme = (lightTheme: boolean): void => {
     title.innerHTML = currentTheme.alt;
     themeBackground.style.fill = currentTheme.background;
 
-    if (lightTheme) {
-        // show the sun and hide the moon/stars
+    if (isLightTheme) {
+        // show the sun/clouds and hide the moon/stars
         sun.style.display = 'inline';
         moon.style.display = 'none';
         stars.style.display = 'none';
+        clouds.style.display = 'inline';
+        clouds.classList.remove('move-right');
 
-        // recover the sun's original position and move the hidden moon/stars to the left
+        // recover the sun's/clouds' original positions and move the hidden moon/stars to the left
         sun.classList.remove('move-right');
         moon.classList.add('move-left');
         stars.classList.add('move-left');
     } else {
-        // hide the sun and show the moon/stars
+        // hide the sun/clouds and show the moon/stars
         sun.style.display = 'none';
+        clouds.style.display = 'none';
         moon.style.display = 'inline';
         stars.style.display = 'inline';
 
-        // move the hidden sun to the right and recover the positions of the moon/stars
+        // move the hidden sun/clouds to the right and recover the positions of the moon/stars
         sun.classList.add('move-right');
+        clouds.classList.add('move-right');
         moon.classList.remove('move-left');
         stars.classList.remove('move-left');
     }
 };
 
-let lightTheme = storage.get('theme') as Theme === Theme.Light;
-setTheme(lightTheme);
+let isLightTheme = storage.get('theme') as Theme === Theme.Light;
+setTheme(isLightTheme);
 
 switcher.addEventListener('click', (): void => {
     // toggle
-    lightTheme = !lightTheme;
+    isLightTheme = !isLightTheme;
 
     // set the theme        
-    setTheme(lightTheme);
+    setTheme(isLightTheme);
 });

@@ -2,17 +2,9 @@
     cursor: pointer;
 }
 
-#sun:hover circle:nth-child(2) {
-    fill: #fff000;
-}
-
-#moon:hover circle:nth-child(2),
-#moon:hover circle:nth-child(4) {
-    fill: #597ddd;
-}
-
 #sun,
 #moon,
+#clouds,
 #stars {
     transition: transform 0.3s;
 }
