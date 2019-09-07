@@ -62,10 +62,23 @@ const setTheme = (isLightTheme: boolean): void => {
 let isLightTheme = storage.get('theme') as Theme === Theme.Light;
 setTheme(isLightTheme);
 
-switcher.addEventListener('click', (): void => {
+// make it visible after defining the current theme
+switcher.style.visibility = 'visible';
+
+const toggleTheme = (): void => {
     // toggle
     isLightTheme = !isLightTheme;
 
     // set the theme        
     setTheme(isLightTheme);
+}
+
+switcher.addEventListener('click', (): void => {
+    toggleTheme();
+});
+
+switcher.addEventListener('keydown', (event: KeyboardEvent): void => {
+    if (event.keyCode === 13 || event.keyCode === 32) { // enter or spacebar
+        toggleTheme();
+    }
 });
