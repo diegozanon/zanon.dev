@@ -2,4 +2,6 @@ body {
     margin: 0 auto;
     padding: 0px;
     max-width: 900px;
+
+    -webkit-tap-highlight-color: transparent; // avoid a blue highlight when tapping with a mobile device
 }

@@ -6,18 +6,18 @@ nav {
     align-items: center;
     flex-direction: row;
 
-    cursor: pointer;
-
     .author {
         margin-right: auto;
     }
 
     a {
+        cursor: pointer;
         text-decoration: none;
     }
 
     img,
     svg {
+        cursor: pointer;
         vertical-align: middle;
     }
 }
