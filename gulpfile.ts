@@ -13,7 +13,7 @@ import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
 
 const watchedBrowserify = watchify(browserify({
-    entries: ['./site/js/main.ts'],
+    entries: ['./site/js/index.ts'],
     debug: true
 }).plugin(tsify));
 
@@ -41,7 +41,7 @@ gulp.task('reload', done => {
 });
 
 gulp.task('build-sass', () => {
-    return gulp.src('./site/css/main.scss')
+    return gulp.src('./site/css/index.scss')
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(sass.sync().on('error', sass.logError))
         .pipe(rename('bundle.min.css'))

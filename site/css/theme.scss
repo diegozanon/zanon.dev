@@ -3,7 +3,8 @@
 @mixin theme($background, $font-color) {
     background-color: $background;
 
-    nav a {
+    nav a,
+    footer a {
         color: $font-color;
     }
 }
