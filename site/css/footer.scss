@@ -1,0 +1,33 @@
+@import './media-query';
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
+    a {
+        cursor: pointer;
+        text-decoration: none;
+    }
+}
+
+@mixin set-footer-size($height, $font-size, $padding) {
+    footer {
+        a {
+            line-height: $height;
+            font-size: $font-size;
+            padding: $padding;
+        }
+    }
+}
+
+@include for-mobile {
+    // $height, $font-size, $padding
+    @include set-footer-size(40px, 18px, 0px 10px);
+}
+
+@include for-desktop {
+    // $height, $font-size, $padding
+    @include set-footer-size(60px, 20px, 0px 15px);
+}

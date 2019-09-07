@@ -1,7 +1,12 @@
 body {
     margin: 0 auto;
     padding: 0px;
+
     max-width: 900px;
+
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 
     -webkit-tap-highlight-color: transparent; // avoid a blue highlight when tapping with a mobile device
 }

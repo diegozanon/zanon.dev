@@ -2,6 +2,7 @@
 
 @mixin theme($background, $font-color) {
     background-color: $background;
+    color: $font-color;
 
     nav a,
     footer a {

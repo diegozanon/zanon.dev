@@ -1,7 +1,6 @@
 @import './media-query';
 
 nav {
-
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -20,29 +19,21 @@ nav {
         cursor: pointer;
         vertical-align: middle;
     }
-}
 
-@include for-mobile {
-    nav {
-        flex-direction: column;
-
-        a,
-        .author {
-            margin: 0 auto;
-        }
+    svg:focus {
+        outline: none;
     }
 }
 
 @mixin set-nav-size($height, $font-size, $img-size, $padding) {
     nav {
-        height: $height;
-
         a {
             line-height: $height;
             font-size: $font-size;
         }
 
-        img {
+        img,
+        svg {
             height: $img-size;
         }
 
@@ -55,7 +46,16 @@ nav {
 
 @include for-mobile {
     // $height, $font-size, $img-size, $padding
-    @include set-nav-size(40px, 18px, 32px, 0px 15px);
+    @include set-nav-size(40px, 18px, 28px, 0px 15px);
+
+    nav {
+        flex-direction: column;
+
+        a,
+        .author {
+            margin: 0 auto;
+        }
+    }
 }
 
 @include for-desktop {
