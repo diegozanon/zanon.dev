@@ -6,8 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added  
-- Defined initial project structure
+- Defined initial project structure and layout
 - Included gulp, jest and eslint
+- Adding theme switcher
 
 ### Changed  
 -  
