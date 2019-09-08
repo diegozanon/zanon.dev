@@ -5,6 +5,10 @@ nav {
     align-items: center;
     flex-direction: row;
 
+    div {
+        display: inline;
+    }
+
     .author {
         margin-right: auto;
     }

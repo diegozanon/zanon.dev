@@ -13,7 +13,6 @@ const dark: ThemeElement = {
     class: Theme.Dark
 }
 
-const body = document.getElementsByTagName('body')[0];
 const switcher = document.getElementById('theme-switcher');
 const sun = document.getElementById('sun');
 const clouds = document.getElementById('clouds');
@@ -25,8 +24,8 @@ const title = document.getElementById('theme-title');
 const setTheme = (isLightTheme: boolean): void => {
     const [currentTheme, oppositeTheme] = isLightTheme ? [light, dark] : [dark, light];
 
-    body.classList.add(currentTheme.class);
-    body.classList.remove(oppositeTheme.class);
+    document.body.classList.add(currentTheme.class);
+    document.body.classList.remove(oppositeTheme.class);
     storage.set('theme', currentTheme.class);
 
     title.innerHTML = currentTheme.alt;
@@ -63,7 +62,7 @@ let isLightTheme = storage.get('theme') as Theme === Theme.Light;
 setTheme(isLightTheme);
 
 // make it visible after defining the current theme
-switcher.style.visibility = 'visible';
+switcher.classList.remove('invisible');
 
 const toggleTheme = (): void => {
     // toggle
@@ -77,7 +76,7 @@ switcher.addEventListener('click', (): void => {
     toggleTheme();
 });
 
-switcher.addEventListener('keydown', (event: KeyboardEvent): void => {
+switcher.parentNode.addEventListener('keydown', (event: KeyboardEvent): void => {
     if (event.keyCode === 13 || event.keyCode === 32) { // enter or spacebar
         toggleTheme();
     }
