@@ -1,21 +1,25 @@
 @import './variables';
 
-@mixin theme($background, $font-color) {
-    background-color: $background;
-    color: $font-color;
+@mixin theme($base, $highlight, $text) {
+    background-color: $base;
+    color: $text;
 
     nav a,
     footer a {
-        color: $font-color;
+        color: $text;
+
+        &:hover {
+            color: rgba($text, 0.7);
+        }
     }
 }
 
 .light-theme {
-    // $background, $font-color
-    @include theme(white, $black);
+    // $base, $highlight, $text
+    @include theme($light-base, $light-highlight, $light-text);
 }
 
 .dark-theme {
-    // $background, $font-color
-    @include theme($black, white);
+    // $base, $highlight, $text
+    @include theme($dark-base, $dark-highlight, $dark-text);
 }
