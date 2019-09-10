@@ -1,3 +1,13 @@
+export interface Post {
+    header: PostMeta;
+    markdown: string;
+}
+
+export interface PostMeta extends PostHeader {
+    date: string;
+    slug: string;
+}
+
 export interface PostHeader {
     title: string;
     description: string;

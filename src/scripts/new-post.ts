@@ -16,6 +16,13 @@ export const newPost = async (title: string): Promise<void> => {
     const root = await rootDir();
     const path = `${root}/posts/${fileName}`;
 
+    // check if directory already exists
+    const dir = `${root}/posts`;
+    const dirExists = await fse.exists(dir);
+    if (!dirExists) {
+        await fse.mkdir(dir);
+    }
+
     // check if already exists
     const fileExists = await fse.exists(path);
     if (fileExists) {
