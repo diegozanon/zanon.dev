@@ -28,7 +28,7 @@ export const newPost = async (title: string): Promise<void> => {
     await fse.writeFile(path, data);
 }
 
-// Executes the function if executed through the command line
+// Executes the function if the module is called through the command line
 if (require.main === module) {
 
     // check the arguments

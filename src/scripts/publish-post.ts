@@ -65,7 +65,7 @@ export const publishPost = async (rootDir: string, name: string): Promise<string
     }
 }
 
-// Executes the function if executed through the command line
+// Executes the function if the module is called through the command line
 if (require.main === module) {
 
     (async (): Promise<void> => {
