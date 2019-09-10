@@ -14,6 +14,11 @@ import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
 
+gulp.task('clean-dist', done => {
+    fse.emptyDirSync('./site/dist');
+    done();
+});
+
 gulp.task('minify-html', () => {
     return gulp.src('./site/index.html')
         .pipe(htmlmin({ collapseWhitespace: true, conservativeCollapse: true, removeComments: true }))
@@ -89,7 +94,7 @@ gulp.task('serve', done => {
     done();
 });
 
-gulp.task('build', gulp.series(['minify-html', 'build-ts', 'build-sass', 'copy-to-dist']));
+gulp.task('build', gulp.series(['clean-dist', 'minify-html', 'build-ts', 'build-sass', 'copy-to-dist']));
 gulp.task('default', gulp.series(['build', 'serve', 'minify-html:watch', 'build-sass:watch']));
 watchedBrowserify.on('log', fancyLog);
 watchedBrowserify.on('update', buildTS);

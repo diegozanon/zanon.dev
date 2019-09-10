@@ -1,8 +1,7 @@
-import * as fs from 'fs';
+import * as fse from 'fs-extra';
 import * as moment from 'moment';
 import { EOL } from 'os';
 import slugify from 'slugify';
-import { promisify } from 'util';
 import * as postHeader from '../templates/post-header.json';
 import rootDir from '../utils/root-dir';
 import { jsonToYaml } from '../utils/yaml';
@@ -18,7 +17,7 @@ export const newPost = async (title: string): Promise<void> => {
     const path = `${root}/posts/${fileName}`;
 
     // check if already exists
-    const fileExists = await promisify(fs.exists)(path);
+    const fileExists = await fse.exists(path);
     if (fileExists) {
         throw Error(`File '${path}' already exists and won't be overwritten.`);
     }
@@ -26,7 +25,7 @@ export const newPost = async (title: string): Promise<void> => {
     // write the file
     const yml = jsonToYaml({ ...postHeader, title });
     const data = ['---', yml, '---'].join(EOL);
-    await promisify(fs.writeFile)(path, data);
+    await fse.writeFile(path, data);
 }
 
 // Executes the function if executed through the command line

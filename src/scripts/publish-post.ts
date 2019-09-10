@@ -1,21 +1,18 @@
 import * as cliSelect from 'cli-select';
-import * as fs from 'fs';
+import * as fse from 'fs-extra';
 import * as moment from 'moment';
 import filterAsync from 'node-filter-async';
 import { EOL } from 'os';
-import { promisify } from 'util';
 import rootDir from '../utils/root-dir';
 import { jsonToYaml, yamlToJson } from '../utils/yaml';
 import { PostHeader, PostStatus } from '../common/types';
-
-const readFile = promisify(fs.readFile);
 
 const getPostPath = (rootDir: string, fileName: string): string => {
     return `${rootDir}/posts/${fileName}`;
 }
 
 const readPost = async (rootDir: string, fileName: string): Promise<string> => {
-    return await readFile(getPostPath(rootDir, fileName), 'utf8');
+    return await fse.readFile(getPostPath(rootDir, fileName), 'utf8');
 }
 
 const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
@@ -25,7 +22,7 @@ const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
 
 /** Select only files where status is draft */
 export const getDraftPosts = async (rootDir: string): Promise<Array<string>> => {
-    const posts = await promisify(fs.readdir)(`${rootDir}/posts`);
+    const posts = await fse.readdir(`${rootDir}/posts`);
 
     return await filterAsync(posts, async post => {
         const data = await readPost(rootDir, post);
@@ -54,15 +51,15 @@ export const publishPost = async (rootDir: string, name: string): Promise<string
     const fileDate = name.substring(0, 10); // format 'YYYY-MM-DD'
     if (currentDate === fileDate) {
         // overwrite current file
-        await promisify(fs.writeFile)(getPostPath(rootDir, name), md);
+        fse.writeFile(getPostPath(rootDir, name), md);
         return name;
     } else {
         // create a new file to use current date
         const newName = currentDate + name.substring(10);
-        await promisify(fs.writeFile)(getPostPath(rootDir, newName), md);
+        await fse.writeFile(getPostPath(rootDir, newName), md);
 
         // delete previous file
-        await promisify(fs.unlink)(getPostPath(rootDir, name));
+        await fse.unlink(getPostPath(rootDir, name));
 
         return newName;
     }

@@ -1,8 +1,7 @@
-import * as fs from 'fs';
+import * as fse from 'fs-extra';
 import * as moment from 'moment';
 import * as path from 'path';
 import rootDir from '../../src/utils/root-dir';
-import * as util from 'util';
 import { getDraftPosts, publishPost } from '../../src/scripts/publish-post';
 
 const templateFile = path.join(__dirname, '../data/2020-01-01-post-draft.md');
@@ -10,10 +9,10 @@ const draftFile = path.join(__dirname, '../../posts/', '2020-01-01-draft.md');
 const updatedDraftFile = path.join(__dirname, '../../posts/', `${moment().format('YYYY-MM-DD')}-draft.md`);
 const publishFile = path.join(__dirname, '../../posts/', '2020-01-01-publish.md');
 
-const readFile = async (file: string): Promise<string> => { return util.promisify(fs.readFile)(file, 'utf8') };
-const writeFile = async (file: string, data: string): Promise<void> => { return util.promisify(fs.writeFile)(file, data) };
-const copyFile = async (src: string, dest: string): Promise<void> => { return util.promisify(fs.copyFile)(src, dest) };
-const deleteFile = async (path: string): Promise<void> => { return util.promisify(fs.unlink)(path) };
+const readFile = async (file: string): Promise<string> => { return fse.readFile(file, 'utf8') };
+const writeFile = async (file: string, data: string): Promise<void> => { return fse.writeFile(file, data) };
+const copyFile = async (src: string, dest: string): Promise<void> => { return fse.copyFile(src, dest) };
+const deleteFile = async (path: string): Promise<void> => { return fse.unlink(path) };
 const replaceInFile = async (file: string, from: string, to: string): Promise<void> => {
     const content = await readFile(file);
     return writeFile(file, content.replace(from, to))
