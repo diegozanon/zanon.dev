@@ -9,6 +9,7 @@ import * as rename from 'gulp-rename';
 import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as uglify from 'gulp-uglify';
+import * as tinyify from 'tinyify';
 import * as tsify from 'tsify';
 import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
@@ -34,7 +35,9 @@ gulp.task('minify-html:watch', done => {
 const watchedBrowserify = watchify(browserify({
     entries: ['./site/js/index.ts'],
     debug: true
-}).plugin(tsify));
+})
+    .plugin(tsify)
+    .plugin(tinyify));
 
 const buildTS = (): NodeJS.ReadWriteStream => {
     return watchedBrowserify
