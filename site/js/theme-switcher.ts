@@ -77,7 +77,7 @@ switcher.addEventListener('click', (): void => {
 });
 
 switcher.parentNode.addEventListener('keydown', (event: KeyboardEvent): void => {
-    if (event.keyCode === 13 || event.keyCode === 32) { // enter or spacebar
+    if (event.code === 'Enter' || event.code === 'Space') {
         toggleTheme();
     }
 });
