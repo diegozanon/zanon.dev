@@ -6,6 +6,7 @@ import { EOL } from 'os';
 import rootDir from '../utils/root-dir';
 import { jsonToYaml, yamlToJson } from '../utils/yaml';
 import { PostHeader, PostStatus } from '../common/types';
+import { updatePostsJson } from './update-jsons';
 
 const getPostPath = (rootDir: string, fileName: string): string => {
     return `${rootDir}/posts/${fileName}`;
@@ -33,6 +34,7 @@ export const getDraftPosts = async (rootDir: string): Promise<Array<string>> => 
 /** 
  * This function will set the selected post 'status' property to 'publish' and update the file date. 
  * Publish will happen when the change is pushed to the master branch with 'status': 'publish' 
+ * Publishing a post will also update the posts.json file
  * @returns new file name, which will be the same if the date hasn't changed
  */
 export const publishPost = async (rootDir: string, name: string): Promise<string> => {
@@ -49,10 +51,11 @@ export const publishPost = async (rootDir: string, name: string): Promise<string
 
     const currentDate = moment().format('YYYY-MM-DD');
     const fileDate = name.substring(0, 10); // format 'YYYY-MM-DD'
+    let filename: string;
     if (currentDate === fileDate) {
         // overwrite current file
         fse.writeFile(getPostPath(rootDir, name), md);
-        return name;
+        filename = name;
     } else {
         // create a new file to use current date
         const newName = currentDate + name.substring(10);
@@ -61,8 +64,13 @@ export const publishPost = async (rootDir: string, name: string): Promise<string
         // delete previous file
         await fse.unlink(getPostPath(rootDir, name));
 
-        return newName;
+        filename = newName;
     }
+
+    // update the posts.json file
+    await updatePostsJson();
+
+    return filename;
 }
 
 // Executes the function if the module is called through the command line

@@ -9,7 +9,7 @@
         "build": "gulp build",
         "new-post": "ts-node src/scripts/new-post.ts",
         "publish-post": "ts-node src/scripts/publish-post.ts",
-        "update-json": "ts-node src/scripts/update-json.ts"
+        "update-jsons": "ts-node src/scripts/update-jsons.ts"
     },
     "type": "module",
     "repository": {

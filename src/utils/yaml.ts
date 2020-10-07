@@ -1,6 +1,6 @@
 import * as yaml from 'js-yaml';
 
-export const yamlToJson = (data: string): object => {
+export const yamlToJson = (data: string): string | object => {
     return yaml.safeLoad(data);
 }
 

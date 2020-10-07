@@ -1,6 +1,11 @@
+export interface Page {
+    slug: string;
+    html: string;
+}
+
 export interface Post {
     header: PostMeta;
-    markdown: string;
+    html: string;
 }
 
 export interface PostMeta extends PostHeader {
@@ -19,8 +24,7 @@ export interface PostHeader {
 
 export enum PostStatus {
     Draft = 'draft',
-    Publish = 'publish',
-    Published = 'published',
+    Publish = 'publish'
 }
 
 export enum PostTemplate {

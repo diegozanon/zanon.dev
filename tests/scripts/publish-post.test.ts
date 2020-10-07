@@ -35,7 +35,7 @@ describe('publishPost', () => {
         expect(actualPosts).toContain(expectedPost);
     });
 
-    it('will set the post to status publish without losing the markdown content and updating the date', async () => {
+    it('will set the post to status publish and updates the date without changing the markdown content', async () => {
         // arrange
         const expectedData = await readFile(publishFile);
 
