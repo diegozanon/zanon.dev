@@ -4,8 +4,8 @@
     "description": "zanon.dev is my personal website where I blog about programming topics and create simple tutorials.",
     "main": "index.ts",
     "scripts": {
-        "start": "concurrently --kill-others \"gulp\" \"jest --watch\"",
-        "test": "jest --watch",
+        "start": "concurrently --kill-others \"gulp\" \"jest -i --watch\"",
+        "test": "jest -i --watch",
         "build": "gulp build",
         "new-post": "ts-node src/scripts/new-post.ts",
         "publish-post": "ts-node src/scripts/publish-post.ts",
