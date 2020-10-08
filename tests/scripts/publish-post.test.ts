@@ -3,6 +3,8 @@ import * as moment from 'moment';
 import * as path from 'path';
 import rootDir from '../../src/utils/root-dir';
 import { getDraftPosts, publishPost } from '../../src/scripts/publish-post';
+import { updatePostsJson } from '../../src/scripts/update-jsons';
+import { renderFullPages } from '../../src/scripts/render-full-pages';
 
 const templateFile = path.join(__dirname, '../data/2020-01-01-post-draft.md');
 const draftFile = path.join(__dirname, '../../posts/', '2020-01-01-draft.md');
@@ -65,7 +67,7 @@ describe('publishPost', () => {
     it('will check if the posts.json file was updated', async () => {
         // arrange
         const root = await rootDir();
-        const path = `${root}/site/posts.json`;
+        const path = `${root}/site/dist/posts.json`;
         const lastTimeUpdated = fse.statSync(path).mtime;
 
         // act
@@ -77,7 +79,9 @@ describe('publishPost', () => {
     });
 
     afterAll(async () => {
-        deleteFile(updatedDraftFile);
-        deleteFile(publishFile);
+        await deleteFile(updatedDraftFile);
+        await deleteFile(publishFile);
+        await updatePostsJson(); // update the posts.json after removing the test files
+        await renderFullPages(); // render pages again after removing the test files
     });
 });

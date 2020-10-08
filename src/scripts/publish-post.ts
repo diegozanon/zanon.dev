@@ -8,12 +8,12 @@ import { jsonToYaml, yamlToJson } from '../utils/yaml';
 import { PostHeader, PostStatus } from '../common/types';
 import { updatePostsJson } from './update-jsons';
 
-const getPostPath = (rootDir: string, fileName: string): string => {
-    return `${rootDir}/posts/${fileName}`;
+const getPostPath = (root: string, fileName: string): string => {
+    return `${root}/posts/${fileName}`;
 }
 
-const readPost = async (rootDir: string, fileName: string): Promise<string> => {
-    return await fse.readFile(getPostPath(rootDir, fileName), 'utf8');
+const readPost = async (root: string, fileName: string): Promise<string> => {
+    return await fse.readFile(getPostPath(root, fileName), 'utf8');
 }
 
 const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
@@ -22,11 +22,11 @@ const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
 }
 
 /** Select only files where status is draft */
-export const getDraftPosts = async (rootDir: string): Promise<Array<string>> => {
-    const posts = await fse.readdir(`${rootDir}/posts`);
+export const getDraftPosts = async (root: string): Promise<Array<string>> => {
+    const posts = await fse.readdir(`${root}/posts`);
 
     return await filterAsync(posts, async post => {
-        const data = await readPost(rootDir, post);
+        const data = await readPost(root, post);
         return (await convertHeaderToJson(data)).status === PostStatus.Draft;
     });
 }
@@ -37,10 +37,10 @@ export const getDraftPosts = async (rootDir: string): Promise<Array<string>> => 
  * Publishing a post will also update the posts.json file
  * @returns new file name, which will be the same if the date hasn't changed
  */
-export const publishPost = async (rootDir: string, name: string): Promise<string> => {
+export const publishPost = async (root: string, name: string): Promise<string> => {
 
     // set status to publish
-    const data = await readPost(rootDir, name);
+    const data = await readPost(root, name);
     const obj = await convertHeaderToJson(data);
     obj.status = PostStatus.Publish;
 
@@ -54,15 +54,15 @@ export const publishPost = async (rootDir: string, name: string): Promise<string
     let filename: string;
     if (currentDate === fileDate) {
         // overwrite current file
-        fse.writeFile(getPostPath(rootDir, name), md);
+        fse.writeFile(getPostPath(root, name), md);
         filename = name;
     } else {
         // create a new file to use current date
         const newName = currentDate + name.substring(10);
-        await fse.writeFile(getPostPath(rootDir, newName), md);
+        await fse.writeFile(getPostPath(root, newName), md);
 
         // delete previous file
-        await fse.unlink(getPostPath(rootDir, name));
+        await fse.unlink(getPostPath(root, name));
 
         filename = newName;
     }

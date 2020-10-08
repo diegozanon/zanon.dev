@@ -4,7 +4,6 @@ import * as fse from 'fs-extra';
 import * as gulp from 'gulp';
 import * as cleanCSS from 'gulp-clean-css';
 import * as connect from 'gulp-connect';
-import * as htmlmin from 'gulp-htmlmin';
 import * as rename from 'gulp-rename';
 import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
@@ -14,21 +13,11 @@ import * as tsify from 'tsify';
 import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
+import { renderFullPages } from './src/scripts/render-full-pages';
+import { updatePostsJson, updateSiteJson } from './src/scripts/update-jsons';
 
 gulp.task('clean-dist', done => {
     fse.emptyDirSync('./site/dist');
-    done();
-});
-
-gulp.task('minify-html', () => {
-    return gulp.src('./site/index.html')
-        .pipe(htmlmin({ collapseWhitespace: true, conservativeCollapse: true, removeComments: true }))
-        .pipe(gulp.dest('./site/dist'))
-        .pipe(connect.reload());
-});
-
-gulp.task('minify-html:watch', done => {
-    gulp.watch('./site/index.html', gulp.series(['minify-html']));
     done();
 });
 
@@ -73,19 +62,31 @@ gulp.task('build-sass:watch', done => {
     done();
 });
 
+gulp.task('update-jsons', async done => {
+    await Promise.all([updatePostsJson(), updateSiteJson()]);
+    done();
+});
+
 gulp.task('copy-to-dist', done => {
     fse.copySync('site/fonts', 'site/dist/fonts');
     fse.copySync('site/icons', 'site/dist/icons');
     fse.copySync('site/imgs', 'site/dist/imgs');
-    fse.copySync('site/pages', 'site/dist');
-    fse.unlinkSync('site/dist/home.html');
-    fse.unlinkSync('site/dist/post.html');
     fse.copySync('site/browserconfig.xml', 'site/dist/browserconfig.xml');
     fse.copySync('site/favicon.ico', 'site/dist/favicon.ico');
     fse.copySync('site/manifest.json', 'site/dist/manifest.json');
     fse.copySync('site/robots.txt', 'site/dist/robots.txt');
     fse.copySync('site/sitemap.xml', 'site/dist/sitemap.xml');
 
+    done();
+});
+
+gulp.task('render-full-pages', async done => {
+    await renderFullPages();
+    done();
+});
+
+gulp.task('build-html:watch', done => {
+    // gulp.watch('./site/index.html', gulp.series(['minify-html']));
     done();
 });
 
@@ -99,7 +100,7 @@ gulp.task('serve', done => {
     done();
 });
 
-gulp.task('build', gulp.series(['clean-dist', 'minify-html', 'build-ts', 'build-sass', 'copy-to-dist']));
-gulp.task('default', gulp.series(['build', 'serve', 'minify-html:watch', 'build-sass:watch']));
+gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'update-jsons', 'copy-to-dist', 'render-full-pages']));
+gulp.task('default', gulp.series(['build', 'serve', 'build-html:watch', 'build-sass:watch']));
 watchedBrowserify.on('log', fancyLog);
 watchedBrowserify.on('update', buildTS);

@@ -8,6 +8,11 @@ export interface Post {
     html: string;
 }
 
+export interface PostsJson {
+    posts: Array<Post>;
+    template: string;
+}
+
 export interface PostMeta extends PostHeader {
     date: string;
     slug: string;
@@ -19,14 +24,9 @@ export interface PostHeader {
     thumbnail: string;
     tags: Array<string>;
     status: PostStatus;
-    template: PostTemplate;
 }
 
 export enum PostStatus {
     Draft = 'draft',
     Publish = 'publish'
-}
-
-export enum PostTemplate {
-    Post = 'post'
 }

@@ -4,7 +4,6 @@ description: ~
 thumbnail: ~
 tags: []
 status: draft
-template: post
 ---
 
 # some markdown title

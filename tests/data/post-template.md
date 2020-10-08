@@ -4,5 +4,4 @@ description: ~
 thumbnail: ~
 tags: []
 status: draft
-template: post
 ---

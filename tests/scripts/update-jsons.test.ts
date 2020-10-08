@@ -1,20 +1,19 @@
 import rootDir from '../../src/utils/root-dir';
 import * as fse from 'fs-extra';
 import { updatePostsJson, updateSiteJson } from '../../src/scripts/update-jsons';
-import { Post, PostStatus } from '../../src/common/types';
+import { PostsJson, PostStatus } from '../../src/common/types';
 
 describe('updateJsons', () => {
 
     it('updates the json file with all published posts', async () => {
         // arrange
         const root = await rootDir();
-        const postsPath = `${root}/posts`;
-        const jsonPath = `${root}/site/posts.json`;
+        const jsonPath = `${root}/site/dist/posts.json`;
 
         let countExpectedPublished = 0;
-        const filenames = await fse.readdir(postsPath);
+        const filenames = await fse.readdir(`${root}/posts`);
         for (const filename of filenames) {
-            const data = await fse.readFile(`${postsPath}/${filename}`, 'utf-8');
+            const data = await fse.readFile(`${root}/posts/${filename}`, 'utf8');
             if (data.includes('status: publish')) {
                 countExpectedPublished++;
                 continue;
@@ -23,12 +22,12 @@ describe('updateJsons', () => {
 
         // act
         await updatePostsJson();
-        const jsonArray: Post[] = JSON.parse(await fse.readFile(jsonPath, 'utf8'));
-        const countActualPublished = jsonArray.length;
+        const json: PostsJson = JSON.parse(await fse.readFile(jsonPath, 'utf8'));
+        const countActualPublished = json.posts.length;
 
         let allObjsPublished = true;
-        for (const json of jsonArray) {
-            if (json.header.status != PostStatus.Publish) {
+        for (const post of json.posts) {
+            if (post.header.status != PostStatus.Publish) {
                 allObjsPublished = false;
                 break;
             }
@@ -42,14 +41,27 @@ describe('updateJsons', () => {
     it('will check if the site.json file was updated', async () => {
         // arrange
         const root = await rootDir();
-        const path = `${root}/site/site.json`;
-        const lastTimeUpdated = fse.statSync(path).mtime;
+        await updateSiteJson(); // create, if not exists
+        const path = `${root}/site/dist/site.json`;
+        const lastTimeUpdated = (await fse.stat(path)).mtime;
 
         // act
         await updateSiteJson();
-        const newTimeUpdated = fse.statSync(path).mtime;
+        const newTimeUpdated = (await fse.stat(path)).mtime;
 
         // assert
         expect(newTimeUpdated.getTime()).toBeGreaterThan(lastTimeUpdated.getTime());
-    })
+    });
+
+    it('will check if posts.json has the template info', async () => {
+        // arrange
+        const root = await rootDir();
+        const path = `${root}/site/dist/posts.json`;
+
+        // act
+        const postsJson: PostsJson = JSON.parse(await fse.readFile(path, 'utf8'));
+
+        // assert
+        expect(postsJson.template).toBeTruthy();
+    });
 });

@@ -18,13 +18,13 @@ export const newPost = async (title: string): Promise<void> => {
 
     // check if directory already exists
     const dir = `${root}/posts`;
-    const dirExists = await fse.exists(dir);
+    const dirExists = fse.existsSync(dir);
     if (!dirExists) {
         await fse.mkdir(dir);
     }
 
     // check if already exists
-    const fileExists = await fse.exists(path);
+    const fileExists = fse.existsSync(path);
     if (fileExists) {
         throw Error(`File '${path}' already exists and won't be overwritten.`);
     }
