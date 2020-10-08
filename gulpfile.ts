@@ -85,8 +85,13 @@ gulp.task('render-full-pages', async done => {
     done();
 });
 
+gulp.task('html-reload', () => {
+    return gulp.src('./site/index.html')
+        .pipe(connect.reload());
+});
+
 gulp.task('build-html:watch', done => {
-    // gulp.watch('./site/index.html', gulp.series(['minify-html']));
+    gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['render-full-pages', 'html-reload']));
     done();
 });
 
