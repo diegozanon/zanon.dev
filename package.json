@@ -9,7 +9,7 @@
         "build": "gulp build",
         "new-post": "ts-node src/scripts/new-post.ts",
         "publish-post": "ts-node src/scripts/publish-post.ts",
-        "update-jsons": "ts-node src/scripts/update-jsons.ts"
+        "prepare": "node -e \"require('fs').mkdirSync('./site/dist', { recursive: true })\""
     },
     "type": "module",
     "repository": {
