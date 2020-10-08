@@ -62,6 +62,20 @@ describe('publishPost', () => {
         expect(actualData).toBe(expectedData);
     });
 
+    it('will check if the posts.json file was updated', async () => {
+        // arrange
+        const root = await rootDir();
+        const path = `${root}/site/posts.json`;
+        const lastTimeUpdated = fse.statSync(path).mtime;
+
+        // act
+        await publishPost(root, `${moment().format('YYYY-MM-DD')}-draft.md`);
+        const newTimeUpdated = fse.statSync(path).mtime;
+
+        // assert
+        expect(newTimeUpdated.getTime()).toBeGreaterThan(lastTimeUpdated.getTime());
+    });
+
     afterAll(async () => {
         deleteFile(updatedDraftFile);
         deleteFile(publishFile);

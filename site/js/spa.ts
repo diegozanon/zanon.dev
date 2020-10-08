@@ -17,7 +17,7 @@ for (const anchor of anchors) {
             // else, prevent default behavior
             evt.preventDefault();
 
-            fetch('/pages/data.json')
+            fetch('/posts.json') // it is probably cached already
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("HTTP error " + response.status);

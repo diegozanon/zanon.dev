@@ -77,7 +77,9 @@ gulp.task('copy-to-dist', done => {
     fse.copySync('site/fonts', 'site/dist/fonts');
     fse.copySync('site/icons', 'site/dist/icons');
     fse.copySync('site/imgs', 'site/dist/imgs');
-    fse.copySync('site/pages', 'site/dist/pages');
+    fse.copySync('site/pages', 'site/dist');
+    fse.unlinkSync('site/dist/home.html');
+    fse.unlinkSync('site/dist/post.html');
     fse.copySync('site/browserconfig.xml', 'site/dist/browserconfig.xml');
     fse.copySync('site/favicon.ico', 'site/dist/favicon.ico');
     fse.copySync('site/manifest.json', 'site/dist/manifest.json');

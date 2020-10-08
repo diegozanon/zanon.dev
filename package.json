@@ -31,6 +31,10 @@
         "testMatch": [
             "<rootDir>/tests/**/*.ts"
         ],
+        "watchPathIgnorePatterns": [
+            "<rootDir>/site/posts.json",
+            "<rootDir>/site/site.json"
+        ],
         "testRunner": "jest-circus/runner",
         "globals": {
             "ts-jest": {
@@ -57,12 +61,14 @@
         "@types/babelify": "^7.3.6",
         "@types/browserify": "^12.0.36",
         "@types/fancy-log": "^1.3.1",
+        "@types/fs-extra": "^9.0.1",
         "@types/gulp": "^4.0.7",
         "@types/gulp-connect": "^5.0.3",
         "@types/gulp-rename": "0.0.33",
         "@types/gulp-sass": "^4.0.0",
         "@types/gulp-sourcemaps": "0.0.32",
         "@types/gulp-uglify": "^3.0.6",
+        "@types/html-minifier": "^4.0.0",
         "@types/jest": "^24.0.18",
         "@types/node": "^12.7.2",
         "@types/vinyl-buffer": "^1.0.0",
@@ -87,6 +93,7 @@
         "gulp-sourcemaps": "^2.6.5",
         "gulp-uglify": "^3.0.2",
         "gulp-uglifycss": "^1.1.0",
+        "html-minifier": "^4.0.0",
         "jest": "^26.5.2",
         "jest-circus": "^26.5.2",
         "marked": "^1.2.0",
