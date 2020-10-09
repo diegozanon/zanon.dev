@@ -1,4 +1,5 @@
 import * as browserify from 'browserify';
+import * as cors from 'cors';
 import * as fancyLog from 'fancy-log';
 import * as fse from 'fs-extra';
 import * as gulp from 'gulp';
@@ -32,7 +33,10 @@ const buildTS = (): NodeJS.ReadWriteStream => {
     return watchedBrowserify
         .transform('babelify', {
             presets: ['@babel/preset-env'],
-            extensions: ['.ts']
+            extensions: ['.ts'],
+            plugins: [
+                ["@babel/plugin-transform-runtime", { "regenerator": true }]
+            ]
         })
         .bundle()
         .pipe(source('bundle.min.js'))
@@ -99,7 +103,10 @@ gulp.task('serve', done => {
     connect.server({
         root: 'site/dist',
         livereload: true,
-        port: 8080
+        port: 8080,
+        middleware: () => {
+            return [cors()];
+        }
     });
 
     done();

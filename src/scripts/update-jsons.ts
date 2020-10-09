@@ -28,6 +28,9 @@ export const updatePostsJson = async (): Promise<void> => {
         const header = yamlToJson(data.split('---')[1]) as PostMeta;
 
         if (header.status === PostStatus.Publish) {
+
+            delete header.status;
+
             header.date = filename.substring(0, 10);
             header.slug = filename.substring(11).slice(0, -3);
 

@@ -1,7 +1,7 @@
 import rootDir from '../../src/utils/root-dir';
 import * as fse from 'fs-extra';
 import { updatePostsJson, updateSiteJson } from '../../src/scripts/update-jsons';
-import { PostsJson, PostStatus } from '../../src/common/types';
+import { PostsJson } from '../../src/common/types';
 
 describe('updateJsons', () => {
 
@@ -25,17 +25,8 @@ describe('updateJsons', () => {
         const json: PostsJson = JSON.parse(await fse.readFile(jsonPath, 'utf8'));
         const countActualPublished = json.posts.length;
 
-        let allObjsPublished = true;
-        for (const post of json.posts) {
-            if (post.header.status != PostStatus.Publish) {
-                allObjsPublished = false;
-                break;
-            }
-        }
-
         // assert
         expect(countActualPublished).toBe(countExpectedPublished);
-        expect(allObjsPublished).toBeTruthy();
     });
 
     it('will check if the site.json file was updated', async () => {
