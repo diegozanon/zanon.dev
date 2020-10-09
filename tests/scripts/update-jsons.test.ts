@@ -1,6 +1,6 @@
 import rootDir from '../../src/utils/root-dir';
 import * as fse from 'fs-extra';
-import { updatePostsJson, updateSiteJson } from '../../src/scripts/update-jsons';
+import { updateJsons } from '../../src/scripts/update-jsons';
 import { PostsJson } from '../../src/common/types';
 
 describe('updateJsons', () => {
@@ -21,7 +21,7 @@ describe('updateJsons', () => {
         }
 
         // act
-        await updatePostsJson();
+        await updateJsons();
         const json: PostsJson = JSON.parse(await fse.readFile(jsonPath, 'utf8'));
         const countActualPublished = json.posts.length;
 
@@ -32,12 +32,12 @@ describe('updateJsons', () => {
     it('will check if the site.json file was updated', async () => {
         // arrange
         const root = await rootDir();
-        await updateSiteJson(); // create, if not exists
+        await updateJsons(); // create, if not exists
         const path = `${root}/site/dist/site.json`;
         const lastTimeUpdated = (await fse.stat(path)).mtime;
 
         // act
-        await updateSiteJson();
+        await updateJsons();
         const newTimeUpdated = (await fse.stat(path)).mtime;
 
         // assert

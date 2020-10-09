@@ -15,7 +15,7 @@ import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
 import { renderFullPages } from './src/scripts/render-full-pages';
-import { updatePostsJson, updateSiteJson } from './src/scripts/update-jsons';
+import { updateJsons } from './src/scripts/update-jsons';
 
 gulp.task('clean-dist', done => {
     fse.emptyDirSync('./site/dist');
@@ -67,7 +67,7 @@ gulp.task('build-sass:watch', done => {
 });
 
 gulp.task('update-jsons', async done => {
-    await Promise.all([updatePostsJson(), updateSiteJson()]);
+    await updateJsons();
     done();
 });
 
@@ -79,6 +79,7 @@ gulp.task('copy-to-dist', done => {
     fse.copySync('site/favicon.ico', 'site/dist/favicon.ico');
     fse.copySync('site/manifest.json', 'site/dist/manifest.json');
     fse.copySync('site/robots.txt', 'site/dist/robots.txt');
+    fse.copySync('site/rss.xml', 'site/dist/rss.xml');
     fse.copySync('site/sitemap.xml', 'site/dist/sitemap.xml');
 
     done();
@@ -105,7 +106,15 @@ gulp.task('serve', done => {
         livereload: true,
         port: 8080,
         middleware: () => {
-            return [cors()];
+            return [cors(), (req, res, next): void => {
+
+                // doesn't have an extension and will be treated as html
+                if (req.url !== '/' && req.url.split('.').length === 1) {
+                    res.setHeader('Content-Type', 'text/html')
+                }
+
+                next();
+            }];
         }
     });
 

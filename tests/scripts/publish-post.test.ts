@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import * as path from 'path';
 import rootDir from '../../src/utils/root-dir';
 import { getDraftPosts, publishPost } from '../../src/scripts/publish-post';
-import { updatePostsJson } from '../../src/scripts/update-jsons';
+import { updateJsons } from '../../src/scripts/update-jsons';
 import { renderFullPages } from '../../src/scripts/render-full-pages';
 
 const templateFile = path.join(__dirname, '../data/2020-01-01-post-draft.md');
@@ -81,7 +81,7 @@ describe('publishPost', () => {
     afterAll(async () => {
         await deleteFile(updatedDraftFile);
         await deleteFile(publishFile);
-        await updatePostsJson(); // update the posts.json after removing the test files
+        await updateJsons(); // update the posts.json and site.json after removing the test files
         await renderFullPages(); // render pages again after removing the test files
     });
 });

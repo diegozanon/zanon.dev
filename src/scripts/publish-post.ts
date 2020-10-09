@@ -6,7 +6,7 @@ import { EOL } from 'os';
 import rootDir from '../utils/root-dir';
 import { jsonToYaml, yamlToJson } from '../utils/yaml';
 import { PostHeader, PostStatus } from '../common/types';
-import { updatePostsJson } from './update-jsons';
+import { updateJsons } from './update-jsons';
 
 const getPostPath = (root: string, fileName: string): string => {
     return `${root}/posts/${fileName}`;
@@ -68,7 +68,7 @@ export const publishPost = async (root: string, name: string): Promise<string> =
     }
 
     // update the posts.json file
-    await updatePostsJson();
+    await updateJsons();
 
     return filename;
 }

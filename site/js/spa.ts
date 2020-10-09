@@ -22,11 +22,32 @@ let siteJson: Page[];
 
 })().catch(console.error);
 
-const switchSitePage = (targetLink: string): void => {
+const loadData = (data: string): void => {
+    document.getElementsByTagName('main')[0].innerHTML = data;
 }
 
 const switchPostPage = (targetLink: string): void => {
+    // rewrite url
+    window.history.pushState({}, '', targetLink);
 
+    const post = postsJson.posts.find(post => post.header.slug === targetLink.substring(1));
+
+    document.title = post.header.title;
+
+    const data = postsJson.template.replace('<post></post>', `<post>${post.html}</post>`);
+    loadData(data);
+}
+
+const switchSitePage = (targetLink: string): void => {
+
+    const page = siteJson.find(page => page.slug === targetLink.substring(1));
+
+    if (!page) { // 404
+        window.location.href = '/404';
+    } else {
+        window.history.pushState({}, '', targetLink);
+        loadData(page.html);
+    }
 }
 
 const anchors = document.getElementsByTagName('a');
@@ -44,20 +65,20 @@ for (const anchor of anchors) {
                 return;
             }
 
+            evt.preventDefault();
+
             const sitePages = siteJson && siteJson.map((site: Page) => { return site.slug });
             const postsPages = postsJson && postsJson.posts.map((post: Post) => { return post.header.slug });
+            const slug = href.substring(1);
 
-            if (sitePages.includes(href)) {
-                evt.preventDefault();
+            if (sitePages.includes(slug)) {
                 switchSitePage(href);
-            } else if (postsPages.includes(href)) {
-                evt.preventDefault();
+            } else if (postsPages.includes(slug)) {
                 switchPostPage(href);
             } else if (siteJson) { // 404
-                evt.preventDefault();
                 switchSitePage(href);
             } else {
-                return;
+                window.location.href = href;
             }
         });
     }
