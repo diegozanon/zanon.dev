@@ -1,4 +1,4 @@
-import { readFile, readdir, lstat } from 'fs-extra';
+import { emptyDirSync, readFile, readdir, lstat } from 'fs-extra';
 import { extname } from 'path';
 import { PostsJson } from '../../src/common/types';
 import rootDir from '../../src/utils/root-dir';
@@ -6,6 +6,10 @@ import { renderFullPages } from '../../src/scripts/render-full-pages';
 import { updateJsons } from '../../src/scripts/update-jsons';
 
 describe('renderFullPages', () => {
+
+    beforeAll(async () => {
+        emptyDirSync('./site/dist');
+    });
 
     it('checks if all pages were rendered', async () => {
         // arrange
