@@ -1,0 +1,36 @@
+service: deploy-zanon-dev
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  stage: prod
+
+functions:
+  deploy:
+    handler: src/deploy/handler.deploy
+    events:
+      - http: POST /deploy
+    memorySize: 512
+    timeout: 60
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: ./src/deploy/webpack.config.ts
+
+package:
+  exclude:
+    - .git/**
+    - .vscode/**
+    - posts/**
+    - site/**
+    - tests/**    
+    - CHANGELOG.md
+    - CONTRIBUTE.md
+    - LICENSE.md
+    - README.md
+    - tsconfig.json
