@@ -8,7 +8,6 @@ import * as connect from 'gulp-connect';
 import * as rename from 'gulp-rename';
 import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
-import * as uglify from 'gulp-uglify';
 import * as tinyify from 'tinyify';
 import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
@@ -31,20 +30,16 @@ const runBrowserify = browserify({
 const buildTS = (browserifyObj): NodeJS.ReadWriteStream => {
     return browserifyObj
         .transform('babelify', {
-            presets: ['@babel/preset-env'],
-            extensions: ['.ts'],
-            plugins: [
-                ["@babel/plugin-transform-runtime", { "regenerator": true }]
-            ]
+            presets: ['@babel/preset-modules'],
+            extensions: ['.ts']
         })
         .bundle()
-        .pipe(source('bundle.min.js'))
+        .pipe(source('bundle.min.mjs'))
         .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(uglify())
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./site/dist'))
-        .pipe(connect.reload());
+        .pipe(connect.reload()); // only reloads if serve is started
 }
 
 gulp.task('build-ts', done => {
