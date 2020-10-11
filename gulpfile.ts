@@ -131,4 +131,5 @@ gulp.task('serve', done => {
 });
 
 gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html']));
-gulp.task('default', gulp.series(['build', 'serve', 'build-ts:watch', 'build-sass:watch', 'build-html:watch']));
+gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch']));
+gulp.task('default', gulp.series(['build:watch', 'serve']));
