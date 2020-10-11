@@ -10,7 +10,6 @@ import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as uglify from 'gulp-uglify';
 import * as tinyify from 'tinyify';
-import * as tsify from 'tsify';
 import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
@@ -22,15 +21,15 @@ gulp.task('clean-dist', done => {
     done();
 });
 
-const watchedBrowserify = watchify(browserify({
+const runBrowserify = browserify({
     entries: ['./site/js/index.ts'],
     debug: true
 })
-    .plugin(tsify)
-    .plugin(tinyify));
+    .plugin('tsify')
+    .plugin(tinyify);
 
-const buildTS = (): NodeJS.ReadWriteStream => {
-    return watchedBrowserify
+const buildTS = (browserifyObj): NodeJS.ReadWriteStream => {
+    return browserifyObj
         .transform('babelify', {
             presets: ['@babel/preset-env'],
             extensions: ['.ts'],
@@ -48,7 +47,20 @@ const buildTS = (): NodeJS.ReadWriteStream => {
         .pipe(connect.reload());
 }
 
-gulp.task('build-ts', buildTS);
+gulp.task('build-ts', done => {
+    buildTS(runBrowserify);
+    done();
+});
+
+gulp.task('build-ts:watch', done => {
+    const watchedBrowserify = watchify(runBrowserify);
+    buildTS(watchedBrowserify);
+    watchedBrowserify.on('log', fancyLog);
+    watchedBrowserify.on('update', () => {
+        buildTS(watchedBrowserify);
+    });
+    done();
+});
 
 gulp.task('build-sass', () => {
     return gulp.src('./site/css/index.scss')
@@ -95,6 +107,8 @@ gulp.task('html-reload', () => {
         .pipe(connect.reload());
 });
 
+gulp.task('build-html', gulp.series(['update-jsons', 'copy-to-dist', 'render-full-pages']));
+
 gulp.task('build-html:watch', done => {
     gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['render-full-pages', 'html-reload']));
     done();
@@ -121,7 +135,5 @@ gulp.task('serve', done => {
     done();
 });
 
-gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'update-jsons', 'copy-to-dist', 'render-full-pages']));
-gulp.task('default', gulp.series(['build', 'serve', 'build-html:watch', 'build-sass:watch']));
-watchedBrowserify.on('log', fancyLog);
-watchedBrowserify.on('update', buildTS);
+gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html']));
+gulp.task('default', gulp.series(['build', 'serve', 'build-ts:watch', 'build-sass:watch', 'build-html:watch']));
