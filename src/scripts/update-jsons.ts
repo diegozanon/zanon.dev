@@ -64,6 +64,7 @@ export const updateJsons = async (): Promise<void> => {
         }
     }
 
+    fse.mkdirSync(`${root}/site/dist`, { recursive: true });
     await fse.writeFile(`${root}/site/dist/posts.json`, JSON.stringify(postsJson));
 
     const path = `${root}/site/pages`;
