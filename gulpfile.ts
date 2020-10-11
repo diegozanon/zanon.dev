@@ -9,7 +9,6 @@ import * as rename from 'gulp-rename';
 import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as tinyify from 'tinyify';
-import * as buffer from 'vinyl-buffer';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
 import { renderFullPages } from './src/scripts/render-full-pages';
@@ -22,7 +21,7 @@ gulp.task('clean-dist', done => {
 
 const runBrowserify = browserify({
     entries: ['./site/js/index.ts'],
-    debug: true
+    debug: false
 })
     .plugin('tsify')
     .plugin(tinyify);
@@ -35,11 +34,8 @@ const buildTS = (browserifyObj): NodeJS.ReadWriteStream => {
         })
         .bundle()
         .pipe(source('bundle.min.mjs'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./site/dist'))
-        .pipe(connect.reload()); // only reloads if serve is started
+        .pipe(connect.reload()); // only reloads if serve was started
 }
 
 gulp.task('build-ts', done => {
