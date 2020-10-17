@@ -3,7 +3,8 @@ node_modules/
 
 # Deployment files
 site/dist/
-src/deploy/.build
+src/deploy/.build/
+downloaded/
 
 # macOS
 .DS_Store
