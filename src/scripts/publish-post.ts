@@ -15,10 +15,10 @@ const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
 
 /** Select only files where status is draft */
 export const getDraftPosts = async (root: string): Promise<Array<string>> => {
-    const posts = await fse.readdir(`${root}/posts`);
+    const posts = await fse.readdir(`${root}/site/posts`);
 
     return await filterAsync(posts, async post => {
-        const data = await fse.readFile(`${root}/posts/${post}`, 'utf8');
+        const data = await fse.readFile(`${root}/site/posts/${post}`, 'utf8');
         return (await convertHeaderToJson(data)).status === PostStatus.Draft;
     });
 }
@@ -32,7 +32,7 @@ export const getDraftPosts = async (root: string): Promise<Array<string>> => {
 export const publishPost = async (root: string, name: string): Promise<string> => {
 
     // set status to publish
-    const data = await fse.readFile(`${root}/posts/${name}`, 'utf8');
+    const data = await fse.readFile(`${root}/site/posts/${name}`, 'utf8');
     const obj = await convertHeaderToJson(data);
     obj.status = PostStatus.Publish;
 
@@ -46,15 +46,15 @@ export const publishPost = async (root: string, name: string): Promise<string> =
     let filename: string;
     if (currentDate === fileDate) {
         // overwrite current file
-        fse.writeFile(`${root}/posts/${name}`, md);
+        fse.writeFile(`${root}/site/posts/${name}`, md);
         filename = name;
     } else {
         // create a new file to use current date
         const newName = currentDate + name.substring(10);
-        await fse.writeFile(`${root}/posts/${newName}`, md);
+        await fse.writeFile(`${root}/site/posts/${newName}`, md);
 
         // delete previous file
-        await fse.unlink(`${root}/posts/${name}`);
+        await fse.unlink(`${root}/site/posts/${name}`);
 
         filename = newName;
     }

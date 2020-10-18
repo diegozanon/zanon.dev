@@ -11,9 +11,9 @@ describe('updateJsons', () => {
         const jsonPath = `${root}/site/dist/posts.json`;
 
         let countExpectedPublished = 0;
-        const filenames = await fse.readdir(`${root}/posts`);
+        const filenames = await fse.readdir(`${root}/site/posts`);
         for (const filename of filenames) {
-            const data = await fse.readFile(`${root}/posts/${filename}`, 'utf8');
+            const data = await fse.readFile(`${root}/site/posts/${filename}`, 'utf8');
             if (data.includes('status: publish')) {
                 countExpectedPublished++;
                 continue;

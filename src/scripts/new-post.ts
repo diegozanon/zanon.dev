@@ -14,10 +14,10 @@ export const newPost = async (title: string): Promise<void> => {
     const date = moment().format('YYYY-MM-DD');
     const fileName = `${date}-${slug}.md`;
     const root = await rootDir();
-    const path = `${root}/posts/${fileName}`;
+    const path = `${root}/site/posts/${fileName}`;
 
     // check if directory already exists
-    const dir = `${root}/posts`;
+    const dir = `${root}/site/posts`;
     const dirExists = fse.existsSync(dir);
     if (!dirExists) {
         await fse.mkdir(dir);

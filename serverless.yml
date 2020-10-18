@@ -26,11 +26,9 @@ package:
   exclude:
     - .git/**
     - .vscode/**
-    - posts/**
     - site/**
     - tests/**    
     - CHANGELOG.md
     - CONTRIBUTE.md
     - LICENSE.md
     - README.md
-    - tsconfig.json

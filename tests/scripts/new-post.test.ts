@@ -5,7 +5,7 @@ import { newPost } from '../../src/scripts/new-post';
 
 const postTitle = 'This is a test';
 const fileName = `${moment().format('YYYY-MM-DD')}-this-is-a-test.md`;
-const filePath = path.join(__dirname, '../../posts/', fileName);
+const filePath = path.join(__dirname, '../../site/posts/', fileName);
 
 describe('newPost', () => {
 

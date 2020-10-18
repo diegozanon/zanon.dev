@@ -34,7 +34,7 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
 export const updateJsons = async (): Promise<void> => {
 
     const root = await rootDir();
-    const postsPath = `${root}/posts`;
+    const postsPath = `${root}/site/posts`;
     const templatePath = `${root}/site/pages/post.html`;
 
     const postsJson: PostsJson = {

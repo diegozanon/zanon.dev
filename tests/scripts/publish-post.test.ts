@@ -7,9 +7,9 @@ import { updateJsons } from '../../src/scripts/update-jsons';
 import { renderFullPages } from '../../src/scripts/render-full-pages';
 
 const templateFile = path.join(__dirname, '../data/2020-01-01-post-draft.md');
-const draftFile = path.join(__dirname, '../../posts/', '2020-01-01-draft.md');
-const updatedDraftFile = path.join(__dirname, '../../posts/', `${moment().format('YYYY-MM-DD')}-draft.md`);
-const publishFile = path.join(__dirname, '../../posts/', '2020-01-01-publish.md');
+const draftFile = path.join(__dirname, '../../site/posts/', '2020-01-01-draft.md');
+const updatedDraftFile = path.join(__dirname, '../../site/posts/', `${moment().format('YYYY-MM-DD')}-draft.md`);
+const publishFile = path.join(__dirname, '../../site/posts/', '2020-01-01-publish.md');
 
 const readFile = async (file: string): Promise<string> => { return fse.readFile(file, 'utf8') };
 const writeFile = async (file: string, data: string): Promise<void> => { return fse.writeFile(file, data) };
@@ -44,7 +44,7 @@ describe('publishPost', () => {
         // act
         const root = await rootDir();
         const updatedFile = await publishPost(root, `2020-01-01-draft.md`);
-        const actualData = await readFile(path.join(__dirname, '../../posts/', updatedFile));
+        const actualData = await readFile(path.join(__dirname, '../../site/posts/', updatedFile));
 
         // assert
         expect(actualData).toBe(expectedData);
@@ -58,7 +58,7 @@ describe('publishPost', () => {
         // act
         const root = await rootDir();
         const updatedFile = await publishPost(root, `${moment().format('YYYY-MM-DD')}-draft.md`);
-        const actualData = await readFile(path.join(__dirname, '../../posts/', updatedFile));
+        const actualData = await readFile(path.join(__dirname, '../../site/posts/', updatedFile));
 
         // assert
         expect(actualData).toBe(expectedData);
