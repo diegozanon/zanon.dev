@@ -5,6 +5,7 @@ node_modules/
 site/dist/
 src/deploy/.build/
 downloaded/
+.serverless/
 
 # macOS
 .DS_Store
