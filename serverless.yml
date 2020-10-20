@@ -5,9 +5,13 @@ provider:
   runtime: nodejs12.x
   region: us-east-1
   stage: prod
+  deploymentBucket:
+    name: zanon.dev-deployment  
   environment:
     BUCKET: zanon.dev
     REGION: us-east-1
+    CLOUDFRONT_DISTRIBUTION: E2ARU5P34MXJB
+    WEBHOOK_SECRET: ${ssm:deploy-zanon-dev-github-webhook-secret}
 
 functions:
   deploy:
@@ -15,7 +19,7 @@ functions:
     events:
       - http: POST /deploy
     memorySize: 512
-    timeout: 60
+    timeout: 30
 
 plugins:
   - serverless-webpack
