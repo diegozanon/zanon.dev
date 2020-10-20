@@ -9,7 +9,17 @@ export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
     const output = './downloaded';
 
     try {
-        start(event);
+        const isMainBranch = start(event);
+
+        if (!isMainBranch) {
+            return {
+                statusCode: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': '*'
+                },
+                body: JSON.stringify({ message: "Valid, but won't execute because the push was not on the main branch" })
+            }
+        }
 
         await download('https://github.com/diegozanon/zanon.dev#feature/r01/deploy', { output });
 
