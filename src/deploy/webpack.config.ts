@@ -11,6 +11,9 @@ module.exports = {
             { test: /\.ts$/, use: 'ts-loader' }
         ]
     },
+    resolve: {
+        extensions: ['.ts', '.js']
+    },
     output: {
         libraryTarget: 'commonjs',
         path: path.resolve('./src/deploy/.build')
