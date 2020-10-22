@@ -1,20 +1,7 @@
-import * as childProcess from 'child_process';
-import * as fse from 'fs-extra';
+import { renderFullPages } from '../../scripts/render-full-pages';
+import { updateJsons } from '../../scripts/update-jsons';
 
-export const build = async (output: string): Promise<void> => {
-
-    await fse.move('./node_modules', `${output}/node_modules`);
-
-    const args = `run build --prefix ${output}`.split(' ');
-    await new Promise((resolve, reject) => {
-        const npmRunBuild = childProcess.spawn('npm', args);
-
-        // npmRunBuild.stdout.on('data', console.log)); // uncomment if need to log
-
-        npmRunBuild.stderr.on('data', reject);
-
-        npmRunBuild.on('close', code => {
-            code == 0 ? resolve() : reject(code);
-        });
-    });
+export const buildPosts = async (output: string): Promise<void> => {
+    await updateJsons(output);
+    await renderFullPages(output);
 }

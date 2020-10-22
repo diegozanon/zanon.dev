@@ -6,8 +6,8 @@ import { minifyHtml } from '../utils/minify-html';
 import rootDir from '../utils/root-dir';
 import { yamlToJson } from '../utils/yaml';
 
-const getPageHtml = (page: string): string => {
-    const html = fse.readFileSync(page, 'utf8');
+const getPageHtml = async (page: string): Promise<string> => {
+    const html = await fse.readFile(page, 'utf8');
     return minifyHtml(html);
 }
 
@@ -31,15 +31,15 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
 }
 
 /** This function updates the posts.json and site.json files. */
-export const updateJsons = async (): Promise<void> => {
+export const updateJsons = async (output?: string): Promise<void> => {
 
-    const root = await rootDir();
+    const root = output || await rootDir();
     const postsPath = `${root}/site/posts`;
     const templatePath = `${root}/site/pages/post.html`;
 
     const postsJson: PostsJson = {
         posts: [],
-        template: minifyHtml(fse.readFileSync(templatePath, 'utf8'))
+        template: minifyHtml(await fse.readFile(templatePath, 'utf8'))
     };
 
     const filenames = await fse.readdir(postsPath);
@@ -64,16 +64,16 @@ export const updateJsons = async (): Promise<void> => {
         }
     }
 
-    fse.mkdirSync(`${root}/site/dist`, { recursive: true });
+    await fse.promises.mkdir(`${root}/site/dist`, { recursive: true });
     await fse.writeFile(`${root}/site/dist/posts.json`, JSON.stringify(postsJson));
 
     const path = `${root}/site/pages`;
     const siteJson: Array<Page> = [];
 
-    siteJson.push({ slug: '', html: addPosts(getPageHtml(`${path}/home.html`), postsJson) });
-    siteJson.push({ slug: '404', html: getPageHtml(`${path}/404.html`) });
-    siteJson.push({ slug: 'blog', html: addPosts(getPageHtml(`${path}/blog.html`), postsJson) });
-    siteJson.push({ slug: 'me', html: getPageHtml(`${path}/me.html`) });
+    siteJson.push({ slug: '', html: addPosts(await getPageHtml(`${path}/home.html`), postsJson) });
+    siteJson.push({ slug: '404', html: await getPageHtml(`${path}/404.html`) });
+    siteJson.push({ slug: 'blog', html: addPosts(await getPageHtml(`${path}/blog.html`), postsJson) });
+    siteJson.push({ slug: 'me', html: await getPageHtml(`${path}/me.html`) });
 
     await fse.writeFile(`${root}/site/dist/site.json`, JSON.stringify(siteJson));
 }

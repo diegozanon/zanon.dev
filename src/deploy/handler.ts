@@ -1,52 +1,51 @@
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { download } from 'get-github-code';
-import { upload, invalidateCache } from './lib/aws';
-import { build } from './lib/build';
-import { start, finish } from './lib/setup';
+import { uploadPosts, invalidateCache } from './lib/aws';
+import { buildPosts } from './lib/build';
+import { isValid } from './lib/validate';
+
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*'
+}
+
+const buildBody = (message: string): string => {
+    return JSON.stringify({ message });
+}
 
 export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-    const output = './downloaded';
+    const output = process.env.IS_OFFLINE ? './downloaded' : '/tmp';
 
     try {
-        const isMainBranch = start(event);
 
-        if (!isMainBranch) {
+        if (!isValid(event)) {
             return {
-                statusCode: 200,
-                headers: {
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({ message: "Valid, but won't execute because the push was not on the main branch" })
+                statusCode: 200, // OK because the request was correctly signed, but should be ignored
+                headers: corsHeaders,
+                body: buildBody("Valid, but won't execute because the push was not on the main branch")
             }
         }
 
         await download('https://github.com/diegozanon/zanon.dev#feature/r01/deploy', { output });
 
-        await build(output);
+        await buildPosts(output);
 
-        await upload(output);
+        await uploadPosts(output);
 
         await invalidateCache();
 
-        await finish(output);
-
         return {
             statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            },
-            body: JSON.stringify({ message: 'success' })
+            headers: corsHeaders,
+            body: buildBody('success')
         }
     } catch (err) {
         console.error(err);
 
         return {
             statusCode: 500,
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            },
-            body: JSON.stringify({ message: (err as Error).message })
+            headers: corsHeaders,
+            body: buildBody((err as Error).message)
         }
     }
 }

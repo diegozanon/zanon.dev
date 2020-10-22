@@ -15,9 +15,9 @@ const changeTitle = (page: string, title: string): string => {
 }
 
 /** This function creates full HTML pages to be served. */
-export const renderFullPages = async (): Promise<void> => {
+export const renderFullPages = async (output?: string): Promise<void> => {
 
-    const root = await rootDir();
+    const root = output || await rootDir();
     const dist = `${root}/site/dist`;
     const siteJson: Page[] = JSON.parse(await readFile(`${root}/site/dist/site.json`, 'utf8'));
     const postsJson: PostsJson = JSON.parse(await readFile(`${root}/site/dist/posts.json`, 'utf8'));

@@ -1,4 +1,4 @@
-import { minify } from 'html-minifier';
+import { minify } from 'html-minifier-terser';
 
 export const minifyHtml = (html: string): string => {
     return minify(html, {
