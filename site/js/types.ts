@@ -20,7 +20,8 @@ export interface Post {
 }
 
 export interface PostMeta {
-    date: string;
+    creationDate: string;
+    modificationDate: string;
     slug: string;
     title: string;
     description: string;

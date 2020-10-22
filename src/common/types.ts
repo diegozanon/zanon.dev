@@ -14,7 +14,8 @@ export interface PostsJson {
 }
 
 export interface PostMeta extends PostHeader {
-    date: string;
+    creationDate: string;
+    modificationDate: string;
     slug: string;
 }
 
