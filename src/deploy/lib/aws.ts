@@ -16,7 +16,12 @@ const isDir = async (file: string): Promise<boolean> => {
 }
 
 const getMimeType = (file: string): string => {
-    const mime = mimeTypes.lookup(file);
+    let mime = mimeTypes.lookup(file);
+
+    if (file.split('/').pop() === 'feed') {
+        mime = 'application/rss+xml';
+    }
+
     return mime || 'text/html';
 }
 
@@ -93,7 +98,7 @@ export const uploadPosts = async (folder: string): Promise<void> => {
 
         const ext = path.extname(file)
 
-        if (ext && (ext !== '.html' && ext !== '.json')) {
+        if (ext && (ext !== '.html' && ext !== '.json' && ext !== '.xml')) {
             continue;
         }
 

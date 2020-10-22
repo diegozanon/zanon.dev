@@ -1,6 +1,6 @@
 import rootDir from '../../src/utils/root-dir';
 import * as fse from 'fs-extra';
-import { updateJsons } from '../../src/scripts/update-jsons';
+import { updateJsons } from '../../src/deploy/lib/update-jsons';
 import { PostsJson } from '../../src/common/types';
 
 describe('updateJsons', () => {

@@ -6,7 +6,8 @@ import { EOL } from 'os';
 import rootDir from '../utils/root-dir';
 import { jsonToYaml, yamlToJson } from '../utils/yaml';
 import { PostHeader, PostStatus } from '../common/types';
-import { updateJsons } from './update-jsons';
+import { updateJsons } from '../deploy/lib/update-jsons';
+import { updateRss, updateSitemap } from '../deploy/lib/update-xmls';
 
 const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
     data = data.split('---')[1]; // yaml is just in the header of the markdown post
@@ -59,8 +60,10 @@ export const publishPost = async (root: string, name: string): Promise<string> =
         filename = newName;
     }
 
-    // update the posts.json file
+    // update the posts.json file and rss/sitemap.rss
     await updateJsons();
+    await updateRss();
+    await updateSitemap();
 
     return filename;
 }

@@ -3,8 +3,9 @@ import * as moment from 'moment';
 import * as path from 'path';
 import rootDir from '../../src/utils/root-dir';
 import { getDraftPosts, publishPost } from '../../src/scripts/publish-post';
-import { updateJsons } from '../../src/scripts/update-jsons';
-import { renderFullPages } from '../../src/scripts/render-full-pages';
+import { renderFullPages } from '../../src/deploy/lib/render-full-pages';
+import { updateJsons } from '../../src/deploy/lib/update-jsons';
+import { updateRss, updateSitemap } from '../../src/deploy/lib/update-xmls';
 
 const templateFile = path.join(__dirname, '../data/2020-01-01-post-draft.md');
 const draftFile = path.join(__dirname, '../../site/posts/', '2020-01-01-draft.md');
@@ -81,7 +82,9 @@ describe('publishPost', () => {
     afterAll(async () => {
         await deleteFile(updatedDraftFile);
         await deleteFile(publishFile);
-        await updateJsons(); // update the posts.json and site.json after removing the test files
-        await renderFullPages(); // render pages again after removing the test files
+        await updateJsons(); // updates the posts.json and site.json after removing the test files
+        await updateRss(); // updates the rss.xml file
+        await updateSitemap(); // updates the sitemap.xml file
+        await renderFullPages(); // renders pages again after removing the test files
     });
 });

@@ -1,10 +1,10 @@
 import * as cheerio from 'cheerio';
 import * as fse from 'fs-extra';
 import * as marked from 'marked';
-import { Page, PostsJson, PostMeta, PostStatus } from '../common/types';
-import { minifyHtml } from '../utils/minify-html';
-import rootDir from '../utils/root-dir';
-import { yamlToJson } from '../utils/yaml';
+import { Page, PostsJson, PostMeta, PostStatus } from '../../common/types';
+import { minifyHtml } from '../../utils/minify-html';
+import rootDir from '../../utils/root-dir';
+import { yamlToJson } from '../../utils/yaml';
 
 const getPageHtml = async (page: string): Promise<string> => {
     const html = await fse.readFile(page, 'utf8');
@@ -51,7 +51,7 @@ export const updateJsons = async (output?: string): Promise<void> => {
 
             delete header.status;
 
-            header.date = filename.substring(0, 10);
+            header.creationDate = filename.substring(0, 10);
             header.slug = filename.substring(11).slice(0, -3);
 
             const markdown = data.split('---')[2];
@@ -76,11 +76,4 @@ export const updateJsons = async (output?: string): Promise<void> => {
     siteJson.push({ slug: 'me', html: await getPageHtml(`${path}/me.html`) });
 
     await fse.writeFile(`${root}/site/dist/site.json`, JSON.stringify(siteJson));
-}
-
-// Executes the function if the module is called through the command line
-if (require.main === module) {
-    (async (): Promise<void> => {
-        await updateJsons();
-    })().catch(console.error);
 }

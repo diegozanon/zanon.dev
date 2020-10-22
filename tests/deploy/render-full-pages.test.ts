@@ -2,8 +2,8 @@ import { emptyDirSync, readFile, readdir, lstat } from 'fs-extra';
 import { extname } from 'path';
 import { PostsJson } from '../../src/common/types';
 import rootDir from '../../src/utils/root-dir';
-import { renderFullPages } from '../../src/scripts/render-full-pages';
-import { updateJsons } from '../../src/scripts/update-jsons';
+import { renderFullPages } from '../../src/deploy/lib/render-full-pages';
+import { updateJsons } from '../../src/deploy/lib/update-jsons';
 
 describe('renderFullPages', () => {
 

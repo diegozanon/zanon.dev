@@ -11,8 +11,10 @@ import * as sourcemaps from 'gulp-sourcemaps';
 import * as tinyify from 'tinyify';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
-import { renderFullPages } from './src/scripts/render-full-pages';
-import { updateJsons } from './src/scripts/update-jsons';
+import { uploadAll } from './src/deploy/lib/aws';
+import { renderFullPages } from './src/deploy/lib/render-full-pages';
+import { updateJsons } from './src/deploy/lib/update-jsons';
+import { updateRss, updateSitemap } from './src/deploy/lib/update-xmls';
 
 gulp.task('clean-dist', done => {
     fse.emptyDirSync('./site/dist');
@@ -74,6 +76,12 @@ gulp.task('update-jsons', async done => {
     done();
 });
 
+gulp.task('update-xmls', async done => {
+    await updateRss();
+    await updateSitemap();
+    done();
+});
+
 gulp.task('copy-to-dist', done => {
     fse.copySync('site/fonts', 'site/dist/fonts');
     fse.copySync('site/icons', 'site/dist/icons');
@@ -82,8 +90,6 @@ gulp.task('copy-to-dist', done => {
     fse.copySync('site/favicon.ico', 'site/dist/favicon.ico');
     fse.copySync('site/manifest.json', 'site/dist/manifest.json');
     fse.copySync('site/robots.txt', 'site/dist/robots.txt');
-    fse.copySync('site/rss.xml', 'site/dist/rss.xml');
-    fse.copySync('site/sitemap.xml', 'site/dist/sitemap.xml');
 
     done();
 });
@@ -98,10 +104,15 @@ gulp.task('html-reload', () => {
         .pipe(connect.reload());
 });
 
-gulp.task('build-html', gulp.series(['update-jsons', 'copy-to-dist', 'render-full-pages']));
+gulp.task('build-html', gulp.series(['update-jsons', 'update-xmls', 'copy-to-dist', 'render-full-pages']));
 
 gulp.task('build-html:watch', done => {
     gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['render-full-pages', 'html-reload']));
+    done();
+});
+
+gulp.task('deploy-aws', async done => {
+    await uploadAll('./site/dist');
     done();
 });
 
