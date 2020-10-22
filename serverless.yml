@@ -8,10 +8,21 @@ provider:
   deploymentBucket:
     name: zanon.dev-deployment  
   environment:
-    BUCKET: zanon.dev
+    BUCKET: zanon.dev  
     REGION: us-east-1
     CLOUDFRONT_DISTRIBUTION: E2ARU5P34MXJB
-    WEBHOOK_SECRET: ${ssm:deploy-zanon-dev-github-webhook-secret}
+    WEBHOOK_SECRET: ${ssm:deploy-zanon-dev-github-webhook-secret}  
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - s3:PutObject
+        - s3:ListObjectsV2
+        - s3:deleteObjects
+      Resource: "arn:aws:s3:::${self:provider.environment.BUCKET}/*"
+    - Effect: "Allow"
+      Action:
+        - cloudfront:CreateInvalidation
+      Resource: "arn:aws:cloudfront:::distribution/${self:provider.environment.CLOUDFRONT_DISTRIBUTION}"   
 
 functions:
   deploy:
@@ -19,7 +30,7 @@ functions:
     events:
       - http: POST /deploy
     memorySize: 512
-    timeout: 30
+    timeout: 30     
 
 plugins:
   - serverless-webpack
@@ -30,6 +41,7 @@ custom:
     webpackConfig: ./src/deploy/webpack.config.ts
 
 package:
+  individually: true
   exclude:
     - .git/**
     - .vscode/**
