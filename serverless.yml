@@ -16,13 +16,12 @@ provider:
     - Effect: "Allow"
       Action:
         - s3:PutObject
-        - s3:ListObjectsV2
-        - s3:deleteObjects
+        - s3:PutObjectAcl
       Resource: "arn:aws:s3:::${self:provider.environment.BUCKET}/*"
     - Effect: "Allow"
       Action:
         - cloudfront:CreateInvalidation
-      Resource: "arn:aws:cloudfront:::distribution/${self:provider.environment.CLOUDFRONT_DISTRIBUTION}"   
+      Resource: "*" # there is no resource level permission in cloudfront for CreateInvalidation, must use *   
 
 functions:
   deploy:
