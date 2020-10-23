@@ -6,8 +6,10 @@ import * as gulp from 'gulp';
 import * as cleanCSS from 'gulp-clean-css';
 import * as connect from 'gulp-connect';
 import * as rename from 'gulp-rename';
+import * as replace from 'gulp-replace';
 import * as sass from 'gulp-sass';
 import * as sourcemaps from 'gulp-sourcemaps';
+import * as moment from 'moment';
 import * as tinyify from 'tinyify';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
@@ -104,7 +106,19 @@ gulp.task('html-reload', () => {
         .pipe(connect.reload());
 });
 
-gulp.task('build-html', gulp.series(['update-jsons', 'update-xmls', 'copy-to-dist', 'render-full-pages']));
+gulp.task('avoid-cache', done => {
+    const date = moment().format('YYYYMMDDHHmmss');
+    gulp.src(['./site/dist/index.html'])
+        .pipe(replace('/bundle.min.mjs', `/bundle.min.mjs?v=${date}`))
+        .pipe(replace('/site.json', `/site.json?v=${date}`))
+        .pipe(replace('/posts.json', `/posts.json?v=${date}`))
+        .pipe(replace('/bundle.min.css', `/bundle.min.css?v=${date}`))
+        .pipe(gulp.dest('./site/dist/'));
+
+    done();
+});
+
+gulp.task('build-html', gulp.series(['update-jsons', 'update-xmls', 'copy-to-dist', 'render-full-pages', 'avoid-cache']));
 
 gulp.task('build-html:watch', done => {
     gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['render-full-pages', 'html-reload']));
