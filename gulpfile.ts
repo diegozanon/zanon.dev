@@ -139,4 +139,5 @@ gulp.task('serve', done => {
 
 gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html']));
 gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch']));
+gulp.task('deploy', gulp.series(['build', 'deploy-aws']));
 gulp.task('default', gulp.series(['build:watch', 'serve']));

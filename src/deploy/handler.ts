@@ -18,7 +18,7 @@ export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     try {
 
-        if (!isValid(event)) {
+        if (!isValid(event) && !process.env.IS_OFFLINE) {
             return {
                 statusCode: 200, // OK because the request was correctly signed, but should be ignored
                 headers: corsHeaders,
@@ -26,7 +26,7 @@ export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
             }
         }
 
-        await download('https://github.com/diegozanon/zanon.dev#feature/r01/deploy', { output });
+        await download('https://github.com/diegozanon/zanon.dev', { output });
 
         await buildPosts(output);
 
