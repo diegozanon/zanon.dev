@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import * as marked from 'marked';
 import { Page, PostsJson, PostMeta, PostStatus } from '../../common/types';
 import { minifyHtml } from '../../utils/minify-html';
@@ -7,7 +7,7 @@ import rootDir from '../../utils/root-dir';
 import { yamlToJson } from '../../utils/yaml';
 
 const getPageHtml = async (page: string): Promise<string> => {
-    const html = await fse.readFile(page, 'utf8');
+    const html = await fs.promises.readFile(page, 'utf8');
     return minifyHtml(html);
 }
 
@@ -39,12 +39,12 @@ export const updateJsons = async (output?: string): Promise<void> => {
 
     const postsJson: PostsJson = {
         posts: [],
-        template: minifyHtml(await fse.readFile(templatePath, 'utf8'))
+        template: minifyHtml(await fs.promises.readFile(templatePath, 'utf8'))
     };
 
-    const filenames = await fse.readdir(postsPath);
+    const filenames = await fs.promises.readdir(postsPath);
     for (const filename of filenames) {
-        const data = await fse.readFile(`${postsPath}/${filename}`, 'utf8');
+        const data = await fs.promises.readFile(`${postsPath}/${filename}`, 'utf8');
         const header = yamlToJson(data.split('---')[1]) as PostMeta;
 
         if (header.status === PostStatus.Publish) {
@@ -64,8 +64,8 @@ export const updateJsons = async (output?: string): Promise<void> => {
         }
     }
 
-    await fse.promises.mkdir(`${root}/site/dist`, { recursive: true });
-    await fse.writeFile(`${root}/site/dist/posts.json`, JSON.stringify(postsJson));
+    await fs.promises.mkdir(`${root}/site/dist`, { recursive: true });
+    await fs.promises.writeFile(`${root}/site/dist/posts.json`, JSON.stringify(postsJson));
 
     const path = `${root}/site/pages`;
     const siteJson: Array<Page> = [];
@@ -75,5 +75,5 @@ export const updateJsons = async (output?: string): Promise<void> => {
     siteJson.push({ slug: 'blog', html: addPosts(await getPageHtml(`${path}/blog.html`), postsJson) });
     siteJson.push({ slug: 'me', html: await getPageHtml(`${path}/me.html`) });
 
-    await fse.writeFile(`${root}/site/dist/site.json`, JSON.stringify(siteJson));
+    await fs.promises.writeFile(`${root}/site/dist/site.json`, JSON.stringify(siteJson));
 }

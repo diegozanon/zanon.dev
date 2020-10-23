@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import { writeFile, readFile } from 'fs-extra';
+import * as fs from 'fs';
 import { Page, PostsJson } from '../../common/types';
 import { minifyHtml } from '../../utils/minify-html';
 import rootDir from '../../utils/root-dir';
@@ -19,19 +19,19 @@ export const renderFullPages = async (output?: string): Promise<void> => {
 
     const root = output || await rootDir();
     const dist = `${root}/site/dist`;
-    const siteJson: Page[] = JSON.parse(await readFile(`${root}/site/dist/site.json`, 'utf8'));
-    const postsJson: PostsJson = JSON.parse(await readFile(`${root}/site/dist/posts.json`, 'utf8'));
-    const index = await readFile(`${root}/site/index.html`, 'utf8');
+    const siteJson: Page[] = JSON.parse(await fs.promises.readFile(`${root}/site/dist/site.json`, 'utf8'));
+    const postsJson: PostsJson = JSON.parse(await fs.promises.readFile(`${root}/site/dist/posts.json`, 'utf8'));
+    const index = await fs.promises.readFile(`${root}/site/index.html`, 'utf8');
 
     for (const page of siteJson) {
         const fullPage = insertPage(index, page.html, 'main');
         const slug = page.slug || 'index.html';
-        await writeFile(`${dist}/${slug}`, minifyHtml(fullPage));
+        await fs.promises.writeFile(`${dist}/${slug}`, minifyHtml(fullPage));
     }
 
     for (const post of postsJson.posts) {
         const partialPostHtml = insertPage(postsJson.template, post.html, 'post');
         const postHtml = changeTitle(insertPage(index, partialPostHtml, 'main'), post.header.title);
-        await writeFile(`${dist}/${post.header.slug}`, minifyHtml(postHtml));
+        await fs.promises.writeFile(`${dist}/${post.header.slug}`, minifyHtml(postHtml));
     }
 }

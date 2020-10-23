@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { PutObjectRequest } from 'aws-sdk/clients/s3';
-import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import * as mimeTypes from 'mime-types';
 import * as path from 'path';
 
@@ -9,7 +9,7 @@ const cloudfront = new AWS.CloudFront({ apiVersion: '2020-05-31' });
 
 const isDir = async (file: string): Promise<boolean> => {
     try {
-        return (await fse.lstat(file)).isDirectory();
+        return (await fs.promises.lstat(file)).isDirectory();
     } catch (_) {
         return false;
     }
@@ -28,7 +28,7 @@ const getMimeType = (file: string): string => {
 const whatToUpload = async (dir: string, root: string): Promise<PutObjectRequest[]> => {
     const filesToUpload: PutObjectRequest[] = [];
     const bucket = process.env.BUCKET;
-    const files = await fse.readdir(dir);
+    const files = await fs.promises.readdir(dir);
     for (const filename of files) {
 
         const file = path.join(dir, filename);
@@ -41,7 +41,7 @@ const whatToUpload = async (dir: string, root: string): Promise<PutObjectRequest
         const fileToUpload: PutObjectRequest = {
             Bucket: bucket,
             Key: file.replace(`${root}/`, ''),
-            Body: await fse.readFile(file),
+            Body: await fs.promises.readFile(file),
             ContentType: getMimeType(file),
             ACL: 'public-read',
             StorageClass: 'STANDARD'
@@ -87,7 +87,7 @@ export const uploadPosts = async (folder: string): Promise<void> => {
 
     const bucket = process.env.BUCKET;
     const dir = path.join(path.resolve(folder), '/site/dist');
-    const files = await fse.readdir(dir);
+    const files = await fs.promises.readdir(dir);
     for (const filename of files) {
 
         const file = path.join(dir, filename);
@@ -105,7 +105,7 @@ export const uploadPosts = async (folder: string): Promise<void> => {
         const fileToUpload: PutObjectRequest = {
             Bucket: bucket,
             Key: file.replace(`${dir}/`, ''),
-            Body: await fse.readFile(file),
+            Body: await fs.promises.readFile(file),
             ContentType: getMimeType(file),
             ACL: 'public-read',
             StorageClass: 'STANDARD'

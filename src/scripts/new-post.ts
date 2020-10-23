@@ -1,4 +1,4 @@
-import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import * as moment from 'moment';
 import { EOL } from 'os';
 import slugify from 'slugify';
@@ -18,13 +18,13 @@ export const newPost = async (title: string): Promise<void> => {
 
     // check if directory already exists
     const dir = `${root}/site/posts`;
-    const dirExists = fse.existsSync(dir);
+    const dirExists = fs.existsSync(dir);
     if (!dirExists) {
-        await fse.mkdir(dir);
+        await fs.promises.mkdir(dir);
     }
 
     // check if already exists
-    const fileExists = fse.existsSync(path);
+    const fileExists = fs.existsSync(path);
     if (fileExists) {
         throw Error(`File '${path}' already exists and won't be overwritten.`);
     }
@@ -32,7 +32,7 @@ export const newPost = async (title: string): Promise<void> => {
     // write the file
     const yml = jsonToYaml({ ...postHeader, title });
     const data = ['---', yml, '---'].join(EOL);
-    await fse.writeFile(path, data);
+    await fs.promises.writeFile(path, data);
 }
 
 // Executes the function if the module is called through the command line

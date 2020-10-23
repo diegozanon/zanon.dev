@@ -1,5 +1,5 @@
 import rootDir from '../../src/utils/root-dir';
-import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import { updateJsons } from '../../src/deploy/lib/update-jsons';
 import { PostsJson } from '../../src/common/types';
 
@@ -11,9 +11,9 @@ describe('updateJsons', () => {
         const jsonPath = `${root}/site/dist/posts.json`;
 
         let countExpectedPublished = 0;
-        const filenames = await fse.readdir(`${root}/site/posts`);
+        const filenames = await fs.promises.readdir(`${root}/site/posts`);
         for (const filename of filenames) {
-            const data = await fse.readFile(`${root}/site/posts/${filename}`, 'utf8');
+            const data = await fs.promises.readFile(`${root}/site/posts/${filename}`, 'utf8');
             if (data.includes('status: publish')) {
                 countExpectedPublished++;
                 continue;
@@ -22,7 +22,7 @@ describe('updateJsons', () => {
 
         // act
         await updateJsons();
-        const json: PostsJson = JSON.parse(await fse.readFile(jsonPath, 'utf8'));
+        const json: PostsJson = JSON.parse(await fs.promises.readFile(jsonPath, 'utf8'));
         const countActualPublished = json.posts.length;
 
         // assert
@@ -34,11 +34,11 @@ describe('updateJsons', () => {
         const root = await rootDir();
         await updateJsons(); // create, if not exists
         const path = `${root}/site/dist/site.json`;
-        const lastTimeUpdated = (await fse.stat(path)).mtime;
+        const lastTimeUpdated = (await fs.promises.stat(path)).mtime;
 
         // act
         await updateJsons();
-        const newTimeUpdated = (await fse.stat(path)).mtime;
+        const newTimeUpdated = (await fs.promises.stat(path)).mtime;
 
         // assert
         expect(newTimeUpdated.getTime()).toBeGreaterThan(lastTimeUpdated.getTime());
@@ -50,7 +50,7 @@ describe('updateJsons', () => {
         const path = `${root}/site/dist/posts.json`;
 
         // act
-        const postsJson: PostsJson = JSON.parse(await fse.readFile(path, 'utf8'));
+        const postsJson: PostsJson = JSON.parse(await fs.promises.readFile(path, 'utf8'));
 
         // assert
         expect(postsJson.template).toBeTruthy();

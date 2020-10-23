@@ -1,4 +1,4 @@
-import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import * as moment from 'moment';
 import * as path from 'path';
 import rootDir from '../../src/utils/root-dir';
@@ -12,10 +12,10 @@ const draftFile = path.join(__dirname, '../../site/posts/', '2020-01-01-draft.md
 const updatedDraftFile = path.join(__dirname, '../../site/posts/', `${moment().format('YYYY-MM-DD')}-draft.md`);
 const publishFile = path.join(__dirname, '../../site/posts/', '2020-01-01-publish.md');
 
-const readFile = async (file: string): Promise<string> => { return fse.readFile(file, 'utf8') };
-const writeFile = async (file: string, data: string): Promise<void> => { return fse.writeFile(file, data) };
-const copyFile = async (src: string, dest: string): Promise<void> => { return fse.copyFile(src, dest) };
-const deleteFile = async (path: string): Promise<void> => { return fse.unlink(path) };
+const readFile = async (file: string): Promise<string> => { return fs.promises.readFile(file, 'utf8') };
+const writeFile = async (file: string, data: string): Promise<void> => { return fs.promises.writeFile(file, data) };
+const copyFile = async (src: string, dest: string): Promise<void> => { return fs.promises.copyFile(src, dest) };
+const deleteFile = async (path: string): Promise<void> => { return fs.promises.unlink(path) };
 const replaceInFile = async (file: string, from: string, to: string): Promise<void> => {
     const content = await readFile(file);
     return writeFile(file, content.replace(from, to))
@@ -69,11 +69,11 @@ describe('publishPost', () => {
         // arrange
         const root = await rootDir();
         const path = `${root}/site/dist/posts.json`;
-        const lastTimeUpdated = fse.statSync(path).mtime;
+        const lastTimeUpdated = fs.statSync(path).mtime;
 
         // act
         await publishPost(root, `${moment().format('YYYY-MM-DD')}-draft.md`);
-        const newTimeUpdated = fse.statSync(path).mtime;
+        const newTimeUpdated = fs.statSync(path).mtime;
 
         // assert
         expect(newTimeUpdated.getTime()).toBeGreaterThan(lastTimeUpdated.getTime());

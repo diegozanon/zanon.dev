@@ -1,5 +1,5 @@
 import * as cliSelect from 'cli-select';
-import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import * as moment from 'moment';
 import filterAsync from 'node-filter-async';
 import { EOL } from 'os';
@@ -16,10 +16,10 @@ const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
 
 /** Select only files where status is draft */
 export const getDraftPosts = async (root: string): Promise<Array<string>> => {
-    const posts = await fse.readdir(`${root}/site/posts`);
+    const posts = await fs.promises.readdir(`${root}/site/posts`);
 
     return await filterAsync(posts, async post => {
-        const data = await fse.readFile(`${root}/site/posts/${post}`, 'utf8');
+        const data = await fs.promises.readFile(`${root}/site/posts/${post}`, 'utf8');
         return (await convertHeaderToJson(data)).status === PostStatus.Draft;
     });
 }
@@ -33,7 +33,7 @@ export const getDraftPosts = async (root: string): Promise<Array<string>> => {
 export const publishPost = async (root: string, name: string): Promise<string> => {
 
     // set status to publish
-    const data = await fse.readFile(`${root}/site/posts/${name}`, 'utf8');
+    const data = await fs.promises.readFile(`${root}/site/posts/${name}`, 'utf8');
     const obj = await convertHeaderToJson(data);
     obj.status = PostStatus.Publish;
 
@@ -47,15 +47,15 @@ export const publishPost = async (root: string, name: string): Promise<string> =
     let filename: string;
     if (currentDate === fileDate) {
         // overwrite current file
-        fse.writeFile(`${root}/site/posts/${name}`, md);
+        fs.promises.writeFile(`${root}/site/posts/${name}`, md);
         filename = name;
     } else {
         // create a new file to use current date
         const newName = currentDate + name.substring(10);
-        await fse.writeFile(`${root}/site/posts/${newName}`, md);
+        await fs.promises.writeFile(`${root}/site/posts/${newName}`, md);
 
         // delete previous file
-        await fse.unlink(`${root}/site/posts/${name}`);
+        await fs.promises.unlink(`${root}/site/posts/${name}`);
 
         filename = newName;
     }

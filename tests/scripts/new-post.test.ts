@@ -1,4 +1,4 @@
-import { readFile, unlink, existsSync } from 'fs-extra';
+import * as fs from 'fs';
 import * as moment from 'moment';
 import * as path from 'path';
 import { newPost } from '../../src/scripts/new-post';
@@ -11,12 +11,12 @@ describe('newPost', () => {
 
     it('creates a new post following the template', async () => {
         // arrange
-        const expectedData = await readFile(path.join(__dirname, '../data/post-template.md'), 'utf8');
+        const expectedData = await fs.promises.readFile(path.join(__dirname, '../data/post-template.md'), 'utf8');
 
         // act
         await newPost(postTitle);
-        const fileWasCreated = existsSync(filePath);
-        const actualData = await readFile(filePath, 'utf8');
+        const fileWasCreated = fs.existsSync(filePath);
+        const actualData = await fs.promises.readFile(filePath, 'utf8');
 
         // assert
         expect(fileWasCreated).toBeTruthy();
@@ -30,6 +30,6 @@ describe('newPost', () => {
     });
 
     afterAll(async () => {
-        await unlink(filePath);
+        await fs.promises.unlink(filePath);
     });
 });
