@@ -9,8 +9,8 @@ provider:
     name: zanon.dev-deployment  
   environment:
     BUCKET: zanon.dev  
-    REGION: us-east-1
     CLOUDFRONT_DISTRIBUTION: E2ARU5P34MXJB
+    REGION: us-east-1
     WEBHOOK_SECRET: ${ssm:deploy-zanon-dev-github-webhook-secret}  
   iamRoleStatements:
     - Effect: "Allow"
@@ -27,9 +27,16 @@ functions:
   deploy:
     handler: src/deploy/handler.deploy
     events:
-      - http: POST /deploy
+      - http: POST /deploy # doesn't need an OPTIONS verb because it won't be called by a browser
     memorySize: 512
     timeout: 30     
+  backend:
+    handler: src/backend/handler.backend
+    events:
+      - http: POST /backend
+      - http: OPTIONS /backend
+    memorySize: 512
+    timeout: 10    
 
 plugins:
   - serverless-webpack
