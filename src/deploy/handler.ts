@@ -3,14 +3,7 @@ import { download } from 'get-github-code';
 import { uploadPosts, invalidateCache } from './lib/aws';
 import { buildPosts } from './lib/build';
 import { isValid } from './lib/validate';
-
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*'
-}
-
-const buildBody = (message: string): string => {
-    return JSON.stringify({ message });
-}
+import { successHandler, errorHandler } from '../common/http-response';
 
 export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
@@ -19,11 +12,10 @@ export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
     try {
 
         if (!isValid(event) && !process.env.IS_OFFLINE) {
-            return {
-                statusCode: 200, // OK because the request was correctly signed, but should be ignored
-                headers: corsHeaders,
-                body: buildBody("Valid, but won't execute because the push was not on the main branch")
-            }
+            return successHandler({
+                message: "Valid, but won't execute because the push was not on the main branch",
+                cors: false
+            });
         }
 
         await download('https://github.com/diegozanon/zanon.dev', { output });
@@ -34,18 +26,9 @@ export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
         await invalidateCache();
 
-        return {
-            statusCode: 200,
-            headers: corsHeaders,
-            body: buildBody('success')
-        }
+        return successHandler({ message: 'success', cors: false });
     } catch (err) {
         console.error(err);
-
-        return {
-            statusCode: 500,
-            headers: corsHeaders,
-            body: buildBody((err as Error).message)
-        }
+        return errorHandler({ error: err, cors: false });
     }
 }
