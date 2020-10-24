@@ -98,10 +98,10 @@ export const updateSitemap = async (output?: string): Promise<void> => {
             priority: 0.1
         },
         {
-            url: `${domain}/blog`,
+            url: `${domain}/privacy`,
             modDate: now,
             freq: 'daily',
-            priority: 1
+            priority: 0.1
         }
     ];
 

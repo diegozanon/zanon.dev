@@ -55,7 +55,7 @@ for (const anchor of anchors) {
     const href = anchor.getAttribute('href');
 
     // handle only local links
-    if (href.startsWith('/')) {
+    if (href.startsWith('/') && href !== '/feed') {
         anchor.addEventListener('click', (evt): void => {
 
             // if the user is trying to open in a new tab, do nothing

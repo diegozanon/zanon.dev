@@ -17,7 +17,7 @@ describe('renderFullPages', () => {
         await updateJsons(); // creates a posts.json
         const postsJson: PostsJson = JSON.parse(await readFile(`${root}/site/dist/posts.json`, 'utf8'));
         const numberOfPosts = postsJson.posts.length;
-        const numberOfFixedPages = 4; // home, blog, me, 404
+        const numberOfFixedPages = 4; // home, privacy, me, 404
         const expectedNumberOfPages = numberOfPosts + numberOfFixedPages;
 
         // act
@@ -44,21 +44,18 @@ describe('renderFullPages', () => {
         expect(allPagesAreFullRendered).toBeTruthy();
     });
 
-    it('checks if there are posts in the home/blog page', async () => {
+    it('checks if there are posts in the home page', async () => {
         // arrange
         const root = await rootDir();
         const postsJson: PostsJson = JSON.parse(await readFile(`${root}/site/dist/posts.json`, 'utf8'));
         const slugs: string[] = postsJson.posts.map(post => post.header.slug);
         const home = await readFile(`${root}/site/dist/index.html`, 'utf8');
-        const blog = await readFile(`${root}/site/dist/blog`, 'utf8');
 
         // act
         await renderFullPages();
         const homeHasAllPosts = !slugs.find(slug => !home.includes(slug));
-        const blogHasAllPosts = !slugs.find(slug => !blog.includes(slug));
 
         // assert
         expect(homeHasAllPosts).toBeTruthy();
-        expect(blogHasAllPosts).toBeTruthy();
     });
 });
