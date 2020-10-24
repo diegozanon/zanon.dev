@@ -38,3 +38,9 @@ export interface HttpResponseOptions {
     cors: boolean;
     httpMethod?: string;
 }
+
+export enum BackendRequestType {
+    Comment = 'comment',
+    Feedback = 'feedback',
+    Visit = 'visit'
+}

@@ -33,3 +33,9 @@ export interface Page {
     slug: string;
     html: string;
 }
+
+export enum BackendRequestType {
+    Comment = 'comment',
+    Feedback = 'feedback',
+    Visit = 'visit'
+}
