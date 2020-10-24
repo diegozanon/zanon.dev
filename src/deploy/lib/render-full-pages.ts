@@ -1,8 +1,8 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import { Page, PostsJson } from '../../common/types';
-import { minifyHtml } from '../../utils/minify-html';
-import rootDir from '../../utils/root-dir';
+import { minifyHtml } from '../../common/minify-html';
+import rootDir from '../../common/root-dir';
 
 const insertPage = (src: string, fragment: string, htmlTag: string): string => {
     const $ = cheerio.load(src);

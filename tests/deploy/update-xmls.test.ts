@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { updateJsons } from '../../src/deploy/lib/update-jsons';
 import { updateRss, updateSitemap } from '../../src/deploy/lib/update-xmls';
-import rootDir from '../../src/utils/root-dir';
+import rootDir from '../../src/common/root-dir';
 
 describe('updateXmls', () => {
 

@@ -1,4 +1,4 @@
-import rootDir from '../../src/utils/root-dir';
+import rootDir from '../../src/common/root-dir';
 import * as fs from 'fs';
 import { updateJsons } from '../../src/deploy/lib/update-jsons';
 import { PostsJson } from '../../src/common/types';

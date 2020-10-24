@@ -3,8 +3,8 @@ import * as moment from 'moment';
 import { EOL } from 'os';
 import slugify from 'slugify';
 import * as postHeader from '../templates/post-header.json';
-import rootDir from '../utils/root-dir';
-import { jsonToYaml } from '../utils/yaml';
+import rootDir from '../common/root-dir';
+import { jsonToYaml } from '../common/yaml';
 
 /** This function creates a new post file following the post template. */
 export const newPost = async (title: string): Promise<void> => {

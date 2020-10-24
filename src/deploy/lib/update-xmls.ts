@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as moment from 'moment';
 import { EOL } from 'os';
 import { Post } from '../../common/types';
-import rootDir from '../../utils/root-dir';
+import rootDir from '../../common/root-dir';
 
 interface PageRssOptions {
     title: string;

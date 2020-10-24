@@ -2,9 +2,9 @@ import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import * as marked from 'marked';
 import { Page, PostsJson, PostMeta, PostStatus } from '../../common/types';
-import { minifyHtml } from '../../utils/minify-html';
-import rootDir from '../../utils/root-dir';
-import { yamlToJson } from '../../utils/yaml';
+import { minifyHtml } from '../../common/minify-html';
+import rootDir from '../../common/root-dir';
+import { yamlToJson } from '../../common/yaml';
 
 const getPageHtml = async (page: string): Promise<string> => {
     const html = await fs.promises.readFile(page, 'utf8');

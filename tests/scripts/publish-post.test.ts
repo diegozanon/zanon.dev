@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as moment from 'moment';
 import * as path from 'path';
-import rootDir from '../../src/utils/root-dir';
+import rootDir from '../../src/common/root-dir';
 import { getDraftPosts, publishPost } from '../../src/scripts/publish-post';
 import { renderFullPages } from '../../src/deploy/lib/render-full-pages';
 import { updateJsons } from '../../src/deploy/lib/update-jsons';

@@ -1,7 +1,7 @@
 import { emptyDirSync, readFile, readdir, lstat } from 'fs-extra';
 import { extname } from 'path';
 import { PostsJson } from '../../src/common/types';
-import rootDir from '../../src/utils/root-dir';
+import rootDir from '../../src/common/root-dir';
 import { renderFullPages } from '../../src/deploy/lib/render-full-pages';
 import { updateJsons } from '../../src/deploy/lib/update-jsons';
 
