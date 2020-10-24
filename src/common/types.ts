@@ -31,3 +31,10 @@ export enum PostStatus {
     Draft = 'draft',
     Publish = 'publish'
 }
+
+export interface HttpResponseOptions {
+    message?: string;
+    error?: Error;
+    cors: boolean;
+    httpMethod?: string;
+}

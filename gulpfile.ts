@@ -13,7 +13,8 @@ import * as moment from 'moment';
 import * as tinyify from 'tinyify';
 import * as source from 'vinyl-source-stream';
 import * as watchify from 'watchify';
-import { uploadAll } from './src/deploy/lib/aws';
+import { yamlToJson } from './src/common/yaml';
+import { uploadAll, invalidateCache } from './src/deploy/lib/aws';
 import { renderFullPages } from './src/deploy/lib/render-full-pages';
 import { updateJsons } from './src/deploy/lib/update-jsons';
 import { updateRss, updateSitemap } from './src/deploy/lib/update-xmls';
@@ -126,7 +127,16 @@ gulp.task('build-html:watch', done => {
 });
 
 gulp.task('deploy-aws', async done => {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const serverlessYml = yamlToJson(await fse.readFile('./serverless.yml', 'utf8')) as any;
+    process.env.BUCKET = serverlessYml.provider.environment.BUCKET;
+    process.env.CLOUDFRONT_DISTRIBUTION = serverlessYml.provider.environment.CLOUDFRONT_DISTRIBUTION;
+    process.env.REGION = serverlessYml.provider.environment.REGION;
+
     await uploadAll('./site/dist');
+    await invalidateCache();
+
     done();
 });
 
