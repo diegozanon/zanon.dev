@@ -33,6 +33,7 @@ functions:
   backend:
     handler: src/backend/handler.backend
     events:
+      - http: GET /backend
       - http: POST /backend
       - http: OPTIONS /backend
     memorySize: 512
