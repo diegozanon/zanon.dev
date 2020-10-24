@@ -6,6 +6,8 @@
     "scripts": {
         "start": "gulp",
         "test": "jest -i --watch",
+        "test-deploy": "ts-node src/scripts/test-deploy.ts",
+        "test-backend": "ts-node src/scripts/test-backend.ts",
         "build": "gulp build",
         "deploy-site": "gulp deploy",
         "deploy-lambda": "serverless deploy",
@@ -90,6 +92,7 @@
         "@types/watchify": "^3.7.4",
         "@typescript-eslint/eslint-plugin": "^2.0.0",
         "@typescript-eslint/parser": "^2.0.0",
+        "axios": "^0.21.0",
         "babelify": "^10.0.0",
         "browserify": "^17.0.0",
         "bufferutil": "^4.0.1",

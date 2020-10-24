@@ -11,7 +11,7 @@ export const deploy = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     try {
 
-        if (!isValid(event) && !process.env.IS_OFFLINE) {
+        if (!isValid(event)) {
             return successHandler({
                 message: "Valid, but won't execute because the push was not on the main branch",
                 cors: false

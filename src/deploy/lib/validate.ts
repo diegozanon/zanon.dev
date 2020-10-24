@@ -9,7 +9,7 @@ export const isValid = (event: APIGatewayProxyEvent): boolean => {
 
     const receivedSignature = event.headers['X-Hub-Signature'];
 
-    if (receivedSignature !== expectedSignature) {
+    if (receivedSignature !== expectedSignature && !process.env.IS_OFFLINE) {
         throw new Error("Invalid signature.");
     }
 

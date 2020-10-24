@@ -39,7 +39,7 @@ export const newPost = async (title: string): Promise<void> => {
 if (require.main === module) {
 
     // check the arguments
-    if (process.argv.length !== 3) { // executed using `ts-node <this-file> <post-title>` (3 arguments)
+    if (process.argv.length !== 3) { // npm run executes as `ts-node <this-file> <post-title>` (3 arguments)
         console.info('Usage: npm run new-post "Post Title".');
         throw Error('Incorrect number of arguments.');
     }
