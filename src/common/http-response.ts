@@ -24,13 +24,18 @@ const buildHeaders = (response: APIGatewayProxyResult, cors: boolean, httpMethod
 
 const buildBody = (options: HttpResponseOptions): string => {
 
-    const obj = {
-        message: options.error ? 'Internal Server Error' : options.message,
-        error: options.error ? options.error.message : ''
-    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obj: any = {};
 
-    if (!obj.error)
-        delete obj.error;
+    if (options.data)
+        obj.data = options.data;
+
+    if (options.message)
+        obj.message = options.message;
+
+    if (options.error) {
+        obj.message = obj.message || 'Internal Server Error';
+    }
 
     return JSON.stringify(obj);
 }

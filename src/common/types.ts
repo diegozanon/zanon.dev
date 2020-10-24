@@ -33,6 +33,7 @@ export enum PostStatus {
 }
 
 export interface HttpResponseOptions {
+    data?: object;
     message?: string;
     error?: Error;
     cors: boolean;
