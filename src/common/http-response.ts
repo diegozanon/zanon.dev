@@ -35,6 +35,7 @@ const buildBody = (options: HttpResponseOptions): string => {
 
     if (options.error) {
         obj.message = obj.message || 'Internal Server Error';
+        obj.error = options.error.message;
     }
 
     return JSON.stringify(obj);
@@ -56,5 +57,5 @@ export const successHandler = (options: HttpResponseOptions): APIGatewayProxyRes
 }
 
 export const errorHandler = (options: HttpResponseOptions): APIGatewayProxyResult => {
-    return buildHandler(options, 200);
+    return buildHandler(options, 500);
 }
