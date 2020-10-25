@@ -1,4 +1,4 @@
-service: deploy-zanon-dev
+service: zanon-dev
 
 provider:
   name: aws
@@ -6,7 +6,7 @@ provider:
   region: us-east-1
   stage: prod
   deploymentBucket:
-    name: zanon.dev-deployment  
+    name: zanon.dev-lambda  
   environment:
     BUCKET: zanon.dev  
     CLOUDFRONT_DISTRIBUTION: E2ARU5P34MXJB
@@ -45,7 +45,7 @@ plugins:
 
 custom:
   webpack:
-    webpackConfig: ./src/deploy/webpack.config.ts
+    webpackConfig: ./webpack.config.ts
 
 package:
   individually: true
