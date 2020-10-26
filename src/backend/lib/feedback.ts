@@ -1,3 +1,5 @@
-export const registerFeedback = async (obj: object): Promise<void> => {
-    console.info(obj);
+import { APIGatewayProxyEvent } from "aws-lambda";
+
+export const registerFeedback = async (event: APIGatewayProxyEvent): Promise<void> => {
+    console.info(event);
 }

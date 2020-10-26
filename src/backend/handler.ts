@@ -15,9 +15,9 @@ export const backend = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         const body = JSON.parse(event.body);
 
         if (event.httpMethod === 'GET') {
-
-            if (body.requestType === BackendRequestType.Comment) {
-                return await getComments(body);
+            const queryStr = event.queryStringParameters;
+            if (queryStr && queryStr.requestType === BackendRequestType.Comment) {
+                return await getComments(event);
             } else {
                 return errorHandler({ error: new Error('Invalid request type'), cors: true })
             }
@@ -25,13 +25,13 @@ export const backend = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
         switch (body.requestType) {
             case BackendRequestType.Comment:
-                await registerComment(body);
+                await registerComment(event);
                 break;
             case BackendRequestType.Feedback:
-                await registerFeedback(body);
+                await registerFeedback(event);
                 break;
             case BackendRequestType.Visit:
-                await registerVisit(body);
+                await registerVisit(event);
                 break;
         }
 
