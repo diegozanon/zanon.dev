@@ -53,7 +53,7 @@
         "aws-sdk": "^2.773.0",
         "cheerio": "^1.0.0-rc.3",
         "cli-select": "1.0.2",
-        "get-github-code": "^1.0.2",
+        "get-github-code": "^1.0.3",
         "html-minifier-terser": "^5.1.1",
         "js-yaml": "^3.13.1",
         "marked": "^1.2.0",
