@@ -3,7 +3,7 @@ node_modules/
 
 # Deployment files
 site/dist/
-src/deploy/.build/
+.build/
 downloaded/
 .serverless/
 
