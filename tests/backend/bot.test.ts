@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { isBot } from '../../src/backend/lib/visit';
+import { isBot } from '../../src/backend/lib/bot';
 
-describe('visit', () => {
+describe('bot', () => {
 
     it('tests if isBot can find most bots user-agents', async () => {
         const botsTxt = await fs.promises.readFile(path.resolve('./tests/data/user-agents/bots.txt'), 'utf8');

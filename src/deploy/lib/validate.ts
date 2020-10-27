@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import * as crypto from "crypto";
+import * as crypto from 'crypto';
 
 export const isValid = (event: APIGatewayProxyEvent): boolean => {
 

@@ -29,7 +29,9 @@ provider:
         - dynamodb:Query
         - dynamodb:PutItem
       Resource: [
-        "arn:aws:dynamodb:${self:provider.region}:*:table/Visits"
+        "arn:aws:dynamodb:${self:provider.region}:*:table/Comments",
+        "arn:aws:dynamodb:${self:provider.region}:*:table/Feedback",
+        "arn:aws:dynamodb:${self:provider.region}:*:table/Visits"        
       ]
     - Effect: Allow
       Action:
@@ -66,6 +68,23 @@ plugins:
 
 resources:
   Resources:
+    FeedbackTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Feedback
+        AttributeDefinitions:
+          - AttributeName: Page
+            AttributeType: S
+          - AttributeName: Timestamp
+            AttributeType: S            
+        KeySchema:
+          - AttributeName: Page
+            KeyType: HASH
+          - AttributeName: Timestamp
+            KeyType: RANGE            
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5    
     VisitsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -89,6 +108,8 @@ custom:
     webpackConfig: ./webpack.config.ts
   dynamodbAutoscaling:
     tablesConfig:
+      FeedbackTable:
+        maxCapacity: 20      
       VisitsTable:
         maxCapacity: 20
 
