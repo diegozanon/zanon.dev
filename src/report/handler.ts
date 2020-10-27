@@ -9,7 +9,38 @@ interface QueryResult {
     ConsumedCapacity: number;
 }
 
-const query = async (period: string, lastEvaluatedKey?: AWS.DynamoDB.DocumentClient.Key): Promise<QueryResult> => {
+const scanFeedback = async (lastEvaluatedKey?: AWS.DynamoDB.DocumentClient.Key): Promise<QueryResult> => {
+
+    const params: AWS.DynamoDB.DocumentClient.ScanInput = {
+        TableName: 'Feedback',
+        Select: 'SPECIFIC_ATTRIBUTES',
+        ProjectionExpression: 'Page, #A',
+        ExpressionAttributeNames: { '#A': 'Action' }, // Action is a reserved word
+        ConsistentRead: false,
+        ReturnConsumedCapacity: 'TOTAL'
+    };
+
+    if (lastEvaluatedKey) {
+        params.ExclusiveStartKey = lastEvaluatedKey;
+    }
+
+    const data = await documentclient.scan(params).promise();
+
+    const result: QueryResult = {
+        Items: data.Items,
+        ConsumedCapacity: data.ConsumedCapacity.CapacityUnits
+    }
+
+    if (data.LastEvaluatedKey) {
+        const recursiveData = await scanFeedback(data.LastEvaluatedKey);
+        result.Items.push(...recursiveData.Items);
+        result.ConsumedCapacity += recursiveData.ConsumedCapacity;
+    }
+
+    return result;
+}
+
+const queryVisits = async (period: string, lastEvaluatedKey?: AWS.DynamoDB.DocumentClient.Key): Promise<QueryResult> => {
 
     const params: AWS.DynamoDB.DocumentClient.QueryInput = {
         TableName: 'Visits',
@@ -36,7 +67,7 @@ const query = async (period: string, lastEvaluatedKey?: AWS.DynamoDB.DocumentCli
     }
 
     if (data.LastEvaluatedKey) {
-        const recursiveData = await query(period, data.LastEvaluatedKey);
+        const recursiveData = await queryVisits(period, data.LastEvaluatedKey);
         result.Items.push(...recursiveData.Items);
         result.ConsumedCapacity += recursiveData.ConsumedCapacity;
     }
@@ -44,14 +75,43 @@ const query = async (period: string, lastEvaluatedKey?: AWS.DynamoDB.DocumentCli
     return result;
 }
 
+const getFeedbackValues = (feedbackCounts): string => {
+    if (feedbackCounts) {
+        const likesSymbol = feedbackCounts.CountLikes > 0 ? '+' : '';
+        const dislikesSymbol = feedbackCounts.CountDislikes > 0 ? '-' : '';
+        return `(${likesSymbol}${feedbackCounts.CountLikes}/${dislikesSymbol}${feedbackCounts.CountDislikes})`;
+    } else {
+        return '';
+    }
+}
+
 export const report = async (): Promise<void> => {
 
     const period = moment().subtract(1, 'months').format('YYYY-MM');
 
-    const result = await query(period);
+    const feedback = await scanFeedback();
+    const visits = await queryVisits(period);
+
+    const feedbackCounts = {};
+    for (const item of feedback.Items) {
+
+        feedbackCounts[item.Page] = feedbackCounts[item.Page] || {
+            CountLikes: 0,
+            CountDislikes: 0
+        };
+
+        switch (item.Action) {
+            case 'like':
+                feedbackCounts[item.Page].CountLikes++;
+                break;
+            case 'dislike':
+                feedbackCounts[item.Page].CountDislikes++;
+                break;
+        }
+    }
 
     const pageCounts = {};
-    for (const item of result.Items) {
+    for (const item of visits.Items) {
 
         pageCounts[item.Page] = pageCounts[item.Page] || {
             CountReads: 0,
@@ -72,7 +132,8 @@ export const report = async (): Promise<void> => {
     let html = '';
     for (const key in pageCounts) {
         total += pageCounts[key].CountReads + pageCounts[key].CountClicks;
-        html += `Page ${key} had ${pageCounts[key].CountReads} reads and ${pageCounts[key].CountClicks} clicks. <br>`;
+        const feedbackValues = getFeedbackValues(feedbackCounts[key]);
+        html += `Page ${key} had ${pageCounts[key].CountReads} reads and ${pageCounts[key].CountClicks} clicks ${feedbackValues} <br>`;
     }
 
     if (total > 0) {
@@ -82,7 +143,8 @@ export const report = async (): Promise<void> => {
     }
 
     html += '<br>';
-    html += `ConsumedCapacity: ${result.ConsumedCapacity}`;
+    html += `Consumed capacity for Feedback: ${feedback.ConsumedCapacity} <br>`;
+    html += `Consumed capacity for Visits: ${visits.ConsumedCapacity}`;
 
     await ses.sendEmail({
         Source: process.env.EMAIL,
