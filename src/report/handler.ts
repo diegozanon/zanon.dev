@@ -68,12 +68,16 @@ export const report = async (): Promise<void> => {
         }
     }
 
+    let total = 0;
     let html = '';
     for (const key in pageCounts) {
+        total += pageCounts[key].CountReads + pageCounts[key].CountClicks;
         html += `Page ${key} had ${pageCounts[key].CountReads} reads and ${pageCounts[key].CountClicks} clicks. <br>`;
     }
 
-    if (Object.keys(pageCounts).length === 0) {
+    if (total > 0) {
+        html += `Total: ${total} <br>`;
+    } else {
         html += 'There were no visits in this month. <br>';
     }
 
