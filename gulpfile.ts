@@ -1,78 +1,26 @@
-import * as browserify from 'browserify';
-import * as cors from 'cors';
-import * as fancyLog from 'fancy-log';
 import * as fse from 'fs-extra';
 import * as gulp from 'gulp';
-import * as cleanCSS from 'gulp-clean-css';
 import * as connect from 'gulp-connect';
-import * as rename from 'gulp-rename';
-import * as replace from 'gulp-replace';
-import * as sass from 'gulp-sass';
-import * as sourcemaps from 'gulp-sourcemaps';
-import * as moment from 'moment';
-import * as tinyify from 'tinyify';
-import * as source from 'vinyl-source-stream';
-import * as watchify from 'watchify';
 import { yamlToJson } from './src/common/yaml';
 import { uploadAll, invalidateCache } from './src/deploy/lib/aws';
 import { renderFullPages } from './src/deploy/lib/render-full-pages';
 import { updateJsons } from './src/deploy/lib/update-jsons';
 import { updateRss, updateSitemap } from './src/deploy/lib/update-xmls';
+import { avoidCache, copyToDist } from './src/gulp/build-html';
+import { buildSass, buildSassWatch } from './src/gulp/build-sass';
+import { buildTS, buildTSWatch } from './src/gulp/build-ts';
+import { serve } from './src/gulp/serve';
 
 gulp.task('clean-dist', done => {
     fse.emptyDirSync('./site/dist');
     done();
 });
 
-const runBrowserify = browserify({
-    entries: ['./site/js/index.ts'],
-    debug: false
-})
-    .plugin('tsify')
-    .plugin(tinyify);
+gulp.task('build-ts', buildTS);
+gulp.task('build-ts:watch', buildTSWatch);
 
-const buildTS = (browserifyObj): NodeJS.ReadWriteStream => {
-    return browserifyObj
-        .transform('babelify', {
-            presets: ['@babel/preset-modules'],
-            extensions: ['.ts']
-        })
-        .bundle()
-        .pipe(source('bundle.min.mjs'))
-        .pipe(gulp.dest('./site/dist'))
-        .pipe(connect.reload()); // only reloads if serve was started
-}
-
-gulp.task('build-ts', done => {
-    buildTS(runBrowserify);
-    done();
-});
-
-gulp.task('build-ts:watch', done => {
-    const watchedBrowserify = watchify(runBrowserify);
-    buildTS(watchedBrowserify);
-    watchedBrowserify.on('log', fancyLog);
-    watchedBrowserify.on('update', () => {
-        buildTS(watchedBrowserify);
-    });
-    done();
-});
-
-gulp.task('build-sass', () => {
-    return gulp.src('./site/css/index.scss')
-        .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(sass.sync().on('error', sass.logError))
-        .pipe(rename('bundle.min.css'))
-        .pipe(cleanCSS())
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./site/dist'))
-        .pipe(connect.reload());
-});
-
-gulp.task('build-sass:watch', done => {
-    gulp.watch('./site/css/*.scss', gulp.series(['build-sass']));
-    done();
-});
+gulp.task('build-sass', buildSass);
+gulp.task('build-sass:watch', buildSassWatch);
 
 gulp.task('update-jsons', async done => {
     await updateJsons();
@@ -85,17 +33,7 @@ gulp.task('update-xmls', async done => {
     done();
 });
 
-gulp.task('copy-to-dist', done => {
-    fse.copySync('site/fonts', 'site/dist/fonts');
-    fse.copySync('site/icons', 'site/dist/icons');
-    fse.copySync('site/imgs', 'site/dist/imgs');
-    fse.copySync('site/browserconfig.xml', 'site/dist/browserconfig.xml');
-    fse.copySync('site/favicon.ico', 'site/dist/favicon.ico');
-    fse.copySync('site/manifest.json', 'site/dist/manifest.json');
-    fse.copySync('site/robots.txt', 'site/dist/robots.txt');
-
-    done();
-});
+gulp.task('copy-to-dist', copyToDist);
 
 gulp.task('render-full-pages', async done => {
     await renderFullPages();
@@ -107,17 +45,7 @@ gulp.task('html-reload', () => {
         .pipe(connect.reload());
 });
 
-gulp.task('avoid-cache', done => {
-    const date = moment().format('YYYYMMDDHHmmss');
-    gulp.src(['./site/dist/index.html'])
-        .pipe(replace('/bundle.min.mjs', `/bundle.min.mjs?v=${date}`))
-        .pipe(replace('/site.json', `/site.json?v=${date}`))
-        .pipe(replace('/posts.json', `/posts.json?v=${date}`))
-        .pipe(replace('/bundle.min.css', `/bundle.min.css?v=${date}`))
-        .pipe(gulp.dest('./site/dist/'));
-
-    done();
-});
+gulp.task('avoid-cache', avoidCache);
 
 gulp.task('build-html', gulp.series(['update-jsons', 'update-xmls', 'copy-to-dist', 'render-full-pages', 'avoid-cache']));
 
@@ -140,26 +68,7 @@ gulp.task('deploy-aws', async done => {
     done();
 });
 
-gulp.task('serve', done => {
-    connect.server({
-        root: 'site/dist',
-        livereload: true,
-        port: 8080,
-        middleware: () => {
-            return [cors(), (req, res, next): void => {
-
-                // doesn't have an extension and will be treated as html
-                if (req.url !== '/' && req.url.split('.').length === 1) {
-                    res.setHeader('Content-Type', 'text/html')
-                }
-
-                next();
-            }];
-        }
-    });
-
-    done();
-});
+gulp.task('serve', serve);
 
 gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html']));
 gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch']));
