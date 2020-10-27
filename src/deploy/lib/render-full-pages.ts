@@ -2,7 +2,6 @@ import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import { Page, PostsJson } from '../../common/types';
 import { minifyHtml } from '../../common/minify-html';
-import rootDir from '../../common/root-dir';
 
 const insertPage = (src: string, fragment: string, htmlTag: string): string => {
     const $ = cheerio.load(src);
@@ -17,7 +16,7 @@ const changeTitle = (page: string, title: string): string => {
 /** This function creates full HTML pages to be served. */
 export const renderFullPages = async (output?: string): Promise<void> => {
 
-    const root = output || await rootDir();
+    const root = output || '.';
     const dist = `${root}/site/dist`;
     const siteJson: Page[] = JSON.parse(await fs.promises.readFile(`${root}/site/dist/site.json`, 'utf8'));
     const postsJson: PostsJson = JSON.parse(await fs.promises.readFile(`${root}/site/dist/posts.json`, 'utf8'));

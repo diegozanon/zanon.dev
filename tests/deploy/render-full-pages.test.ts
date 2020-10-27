@@ -1,7 +1,6 @@
 import { emptyDirSync, readFile, readdir, lstat } from 'fs-extra';
 import { extname } from 'path';
 import { PostsJson } from '../../src/common/types';
-import rootDir from '../../src/common/root-dir';
 import { renderFullPages } from '../../src/deploy/lib/render-full-pages';
 import { updateJsons } from '../../src/deploy/lib/update-jsons';
 
@@ -13,16 +12,15 @@ describe('renderFullPages', () => {
 
     it('checks if all pages were rendered', async () => {
         // arrange
-        const root = await rootDir();
         await updateJsons(); // creates a posts.json
-        const postsJson: PostsJson = JSON.parse(await readFile(`${root}/site/dist/posts.json`, 'utf8'));
+        const postsJson: PostsJson = JSON.parse(await readFile('./site/dist/posts.json', 'utf8'));
         const numberOfPosts = postsJson.posts.length;
         const numberOfFixedPages = 4; // home, privacy, me, 404
         const expectedNumberOfPages = numberOfPosts + numberOfFixedPages;
 
         // act
         await renderFullPages();
-        const distPath = `${root}/site/dist`;
+        const distPath = './site/dist';
         const filenames = await readdir(distPath);
         let numberOfPages = 0;
         let allPagesAreFullRendered = true;
@@ -46,10 +44,9 @@ describe('renderFullPages', () => {
 
     it('checks if there are posts in the home page', async () => {
         // arrange
-        const root = await rootDir();
-        const postsJson: PostsJson = JSON.parse(await readFile(`${root}/site/dist/posts.json`, 'utf8'));
+        const postsJson: PostsJson = JSON.parse(await readFile('./site/dist/posts.json', 'utf8'));
         const slugs: string[] = postsJson.posts.map(post => post.header.slug);
-        const home = await readFile(`${root}/site/dist/index.html`, 'utf8');
+        const home = await readFile('./site/dist/index.html', 'utf8');
 
         // act
         await renderFullPages();

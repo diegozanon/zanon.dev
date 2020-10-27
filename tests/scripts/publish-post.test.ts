@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as moment from 'moment';
 import * as path from 'path';
-import rootDir from '../../src/common/root-dir';
 import { getDraftPosts, publishPost } from '../../src/scripts/publish-post';
 import { renderFullPages } from '../../src/deploy/lib/render-full-pages';
 import { updateJsons } from '../../src/deploy/lib/update-jsons';
@@ -31,8 +30,7 @@ describe('publishPost', () => {
         const expectedPost = '2020-01-01-draft.md';
 
         // act
-        const root = await rootDir();
-        const actualPosts = await getDraftPosts(root);
+        const actualPosts = await getDraftPosts();
 
         // assert
         expect(actualPosts).toContain(expectedPost);
@@ -43,8 +41,7 @@ describe('publishPost', () => {
         const expectedData = await readFile(publishFile);
 
         // act
-        const root = await rootDir();
-        const updatedFile = await publishPost(root, `2020-01-01-draft.md`);
+        const updatedFile = await publishPost(`2020-01-01-draft.md`);
         const actualData = await readFile(path.join(__dirname, '../../site/posts/', updatedFile));
 
         // assert
@@ -57,8 +54,7 @@ describe('publishPost', () => {
         const expectedData = await readFile(publishFile);
 
         // act
-        const root = await rootDir();
-        const updatedFile = await publishPost(root, `${moment().format('YYYY-MM-DD')}-draft.md`);
+        const updatedFile = await publishPost(`${moment().format('YYYY-MM-DD')}-draft.md`);
         const actualData = await readFile(path.join(__dirname, '../../site/posts/', updatedFile));
 
         // assert
@@ -67,12 +63,11 @@ describe('publishPost', () => {
 
     it('will check if the posts.json file was updated', async () => {
         // arrange
-        const root = await rootDir();
-        const path = `${root}/site/dist/posts.json`;
+        const path = './site/dist/posts.json';
         const lastTimeUpdated = fs.statSync(path).mtime;
 
         // act
-        await publishPost(root, `${moment().format('YYYY-MM-DD')}-draft.md`);
+        await publishPost(`${moment().format('YYYY-MM-DD')}-draft.md`);
         const newTimeUpdated = fs.statSync(path).mtime;
 
         // assert

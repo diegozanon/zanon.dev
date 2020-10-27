@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import * as marked from 'marked';
 import { Page, PostsJson, PostMeta, PostStatus } from '../../common/types';
 import { minifyHtml } from '../../common/minify-html';
-import rootDir from '../../common/root-dir';
 import { yamlToJson } from '../../common/yaml';
 
 const getPageHtml = async (page: string): Promise<string> => {
@@ -33,7 +32,7 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
 /** This function updates the posts.json and site.json files. */
 export const updateJsons = async (output?: string): Promise<void> => {
 
-    const root = output || await rootDir();
+    const root = output || '.';
     const postsPath = `${root}/site/posts`;
     const templatePath = `${root}/site/pages/post.html`;
 

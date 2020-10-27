@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import * as moment from 'moment';
 import filterAsync from 'node-filter-async';
 import { EOL } from 'os';
-import rootDir from '../common/root-dir';
 import { jsonToYaml, yamlToJson } from '../common/yaml';
 import { PostHeader, PostStatus } from '../common/types';
 import { updateJsons } from '../deploy/lib/update-jsons';
@@ -15,11 +14,11 @@ const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
 }
 
 /** Select only files where status is draft */
-export const getDraftPosts = async (root: string): Promise<Array<string>> => {
-    const posts = await fs.promises.readdir(`${root}/site/posts`);
+export const getDraftPosts = async (): Promise<Array<string>> => {
+    const posts = await fs.promises.readdir('./site/posts');
 
     return await filterAsync(posts, async post => {
-        const data = await fs.promises.readFile(`${root}/site/posts/${post}`, 'utf8');
+        const data = await fs.promises.readFile(`./site/posts/${post}`, 'utf8');
         return (await convertHeaderToJson(data)).status === PostStatus.Draft;
     });
 }
@@ -30,10 +29,10 @@ export const getDraftPosts = async (root: string): Promise<Array<string>> => {
  * Publishing a post will also update the posts.json file
  * @returns new file name, which will be the same if the date hasn't changed
  */
-export const publishPost = async (root: string, name: string): Promise<string> => {
+export const publishPost = async (name: string): Promise<string> => {
 
     // set status to publish
-    const data = await fs.promises.readFile(`${root}/site/posts/${name}`, 'utf8');
+    const data = await fs.promises.readFile(`./site/posts/${name}`, 'utf8');
     const obj = await convertHeaderToJson(data);
     obj.status = PostStatus.Publish;
 
@@ -47,15 +46,15 @@ export const publishPost = async (root: string, name: string): Promise<string> =
     let filename: string;
     if (currentDate === fileDate) {
         // overwrite current file
-        fs.promises.writeFile(`${root}/site/posts/${name}`, md);
+        fs.promises.writeFile(`./site/posts/${name}`, md);
         filename = name;
     } else {
         // create a new file to use current date
         const newName = currentDate + name.substring(10);
-        await fs.promises.writeFile(`${root}/site/posts/${newName}`, md);
+        await fs.promises.writeFile(`./site/posts/${newName}`, md);
 
         // delete previous file
-        await fs.promises.unlink(`${root}/site/posts/${name}`);
+        await fs.promises.unlink(`./site/posts/${name}`);
 
         filename = newName;
     }
@@ -72,8 +71,7 @@ export const publishPost = async (root: string, name: string): Promise<string> =
 if (require.main === module) {
 
     (async (): Promise<void> => {
-        const root = await rootDir();
-        const posts = await getDraftPosts(root);
+        const posts = await getDraftPosts();
 
         if (posts.length === 0) {
             console.info('There are no posts to publish.');
@@ -90,7 +88,7 @@ if (require.main === module) {
             return;
         }
 
-        const newName = await publishPost(root, selected.value);
+        const newName = await publishPost(selected.value);
         console.info(`Post ${newName} was marked to be published.`);
     })().catch(console.error);
 }

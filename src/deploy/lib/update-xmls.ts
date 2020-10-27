@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as moment from 'moment';
 import { EOL } from 'os';
 import { Post } from '../../common/types';
-import rootDir from '../../common/root-dir';
 
 interface PageRssOptions {
     title: string;
@@ -27,7 +26,7 @@ const buildPageRss = (options: PageRssOptions): string => {
 /** This function updates the rss.xml file. */
 export const updateRss = async (output?: string): Promise<void> => {
 
-    const root = output || await rootDir();
+    const root = output || '.';
 
     const domain = 'https://zanon.dev';
 
@@ -80,7 +79,7 @@ const buildPageMap = (options: PageMapOptions): string => {
 /** This function updates the sitemap.xml file. */
 export const updateSitemap = async (output?: string): Promise<void> => {
 
-    const root = output || await rootDir();
+    const root = output || '.';
 
     const domain = 'https://zanon.dev';
     const now = moment().format('YYYY-MM-DD');
