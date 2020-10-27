@@ -1,9 +1,8 @@
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { successHandler, errorHandler } from '../common/http-response';
 import { BackendRequestType } from '../common/types';
-import { getComments, registerComment } from './lib/comment';
-import { registerFeedback } from './lib/feedback';
-import { registerVisit } from './lib/visit';
+import { isBot } from './lib/bot';
+import { insertFeedback, insertVisit } from './lib/dynamodb';
 
 export const backend = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
@@ -17,22 +16,26 @@ export const backend = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         if (event.httpMethod === 'GET') {
             const queryStr = event.queryStringParameters;
             if (queryStr && queryStr.requestType === BackendRequestType.Comment) {
-                return await getComments(event);
+                // const comments = await getComments(event);
+                // return successHandler({ data: comments, cors: true });
+                return successHandler({ data: event, cors: true });
             } else {
                 return errorHandler({ error: new Error('Invalid request type'), cors: true })
             }
         }
 
-        switch (body.requestType) {
-            case BackendRequestType.Comment:
-                await registerComment(event);
-                break;
-            case BackendRequestType.Feedback:
-                await registerFeedback(event);
-                break;
-            case BackendRequestType.Visit:
-                await registerVisit(event);
-                break;
+        if (!isBot(event.requestContext.identity.userAgent)) {
+            switch (body.requestType) {
+                case BackendRequestType.Comment:
+                    // await insertComment();
+                    break;
+                case BackendRequestType.Feedback:
+                    await insertFeedback(body.page, body.action);
+                    break;
+                case BackendRequestType.Visit:
+                    await insertVisit(body.page, body.action);
+                    break;
+            }
         }
 
         return successHandler({ message: 'success', cors: true });
