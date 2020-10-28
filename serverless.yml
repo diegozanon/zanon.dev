@@ -51,6 +51,8 @@ functions:
     events:
       - http: GET /backend
       - http: POST /backend
+      - http: PUT /backend
+      - http: DELETE /backend
       - http: OPTIONS /backend
     memorySize: 512
     timeout: 10       
@@ -68,6 +70,23 @@ plugins:
 
 resources:
   Resources:
+    CommentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Comments
+        AttributeDefinitions:
+          - AttributeName: Page
+            AttributeType: S
+          - AttributeName: GUID
+            AttributeType: S            
+        KeySchema:
+          - AttributeName: Page
+            KeyType: HASH
+          - AttributeName: GUID
+            KeyType: RANGE            
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5  
     FeedbackTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -83,8 +102,8 @@ resources:
           - AttributeName: Timestamp
             KeyType: RANGE            
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5    
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2    
     VisitsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -108,8 +127,11 @@ custom:
     webpackConfig: ./webpack.config.ts
   dynamodbAutoscaling:
     tablesConfig:
+      CommentsTable:
+        maxCapacity: 20     
       FeedbackTable:
-        maxCapacity: 20      
+        maxCapacity: 20     
+        minCapacity: 2 
       VisitsTable:
         maxCapacity: 20
 

@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk';
 import * as moment from 'moment';
 
-const documentclient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.REGION });
+const documentClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.REGION });
 const ses = new AWS.SES({ apiVersion: '2010-12-01', region: process.env.REGION });
 
 interface QueryResult {
@@ -24,7 +24,7 @@ const scanFeedback = async (lastEvaluatedKey?: AWS.DynamoDB.DocumentClient.Key):
         params.ExclusiveStartKey = lastEvaluatedKey;
     }
 
-    const data = await documentclient.scan(params).promise();
+    const data = await documentClient.scan(params).promise();
 
     const result: QueryResult = {
         Items: data.Items,
@@ -59,7 +59,7 @@ const queryVisits = async (period: string, lastEvaluatedKey?: AWS.DynamoDB.Docum
         params.ExclusiveStartKey = lastEvaluatedKey;
     }
 
-    const data = await documentclient.query(params).promise();
+    const data = await documentClient.query(params).promise();
 
     const result: QueryResult = {
         Items: data.Items,

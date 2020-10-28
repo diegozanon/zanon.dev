@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 if (process.argv.length !== 3) { // npm run executes as `ts-node <this-file> <test-type>` (3 arguments)
-    console.info('Usage: npm run test-deploy (comment | feedback | visit).');
+    console.info('Usage: npm run test-backend (comment | feedback | visit).');
     throw Error('Incorrect number of arguments.');
 }
 
