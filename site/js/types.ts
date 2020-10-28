@@ -45,7 +45,6 @@ export enum FeedbackType {
     Dislike = 'dislike'
 }
 
-export interface Vote {
-    page: string;
-    action: FeedbackType;
+export interface Votes {
+    [page: string]: FeedbackType;
 }

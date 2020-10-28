@@ -1,36 +1,48 @@
 import { lambdaURL } from './config';
 import storage from './storage';
-import { FeedbackType, Vote } from './types';
+import { BackendRequestType, FeedbackType, Votes } from './types';
 
 const sendFeedback = async (action: FeedbackType): Promise<void> => {
-    let votes = JSON.parse(storage.get('votes')) as Vote[];
+    let votes = JSON.parse(storage.get('votes')) as Votes;
 
     const page = window.location.pathname;
-    if (!votes || !votes.find(vote => vote.page === page)) {
+    if (!votes || !Object.keys(votes).find(_page => _page === page)) {
 
-        const vote = { page, action };
         const rawResponse = await fetch(lambdaURL, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(vote)
+            body: JSON.stringify({ page, action, requestType: BackendRequestType.Feedback })
         });
 
         await rawResponse.json();
-
-        votes = votes || [];
-        votes.push(vote);
-
-        storage.set('votes', JSON.stringify(votes));
     }
+
+    votes = votes || {};
+    votes[page] = action;
+
+    storage.set('votes', JSON.stringify(votes));
 }
 
 export const configureFeedback = (): void => {
     if (document.getElementById('feedback')) {
         const heart = document.querySelectorAll('#feedback .heart')[0];
         const brokenHeart = document.querySelectorAll('#feedback .broken-heart')[0];
+
+        const votes = JSON.parse(storage.get('votes')) as Votes;
+        if (votes) {
+            const page = Object.keys(votes).find(page => page === window.location.pathname);
+
+            if (votes[page] === FeedbackType.Like) {
+                heart.classList.remove('grayscale');
+                brokenHeart.classList.add('grayscale');
+            } else if (votes[page] === FeedbackType.Dislike) {
+                heart.classList.add('grayscale');
+                brokenHeart.classList.remove('grayscale');
+            }
+        }
 
         heart.addEventListener('click', async (): Promise<void> => {
             heart.classList.remove('grayscale');
@@ -47,3 +59,5 @@ export const configureFeedback = (): void => {
         });
     }
 }
+
+configureFeedback();
