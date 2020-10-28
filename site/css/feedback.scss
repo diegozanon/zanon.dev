@@ -8,6 +8,14 @@
         padding: 0px 5px;
     }
 
+    .grayscale {
+        filter: grayscale(1);
+
+        &:hover {
+            filter: grayscale(0);
+        }
+    }
+
     .heart:hover {
         animation: 1.5s pulsate infinite alternate ease-in-out;
     }
