@@ -39,3 +39,13 @@ export enum BackendRequestType {
     Feedback = 'feedback',
     Visit = 'visit'
 }
+
+export enum FeedbackType {
+    Like = 'like',
+    Dislike = 'dislike'
+}
+
+export interface Vote {
+    page: string;
+    action: FeedbackType;
+}

@@ -1,2 +1,2 @@
-import './theme-switcher';
 import './spa';
+import './theme-switcher';

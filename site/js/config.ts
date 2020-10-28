@@ -1,0 +1,1 @@
+export const lambdaURL = 'https://xhhvlegyd5.execute-api.us-east-1.amazonaws.com/prod/backend';
