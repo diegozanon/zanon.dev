@@ -69,11 +69,8 @@ export const newComment = async (httpMethod: string, page: string, username: str
 
     validateSize(page, 5, 150);
     validateSize(guid, 36, 36);
-
-    if (httpMethod !== 'DELETE') {
-        validateSize(username, 2, 100);
-        validateSize(comment, 10, 5000);
-    }
+    validateSize(username, 2, 100);
+    validateSize(comment, 10, 5000);
 
     const timestamp = moment().format('YYYY-MM-DDThh:mm:ss.SSSZ');
 

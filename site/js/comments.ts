@@ -24,27 +24,28 @@ const addEditDeleteButtons = (guid: string): string => {
     `;
 }
 
-const addEditDeleteButtonsIfOwner = (page: string, timestamp: string): string => {
+const addComment = (comment: Comment): string => {
 
-    const comments = getStorageComments();
-
-    for (const comment of comments) {
-        if (comment.page === page && comment.timestamp === timestamp) {
-            return addEditDeleteButtons(comment.guid);
+    let editDeleteButtons = '';
+    if (comment.guid) {
+        editDeleteButtons = addEditDeleteButtons(comment.guid);
+    } else {
+        // check if the comment is saved in local storage
+        const savedComments = getStorageComments();
+        for (const savedComment of savedComments) {
+            if (comment.page === savedComment.page && comment.timestamp === savedComment.timestamp) {
+                editDeleteButtons = addEditDeleteButtons(savedComment.guid);
+            }
         }
     }
 
-    return '';
-}
-
-const addComment = (comment: Comment): string => {
     return `
         <comment>
             <div class="avatar">${comment.username.substring(0, 1)}</div>
             <div class="timestamp">${printTimestamp(comment.timestamp)}</div>
             <h3>${comment.username}</h3>
             ${comment.comment}
-            ${addEditDeleteButtonsIfOwner(comment.page, comment.timestamp)}
+            ${editDeleteButtons}
         </comment>
     `;
 }
@@ -74,7 +75,7 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
     const localTimestamp = new Date().toString();
     const newComment = { page, username, comment, timestamp: localTimestamp, guid };
     const commentsElm = document.getElementsByTagName('comments')[0];
-    commentsElm.innerHTML += addComment(newComment) + addEditDeleteButtons(guid);
+    commentsElm.innerHTML += addComment(newComment);
 
     const rawResponse = await fetch(lambdaURL, {
         method: 'POST',
