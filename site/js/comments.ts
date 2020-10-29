@@ -57,62 +57,78 @@ const uuidv4 = (): string => {
     );
 }
 
-export const fillComments = async (page: string): Promise<void> => {
+const headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+};
 
-    const url = `${lambdaURL}?requestType=${BackendRequestType.Comment}&page=${page.substring(1)}`;
-    const rawResponse = await fetch(url);
-    const comments = ((await rawResponse.json()).data as Comment[]).sort((c1, c2) => {
-        return new Date(c2.timestamp).getTime() - new Date(c1.timestamp).getTime()
+const newCommentClickEvent = async (page: string): Promise<void> => {
+    const userElm = document.querySelector('comment-box .comment-username') as HTMLInputElement;
+    const commentElm = document.querySelector('comment-box .comment-text') as HTMLTextAreaElement;
+    const username = userElm.value;
+    const comment = commentElm.value;
+    userElm.value = '';
+    commentElm.value = '';
+
+    const guid = uuidv4();
+    const localTimestamp = new Date().toString();
+    const newComment = { page, username, comment, timestamp: localTimestamp, guid };
+    const commentsElm = document.getElementsByTagName('comments')[0];
+    commentsElm.innerHTML += addComment(newComment) + addEditDeleteButtons(guid);
+
+    const rawResponse = await fetch(lambdaURL, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+            page,
+            username,
+            comment,
+            guid,
+            requestType: BackendRequestType.Comment
+        })
     });
 
-    let commentsHtml = '';
-    for (const comment of comments) {
-        comment.page = page;
-        commentsHtml += addComment(comment);
+    const serverTimestamp = (await rawResponse.json()).data.timestamp;
+
+    newComment.timestamp = serverTimestamp;
+    const savedComments = getStorageComments();
+    savedComments.push(newComment);
+    setStorageComments(savedComments);
+}
+
+const addDeleteCommentClickEvent = (page: string): void => {
+    const deleteElms = document.getElementsByClassName('delete-comment') as HTMLCollectionOf<HTMLElement>;
+    for (const deleteElm of deleteElms) {
+        deleteElm.onclick = async (): Promise<void> => {
+
+            const guid = deleteElm.dataset.guid;
+            let savedComments = getStorageComments();
+            const commentToDelete = savedComments.find((el: Comment) => { return el.guid === guid });
+
+            const commentDiv = deleteElm.parentNode;
+            commentDiv.parentNode.removeChild(commentDiv);
+
+            const rawResponse = await fetch(lambdaURL, {
+                method: 'DELETE',
+                headers,
+                body: JSON.stringify({
+                    page,
+                    username: commentToDelete.username,
+                    comment: commentToDelete.comment,
+                    guid,
+                    requestType: BackendRequestType.Comment
+                })
+            });
+
+            await rawResponse.json();
+
+            savedComments = savedComments.filter((el: Comment) => { return el.guid !== guid });
+            setStorageComments(savedComments);
+        }
     }
+}
 
-    const commentsElm = document.getElementsByTagName('comments')[0];
-    commentsElm.innerHTML = commentsHtml;
-
-    const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    };
-
-    (document.querySelector('comment-box .send-comment') as HTMLInputElement).onclick = async (): Promise<void> => {
-
-        const userElm = document.querySelector('comment-box .comment-username') as HTMLInputElement;
-        const commentElm = document.querySelector('comment-box .comment-text') as HTMLTextAreaElement;
-        const username = userElm.value;
-        const comment = commentElm.value;
-        userElm.value = '';
-        commentElm.value = '';
-
-        const guid = uuidv4();
-        const localTimestamp = new Date().toString();
-        const newComment = { page, username, comment, timestamp: localTimestamp, guid };
-        commentsElm.innerHTML += addComment(newComment) + addEditDeleteButtons(guid);
-
-        const rawResponse = await fetch(lambdaURL, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-                page,
-                username,
-                comment,
-                guid,
-                requestType: BackendRequestType.Comment
-            })
-        });
-
-        const serverTimestamp = (await rawResponse.json()).data.timestamp;
-
-        newComment.timestamp = serverTimestamp;
-        const savedComments = getStorageComments();
-        savedComments.push(newComment);
-        setStorageComments(savedComments);
-    }
-
+const addEditCommentClickEvent = (page: string): void => {
     const editElms = document.getElementsByClassName('edit-comment') as HTMLCollectionOf<HTMLElement>;
     for (const editElm of editElms) {
         editElm.onclick = (): void => {
@@ -132,6 +148,14 @@ export const fillComments = async (page: string): Promise<void> => {
             commentElm.value = commentToEdit.comment;
 
             sendElm.onclick = async (): Promise<void> => {
+
+                commentDiv.innerHTML = addComment({
+                    page,
+                    username: userElm.value,
+                    comment: commentElm.value,
+                    timestamp: commentToEdit.timestamp
+                });
+
                 const rawResponse = await fetch(lambdaURL, {
                     method: 'PUT',
                     headers,
@@ -146,47 +170,40 @@ export const fillComments = async (page: string): Promise<void> => {
 
                 await rawResponse.json();
 
-                commentDiv.innerHTML = addComment({
-                    page,
-                    username: userElm.value,
-                    comment: commentElm.value,
-                    timestamp: commentToEdit.timestamp
-                });
-
                 commentToEdit.username = userElm.value;
                 commentToEdit.comment = commentElm.value;
                 setStorageComments(savedComments);
+
+                addEditCommentClickEvent(page);
+                addDeleteCommentClickEvent(page);
             }
         }
     }
+}
 
-    const deleteElms = document.getElementsByClassName('delete-comment') as HTMLCollectionOf<HTMLElement>;
-    for (const deleteElm of deleteElms) {
-        deleteElm.onclick = async (): Promise<void> => {
+export const fillComments = async (page: string): Promise<void> => {
 
-            const guid = deleteElm.dataset.guid;
-            let savedComments = getStorageComments();
-            const commentToDelete = savedComments.find((el: Comment) => { return el.guid === guid });
+    const url = `${lambdaURL}?requestType=${BackendRequestType.Comment}&page=${page.substring(1)}`;
+    const rawResponse = await fetch(url);
+    const comments = ((await rawResponse.json()).data as Comment[]).sort((c1, c2) => {
+        return new Date(c2.timestamp).getTime() - new Date(c1.timestamp).getTime()
+    });
 
-            const rawResponse = await fetch(lambdaURL, {
-                method: 'DELETE',
-                headers,
-                body: JSON.stringify({
-                    page,
-                    username: commentToDelete.username,
-                    comment: commentToDelete.comment,
-                    guid,
-                    requestType: BackendRequestType.Comment
-                })
-            });
-
-            await rawResponse.json();
-
-            const commentDiv = deleteElm.parentNode;
-            commentDiv.parentNode.removeChild(commentDiv);
-
-            savedComments = savedComments.filter((el: Comment) => { return el.guid !== guid });
-            setStorageComments(savedComments);
-        }
+    let commentsHtml = '';
+    for (const comment of comments) {
+        comment.page = page;
+        commentsHtml += addComment(comment);
     }
+
+    const commentsElm = document.getElementsByTagName('comments')[0];
+    commentsElm.innerHTML = commentsHtml;
+
+    (document.querySelector('comment-box .send-comment') as HTMLInputElement).onclick = async (): Promise<void> => {
+        await newCommentClickEvent(page);
+        addEditCommentClickEvent(page);
+        addDeleteCommentClickEvent(page);
+    }
+
+    addEditCommentClickEvent(page);
+    addDeleteCommentClickEvent(page);
 }
