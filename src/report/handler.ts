@@ -1,5 +1,6 @@
 import * as AWS from 'aws-sdk';
 import * as moment from 'moment';
+import { FeedbackType, VisitType } from '../common/types';
 
 const documentClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.REGION });
 const ses = new AWS.SES({ apiVersion: '2010-12-01', region: process.env.REGION });
@@ -101,10 +102,10 @@ export const report = async (): Promise<void> => {
         };
 
         switch (item.Action) {
-            case 'like':
+            case FeedbackType.Like:
                 feedbackCounts[item.Page].CountLikes++;
                 break;
-            case 'dislike':
+            case FeedbackType.Dislike:
                 feedbackCounts[item.Page].CountDislikes++;
                 break;
         }
@@ -119,10 +120,10 @@ export const report = async (): Promise<void> => {
         };
 
         switch (item.Action) {
-            case 'read':
+            case VisitType.Read:
                 pageCounts[item.Page].CountReads++;
                 break;
-            case 'clicked':
+            case VisitType.Clicked:
                 pageCounts[item.Page].CountClicks++;
                 break;
         }

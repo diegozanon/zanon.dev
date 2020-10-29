@@ -4,12 +4,15 @@ import * as moment from 'moment';
 
 const documentClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.REGION });
 
-const validateSize = (text: string, limit: number): void => {
-    if (text.length > limit)
+const validateSize = (text: string, minLimit: number, maxLimit: number): void => {
+    if (text.length > maxLimit)
         throw new Error('Text is bigger than its limit size.')
+    if (text.length < minLimit)
+        throw new Error('Text is smaller than its limit size.')
 }
 
 interface QueryResult {
+    username: string;
     comment: string;
     timestamp: string;
 }
@@ -19,7 +22,7 @@ const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.Docum
     const params: AWS.DynamoDB.DocumentClient.QueryInput = {
         TableName: 'Comments',
         Select: 'SPECIFIC_ATTRIBUTES',
-        ProjectionExpression: '#C, #T',
+        ProjectionExpression: 'Username, #C, #T',
         ExpressionAttributeNames: { // Comment and Timestamp are reserved words
             '#C': 'Comment',
             '#T': 'Timestamp'
@@ -41,6 +44,7 @@ const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.Docum
     const result: QueryResult[] = [];
     for (const item of data.Items) {
         result.push({
+            username: item.Username,
             comment: marked(item.Comment),
             timestamp: item.Timestamp
         });
@@ -56,16 +60,22 @@ const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.Docum
 
 export const getComments = async (page: string): Promise<QueryResult[]> => {
 
-    validateSize(page, 150);
+    validateSize(page, 5, 150);
 
     return await queryComments(page);
 }
 
-export const newComment = async (httpMethod: string, page: string, comment: string, guid: string): Promise<void> => {
+export const newComment = async (httpMethod: string, page: string, username: string, comment: string, guid: string): Promise<string> => {
 
-    validateSize(page, 150);
-    validateSize(comment, 5000);
-    validateSize(guid, 36);
+    validateSize(page, 5, 150);
+    validateSize(guid, 36, 36);
+
+    if (httpMethod !== 'DELETE') {
+        validateSize(username, 2, 100);
+        validateSize(comment, 10, 5000);
+    }
+
+    const timestamp = moment().format('YYYY-MM-DDThh:mm:ss.SSSZ');
 
     switch (httpMethod) {
         case 'POST':
@@ -74,8 +84,9 @@ export const newComment = async (httpMethod: string, page: string, comment: stri
                 Item: {
                     Page: page,
                     GUID: guid,
+                    Username: username,
                     Comment: comment,
-                    Timestamp: moment().format('YYYY-MM-DDThh:mm:ss.SSSZ')
+                    Timestamp: timestamp
                 }
             }).promise();
             break;
@@ -86,13 +97,13 @@ export const newComment = async (httpMethod: string, page: string, comment: stri
                     'Page': page,
                     'GUID': guid
                 },
-                UpdateExpression: 'set #C = :comment',
+                UpdateExpression: 'set Username = :username, #C = :comment',
                 ExpressionAttributeNames: { '#C': 'Comment' }, // Comment is a reserved word
                 ExpressionAttributeValues: {
-                    ':comment': comment
+                    ':comment': comment,
+                    ':username': username
                 },
-                ConditionExpression: 'attribute_exists(Page) and attribute_exists(GUID)',
-                ReturnValues: 'UPDATED_OLD'
+                ConditionExpression: 'attribute_exists(Page) and attribute_exists(GUID)'
             }).promise();
             break;
         case 'DELETE':
@@ -102,17 +113,18 @@ export const newComment = async (httpMethod: string, page: string, comment: stri
                     'Page': page,
                     'GUID': guid
                 },
-                ConditionExpression: 'attribute_exists(Page) and attribute_exists(GUID)',
-                ReturnValues: 'ALL_OLD'
+                ConditionExpression: 'attribute_exists(Page) and attribute_exists(GUID)'
             }).promise();
             break;
     }
+
+    return timestamp;
 }
 
 export const insertVisit = async (page: string, action: string): Promise<void> => {
 
-    validateSize(page, 150);
-    validateSize(action, 7);
+    validateSize(page, 1, 150);
+    validateSize(action, 4, 7);
 
     await documentClient.put({
         TableName: 'Visits',
@@ -127,8 +139,8 @@ export const insertVisit = async (page: string, action: string): Promise<void> =
 
 export const insertFeedback = async (page: string, action: string): Promise<void> => {
 
-    validateSize(page, 150);
-    validateSize(action, 7);
+    validateSize(page, 5, 150);
+    validateSize(action, 4, 7);
 
     await documentClient.put({
         TableName: 'Feedback',
