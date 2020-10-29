@@ -28,8 +28,8 @@ const sendFeedback = async (action: FeedbackType): Promise<void> => {
 
 export const configureFeedback = (): void => {
     if (document.getElementById('feedback')) {
-        const heart = document.querySelectorAll('#feedback .heart')[0];
-        const brokenHeart = document.querySelectorAll('#feedback .broken-heart')[0];
+        const heart = document.querySelectorAll('#feedback .heart')[0] as HTMLElement;
+        const brokenHeart = document.querySelectorAll('#feedback .broken-heart')[0] as HTMLElement;
 
         const votes = JSON.parse(storage.get('votes')) as Votes;
         if (votes) {
@@ -44,19 +44,19 @@ export const configureFeedback = (): void => {
             }
         }
 
-        heart.addEventListener('click', async (): Promise<void> => {
+        heart.onclick = async (): Promise<void> => {
             heart.classList.remove('grayscale');
             brokenHeart.classList.add('grayscale');
 
             await sendFeedback(FeedbackType.Like);
-        });
+        }
 
-        brokenHeart.addEventListener('click', async (): Promise<void> => {
+        brokenHeart.onclick = async (): Promise<void> => {
             heart.classList.add('grayscale');
             brokenHeart.classList.remove('grayscale');
 
             await sendFeedback(FeedbackType.Dislike);
-        });
+        }
     }
 }
 

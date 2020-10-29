@@ -72,9 +72,9 @@ const toggleTheme = (): void => {
     setTheme(isLightTheme);
 }
 
-switcher.addEventListener('click', (): void => {
+switcher.onclick = (): void => {
     toggleTheme();
-});
+}
 
 switcher.parentNode.addEventListener('keydown', (event: KeyboardEvent): void => {
     if (event.code === 'Enter' || event.code === 'Space') {
