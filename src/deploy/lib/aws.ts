@@ -15,6 +15,10 @@ const getMimeType = (file: string): string => {
         mime = 'application/rss+xml';
     }
 
+    if (file.endsWith('.amphtml')) {
+        mime = 'text/html';
+    }
+
     return mime || 'text/html';
 }
 
@@ -90,7 +94,7 @@ export const uploadPosts = async (folder: string): Promise<void> => {
         }
 
         const ext = path.extname(file);
-        const extToUpload = ['', '.html', '.json', '.xml'];
+        const extToUpload = ['', '.html', '.json', '.xml', '.amphtml'];
 
         if (!extToUpload.includes(ext)) {
             continue;

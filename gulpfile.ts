@@ -6,6 +6,7 @@ import { uploadAll, invalidateCache } from './src/deploy/lib/aws';
 import { renderFullPages } from './src/deploy/lib/render-full-pages';
 import { updateJsons } from './src/deploy/lib/update-jsons';
 import { updateRss, updateSitemap } from './src/deploy/lib/update-xmls';
+import { ampify } from './src/gulp/ampify';
 import { avoidCache, copyToDist } from './src/gulp/build-html';
 import { buildSass, buildSassWatch } from './src/gulp/build-sass';
 import { buildTS, buildTSWatch } from './src/gulp/build-ts';
@@ -54,6 +55,8 @@ gulp.task('build-html:watch', done => {
     done();
 });
 
+gulp.task('ampify', ampify);
+
 gulp.task('deploy-aws', async done => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,7 +73,7 @@ gulp.task('deploy-aws', async done => {
 
 gulp.task('serve', serve);
 
-gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html']));
-gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch']));
+gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html', 'ampify']));
+gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch', 'ampify']));
 gulp.task('deploy', gulp.series(['build', 'deploy-aws']));
 gulp.task('default', gulp.series(['build:watch', 'serve']));
