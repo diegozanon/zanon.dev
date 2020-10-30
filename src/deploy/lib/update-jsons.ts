@@ -14,9 +14,9 @@ const createLink = (slug: string, title: string): string => {
     return `<a href="/${slug}">${title}</a>`;
 }
 
-const insertPage = (src: string, fragment: string, htmlTag: string): string => {
+const insertPage = (src: string, fragment: string, htmlId: string): string => {
     const $ = cheerio.load(src);
-    $(htmlTag).html(fragment);
+    $(`#${htmlId}`).html(fragment);
     return $.html();
 }
 

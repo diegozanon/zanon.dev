@@ -3,22 +3,15 @@ import { PutObjectRequest } from 'aws-sdk/clients/s3';
 import * as fs from 'fs';
 import * as mimeTypes from 'mime-types';
 import * as path from 'path';
+import { isDir } from '../../common/fs-utils';
 
 const s3 = new AWS.S3({ apiVersion: '2006-03-01', region: process.env.REGION });
 const cloudfront = new AWS.CloudFront({ apiVersion: '2020-05-31' });
 
-const isDir = async (file: string): Promise<boolean> => {
-    try {
-        return (await fs.promises.lstat(file)).isDirectory();
-    } catch (_) {
-        return false;
-    }
-}
-
 const getMimeType = (file: string): string => {
     let mime = mimeTypes.lookup(file);
 
-    if (file.split('/').pop() === 'feed') {
+    if (file.endsWith('/feed')) {
         mime = 'application/rss+xml';
     }
 
@@ -96,9 +89,10 @@ export const uploadPosts = async (folder: string): Promise<void> => {
             continue;
         }
 
-        const ext = path.extname(file)
+        const ext = path.extname(file);
+        const extToUpload = ['', '.html', '.json', '.xml'];
 
-        if (ext && (ext !== '.html' && ext !== '.json' && ext !== '.xml')) {
+        if (!extToUpload.includes(ext)) {
             continue;
         }
 

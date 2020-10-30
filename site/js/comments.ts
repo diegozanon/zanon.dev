@@ -74,7 +74,7 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
     const guid = uuidv4();
     const localTimestamp = new Date().toString();
     const newComment = { page, username, comment, timestamp: localTimestamp, guid };
-    const commentsElm = document.getElementsByTagName('comments')[0];
+    const commentsElm = document.getElementById('comments')[0];
     commentsElm.innerHTML += addComment(newComment);
 
     const rawResponse = await fetch(lambdaURL, {
@@ -196,7 +196,7 @@ export const fillComments = async (page: string): Promise<void> => {
         commentsHtml += addComment(comment);
     }
 
-    const commentsElm = document.getElementsByTagName('comments')[0];
+    const commentsElm = document.getElementById('comments')[0];
     commentsElm.innerHTML = commentsHtml;
 
     (document.querySelector('comment-box .send-comment') as HTMLInputElement).onclick = async (): Promise<void> => {
