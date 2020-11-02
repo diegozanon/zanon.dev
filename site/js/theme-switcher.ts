@@ -76,8 +76,8 @@ switcher.onclick = (): void => {
     toggleTheme();
 }
 
-switcher.parentNode.addEventListener('keydown', (event: KeyboardEvent): void => {
+(switcher.parentNode as HTMLElement).onkeydown = (event: KeyboardEvent): void => {
     if (event.code === 'Enter' || event.code === 'Space') {
         toggleTheme();
     }
-});
+};

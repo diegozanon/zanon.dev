@@ -14,9 +14,9 @@ const createLink = (slug: string, title: string): string => {
     return `<a href="/${slug}">${title}</a>`;
 }
 
-const insertPage = (src: string, fragment: string, htmlId: string): string => {
+const insertPage = (src: string, fragment: string, htmlSelector: string): string => {
     const $ = cheerio.load(src);
-    $(`#${htmlId}`).html(fragment);
+    $(htmlSelector).html(fragment);
     return $.html();
 }
 
@@ -26,7 +26,7 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
         links += createLink(post.header.slug, post.header.title);
     }
 
-    return insertPage(page, links, 'posts');
+    return insertPage(page, links, '#posts');
 }
 
 /** This function updates the posts.json and site.json files. */

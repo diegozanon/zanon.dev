@@ -3,9 +3,9 @@ import * as fs from 'fs';
 import { Page, PostsJson } from '../../common/types';
 import { minifyHtml } from '../../common/minify-html';
 
-const insertPage = (src: string, fragment: string, htmlTag: string): string => {
+const insertPage = (src: string, fragment: string, htmlSelector: string): string => {
     const $ = cheerio.load(src);
-    $(htmlTag).html(fragment);
+    $(htmlSelector).html(fragment);
     return $.html();
 }
 
@@ -29,7 +29,7 @@ export const renderFullPages = async (output?: string): Promise<void> => {
     }
 
     for (const post of postsJson.posts) {
-        const partialPostHtml = insertPage(postsJson.template, post.html, 'post');
+        const partialPostHtml = insertPage(postsJson.template, post.html, 'article');
         const postHtml = changeTitle(insertPage(index, partialPostHtml, 'main'), post.header.title);
         await fs.promises.writeFile(`${dist}/${post.header.slug}`, minifyHtml(postHtml));
     }

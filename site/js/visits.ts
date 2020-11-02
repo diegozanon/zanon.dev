@@ -33,7 +33,10 @@ const scrollEvent = async (): Promise<void> => {
         nbOfScrolls++;
 
         if (nbOfScrolls === 3) {
-            window.removeEventListener('scroll', scrollEvent);
+            window.onscroll = (): void => {
+                // do nothing
+            }
+
             await sendVisited(page, VisitType.Read);
         }
     }
@@ -46,12 +49,12 @@ export const configureReadVisit = (): void => {
 
     if (isPost) {
         // send read event after 3 scrolls        
-        window.addEventListener('scroll', scrollEvent);
+        window.onscroll = scrollEvent;
     } else {
-        // send read event after 10 seconds
+        // send read event after 7 seconds
         readTimeout = setTimeout(async () => {
             await sendVisited(page, VisitType.Read);
-        }, 10000);
+        }, 7000);
     }
 }
 
@@ -60,5 +63,8 @@ export const clearReadVisit = (): void => {
     clearTimeout(readTimeout);
 
     // remove scroll event listener
-    window.removeEventListener('scroll', scrollEvent);
+    nbOfScrolls = 0;
+    window.onscroll = (): void => {
+        // do nothing
+    }
 }

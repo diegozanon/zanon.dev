@@ -40,7 +40,7 @@ const configureSPA = (): void => {
 
         document.title = post.header.title;
 
-        const data = postsJson.template.replace('<post></post>', `<post>${post.html}</post>`);
+        const data = postsJson.template.replace('<article></article>', `<article>${post.html}</article>`);
         loadData(data);
         fillComments(targetLink);
     }

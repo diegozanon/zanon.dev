@@ -40,13 +40,13 @@ const addComment = (comment: Comment): string => {
     }
 
     return `
-        <comment>
+        <div id="comment">
             <div class="avatar">${comment.username.substring(0, 1)}</div>
             <div class="timestamp">${printTimestamp(comment.timestamp)}</div>
             <h3>${comment.username}</h3>
             ${comment.comment}
             ${editDeleteButtons}
-        </comment>
+        </div>
     `;
 }
 
@@ -64,8 +64,8 @@ const headers = {
 };
 
 const newCommentClickEvent = async (page: string): Promise<void> => {
-    const userElm = document.querySelector('comment-box .comment-username') as HTMLInputElement;
-    const commentElm = document.querySelector('comment-box .comment-text') as HTMLTextAreaElement;
+    const userElm = document.querySelector('#comment-widget .comment-username') as HTMLInputElement;
+    const commentElm = document.querySelector('#comment-widget .comment-text') as HTMLTextAreaElement;
     const username = userElm.value;
     const comment = commentElm.value;
     userElm.value = '';
@@ -74,7 +74,7 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
     const guid = uuidv4();
     const localTimestamp = new Date().toString();
     const newComment = { page, username, comment, timestamp: localTimestamp, guid };
-    const commentsElm = document.getElementById('comments')[0];
+    const commentsElm = document.getElementById('comments');
     commentsElm.innerHTML += addComment(newComment);
 
     const rawResponse = await fetch(lambdaURL, {
@@ -135,7 +135,7 @@ const addEditCommentClickEvent = (page: string): void => {
         editElm.onclick = (): void => {
 
             const commentDiv = editElm.parentNode as HTMLElement;
-            const commentBoxDiv = document.querySelector('comment-box');
+            const commentBoxDiv = document.querySelector('#comment-widget');
             commentDiv.innerHTML = commentBoxDiv.outerHTML;
 
             const guid = editElm.dataset.guid;
@@ -196,10 +196,10 @@ export const fillComments = async (page: string): Promise<void> => {
         commentsHtml += addComment(comment);
     }
 
-    const commentsElm = document.getElementById('comments')[0];
+    const commentsElm = document.getElementById('comments');
     commentsElm.innerHTML = commentsHtml;
 
-    (document.querySelector('comment-box .send-comment') as HTMLInputElement).onclick = async (): Promise<void> => {
+    (document.querySelector('#comment-widget .send-comment') as HTMLInputElement).onclick = async (): Promise<void> => {
         await newCommentClickEvent(page);
         addEditCommentClickEvent(page);
         addDeleteCommentClickEvent(page);
