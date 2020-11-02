@@ -118,6 +118,8 @@ const buildCustomJs = async (): Promise<void> => {
 const useCustomJsCss = async (): Promise<void> => {
 
     const jsTag = /<script type="module" src="\/bundle\.min\.mjs\?v=(\d+)"><\/script>/;
+    const siteJson = /<link rel="preload" href="\/site.json\?v=(\d+)" as="fetch" crossorigin>/;
+    const postsJson = /<link rel="preload" href="\/posts.json\?v=(\d+)" as="fetch" crossorigin>/;
 
     const ampVisits = await fs.promises.readFile('./site/dist/amp-visits.min.js', 'utf8');
     const getJsCustom = (pathname: string): string => {
@@ -151,6 +153,8 @@ const useCustomJsCss = async (): Promise<void> => {
     await new Promise(resolve => {
         gulp.src('./site/dist/*.amphtml')
             .pipe(replace(jsTag, ''))
+            .pipe(replace(siteJson, ''))
+            .pipe(replace(postsJson, ''))
             .pipe(replace('</head>', `${jsHash}</head>`))
             .pipe(replace(cssTag, cssCustom))
             .pipe(gulp.dest('./site/dist/'))
