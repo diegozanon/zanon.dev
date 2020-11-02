@@ -12,8 +12,8 @@ import { buildSass, buildSassWatch } from './src/gulp/build-sass';
 import { buildTS, buildTSWatch } from './src/gulp/build-ts';
 import { serve } from './src/gulp/serve';
 
-gulp.task('clean-dist', done => {
-    fse.emptyDirSync('./site/dist');
+gulp.task('clean-dist', async done => {
+    await fse.emptyDir('./site/dist');
     done();
 });
 
