@@ -13,29 +13,32 @@ const runBrowserify = browserify({
     .plugin('tsify')
     .plugin(tinyify);
 
-const buildBrowserify = (browserifyObj): NodeJS.ReadWriteStream => {
-    return browserifyObj
-        .transform('babelify', {
-            presets: ['@babel/preset-modules'],
-            extensions: ['.ts']
-        })
-        .bundle()
-        .pipe(source('bundle.min.mjs'))
-        .pipe(gulp.dest('./site/dist'))
-        .pipe(connect.reload()); // only reloads if the server was started
+const buildBrowserify = async (browserifyObj): Promise<void> => {
+    await new Promise(resolve => {
+        browserifyObj
+            .transform('babelify', {
+                presets: ['@babel/preset-modules'],
+                extensions: ['.ts']
+            })
+            .bundle()
+            .pipe(source('bundle.min.mjs'))
+            .pipe(gulp.dest('./site/dist'))
+            .pipe(connect.reload()) // only reloads if the server was started
+            .on('end', resolve);
+    });
 }
 
-export const buildTS = (done): void => {
-    buildBrowserify(runBrowserify);
+export const buildTS = async (done): Promise<void> => {
+    await buildBrowserify(runBrowserify);
     done();
 }
 
-export const buildTSWatch = (done): void => {
+export const buildTSWatch = async (done): Promise<void> => {
     const watchedBrowserify = watchify(runBrowserify);
-    buildBrowserify(watchedBrowserify);
+    await buildBrowserify(watchedBrowserify);
     watchedBrowserify.on('log', fancyLog);
-    watchedBrowserify.on('update', () => {
-        buildBrowserify(watchedBrowserify);
+    watchedBrowserify.on('update', async (): Promise<void> => {
+        await buildBrowserify(watchedBrowserify);
     });
     done();
 }
