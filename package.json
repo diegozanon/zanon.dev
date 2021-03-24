@@ -13,9 +13,9 @@
         "deploy-lambda": "serverless deploy",
         "offline": "serverless offline",
         "new-post": "ts-node src/scripts/new-post.ts",
-        "publish-post": "ts-node src/scripts/publish-post.ts"
+        "publish-post": "ts-node src/scripts/publish-post.ts",
+        "new-snippet": "ts-node src/scripts/new-snippet.ts"
     },
-    "type": "module",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/diegozanon/zanon.dev.git"
