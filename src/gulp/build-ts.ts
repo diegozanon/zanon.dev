@@ -1,3 +1,4 @@
+import * as gulp from 'gulp';
 import * as connect from 'gulp-connect';
 import { build } from 'esbuild';
 
@@ -10,7 +11,8 @@ export const buildTS = async (done, watch = false): Promise<void> => {
         minify: true,
         watch: watch ? {
             onRebuild(): void {
-                connect.reload();
+                gulp.src('./site/dist/bundle.min.mjs')
+                    .pipe(connect.reload());
             }
         } : false,
         outfile: './site/dist/bundle.min.mjs'
