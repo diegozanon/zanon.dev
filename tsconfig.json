@@ -3,5 +3,8 @@
         "target": "es2018",
         "resolveJsonModule": true,
         "moduleResolution": "node"
-    }
+    },
+    "exclude": [
+        "./site/service-worker.ts"
+    ]
 }

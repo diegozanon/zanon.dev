@@ -12,3 +12,10 @@ const isPost = !notPosts.includes(page);
 if (isPost) {
     fillComments(page);
 }
+
+// Add the service worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // navigator.serviceWorker.register('/service-worker.js');
+    });
+}

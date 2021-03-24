@@ -10,6 +10,7 @@ import { ampify } from './src/gulp/ampify';
 import { avoidCache, copyToDist } from './src/gulp/build-html';
 import { buildSass, buildSassWatch } from './src/gulp/build-sass';
 import { buildTS, buildTSWatch } from './src/gulp/build-ts';
+import { generateSW } from './src/gulp/workbox';
 import { serve } from './src/gulp/serve';
 
 gulp.task('clean-dist', async done => {
@@ -57,6 +58,8 @@ gulp.task('build-html:watch', done => {
 
 gulp.task('ampify', ampify);
 
+gulp.task('generate-service-worker', generateSW);
+
 gulp.task('deploy-aws', async done => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,7 +76,7 @@ gulp.task('deploy-aws', async done => {
 
 gulp.task('serve', serve);
 
-gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html', 'ampify']));
-gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch', 'ampify']));
+gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html', 'ampify', 'generate-service-worker']));
+gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch', 'ampify', 'generate-service-worker']));
 gulp.task('deploy', gulp.series(['build', 'deploy-aws']));
 gulp.task('default', gulp.series(['build:watch', 'serve']));

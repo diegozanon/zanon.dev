@@ -1,4 +1,3 @@
-import * as browserify from 'browserify';
 import * as crypto from 'crypto';
 import * as fancyLog from 'fancy-log';
 import * as fs from 'fs';
@@ -8,9 +7,8 @@ import * as replace from 'gulp-replace';
 import * as path from 'path';
 import { replaceInFile } from 'replace-in-file';
 import * as sharp from 'sharp';
-import * as tinyify from 'tinyify';
-import * as source from 'vinyl-source-stream';
 import { isDir } from '../common/fs-utils';
+import { build } from 'esbuild';
 
 const getCanonicalHtmlFilesExceptIndex = async (): Promise<string[]> => {
     const res = new Array<string>();
@@ -53,7 +51,7 @@ const fixAmpLinks = async (): Promise<void> => {
 }
 
 const duplicateHtmlFiles = async (): Promise<void> => {
-    await fs.promises.copyFile('site/dist/index.html', 'site/dist/index.html.amphtml');
+    await fs.promises.copyFile('site/dist/index.html', 'site/dist/index.amphtml');
 
     const files = await getCanonicalHtmlFilesExceptIndex();
     for (const file of files) {
@@ -85,33 +83,13 @@ const replaceToAmpTags = async (): Promise<void> => {
 }
 
 const buildCustomJs = async (): Promise<void> => {
-    const runBrowserify = browserify({
-        entries: [`./site/amp/amp-visits.ts`],
-        debug: false
-    })
-        .plugin('tsify')
-        .plugin(tinyify);
-
-    await new Promise(resolve => {
-        runBrowserify
-            .transform('babelify', {
-                presets: [
-                    [
-                        '@babel/preset-env',
-                        {
-                            'targets': '> 1%, not dead'
-                        }
-                    ]
-                ],
-                plugins: [
-                    ["@babel/transform-runtime"]
-                ],
-                extensions: ['.ts']
-            })
-            .bundle()
-            .pipe(source(`amp-visits.min.js`))
-            .pipe(gulp.dest('./site/dist'))
-            .on('end', resolve);
+    await build({
+        entryPoints: ['./site/amp/amp-visits.ts'],
+        target: ['es2018'],
+        bundle: true,
+        minify: true,
+        watch: false,
+        outfile: './site/dist/amp-visits.min.js'
     });
 }
 
@@ -142,7 +120,8 @@ const useCustomJsCss = async (): Promise<void> => {
     const cssCustom = `<style amp-custom>${minifiedCss}</style>`;
 
     const files = await getCanonicalHtmlFiles();
-    for (const file of files) {
+    for (let file of files) {
+        file = file.endsWith('index.html') ? file.slice(0, -5) : file; // remove the .html ending
         await replaceInFile({
             files: `${file}.amphtml`,
             from: '<body>',
@@ -164,7 +143,7 @@ const useCustomJsCss = async (): Promise<void> => {
 
 const adjustImageTags = async (): Promise<void> => {
     const files = await getCanonicalHtmlFiles();
-    for (const file of files) {
+    for (let file of files) {
         const imgRegex = /<img([\w\W]+?)>/g;
         const fileContents = await fs.promises.readFile(file, 'utf8');
         const allMatches = fileContents.match(imgRegex);
@@ -178,6 +157,7 @@ const adjustImageTags = async (): Promise<void> => {
             const srcPath = path.resolve(path.join('./site', src));
             const metadata = await (sharp(srcPath)).metadata();
 
+            file = file.endsWith('index.html') ? file.slice(0, -5) : file; // remove the .html ending
             await replaceInFile({
                 files: `${file}.amphtml`,
                 from: matched,
@@ -196,7 +176,9 @@ const removeUnusedFeatures = async (): Promise<void> => {
     });
 
     const files = await getCanonicalHtmlFiles();
-    for (const file of files) {
+    for (let file of files) {
+        file = file.endsWith('index.html') ? file.slice(0, -5) : file; // remove the .html ending
+
         const fileContents = await fs.promises.readFile(`${file}.amphtml`, 'utf8');
 
         const asideRegex = /<aside>([\w\W]+?)<\/aside>/;
