@@ -10,7 +10,7 @@ import { ampify } from './src/gulp/ampify';
 import { avoidCache, copyToDist } from './src/gulp/build-html';
 import { buildSass, buildSassWatch } from './src/gulp/build-sass';
 import { buildTS, buildTSWatch } from './src/gulp/build-ts';
-import { generateSW } from './src/gulp/workbox';
+import { generateSW } from './src/gulp/build-sw';
 import { serve } from './src/gulp/serve';
 
 gulp.task('clean-dist', async done => {

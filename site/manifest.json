@@ -1,8 +1,25 @@
 {
     "name": "zanon.dev",
     "short_name": "zanon.dev",
+    "start_url": "/",
     "description": "zanon.dev",
+    "theme_color": "#202020",
+    "background_color": "#202020",
+    "display": "standalone",
+    "lang": "en-US",
+    "dir": "auto",
+    "orientation": "any",
     "icons": [
+        {
+            "src": "icons/mstile-150x150.png",
+            "sizes": "150x150",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
         {
             "src": "icons/android-chrome-192x192.png",
             "sizes": "192x192",
@@ -13,11 +30,5 @@
             "sizes": "512x512",
             "type": "image/png"
         }
-    ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "lang": "en-US",
-    "dir": "auto",
-    "orientation": "any"
+    ]
 }
