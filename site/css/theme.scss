@@ -3,6 +3,7 @@
 @mixin theme($base, $highlight, $text) {
     background-color: $base;
     color: $text;
+    transition: background-color 0.5s, color 0.5s;
 
     nav a,
     footer a {
