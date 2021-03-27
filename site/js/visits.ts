@@ -44,7 +44,7 @@ const scrollEvent = async (): Promise<void> => {
 
 export const configureReadVisit = (): void => {
 
-    const notPosts = ['/', '/me', '/privacy', '/404'];
+    const notPosts = ['/', '/me', '/privacy', '/newsletter', '/404'];
     const isPost = !notPosts.includes(page);
 
     if (isPost) {

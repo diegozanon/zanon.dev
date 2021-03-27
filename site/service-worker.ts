@@ -3,6 +3,7 @@ const CACHE_FILES = [
     '/',
     '/me',
     '/privacy',
+    '/newsletter',
     '/fonts/Roboto-Regular.woff2',
     '/bundle.min.css',
     '/bundle.min.mjs',

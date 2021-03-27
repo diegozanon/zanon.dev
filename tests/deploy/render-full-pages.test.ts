@@ -15,7 +15,7 @@ describe('renderFullPages', () => {
         await updateJsons(); // creates a posts.json
         const postsJson: PostsJson = JSON.parse(await readFile('./site/dist/posts.json', 'utf8'));
         const numberOfPosts = postsJson.posts.length;
-        const numberOfFixedPages = 4; // home, privacy, me, 404
+        const numberOfFixedPages = 5; // home, privacy, newsletter, me, 404
         const expectedNumberOfPages = numberOfPosts + numberOfFixedPages;
 
         // act

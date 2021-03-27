@@ -71,6 +71,7 @@ export const updateJsons = async (output?: string): Promise<void> => {
 
     siteJson.push({ slug: '', html: addPosts(await getPageHtml(`${path}/home.html`), postsJson) });
     siteJson.push({ slug: '404', html: await getPageHtml(`${path}/404.html`) });
+    siteJson.push({ slug: 'newsletter', html: await getPageHtml(`${path}/newsletter.html`) });
     siteJson.push({ slug: 'privacy', html: await getPageHtml(`${path}/privacy.html`) });
     siteJson.push({ slug: 'me', html: await getPageHtml(`${path}/me.html`) });
 

@@ -97,9 +97,15 @@ export const updateSitemap = async (output?: string): Promise<void> => {
             priority: 0.1
         },
         {
+            url: `${domain}/newsletter`,
+            modDate: now,
+            freq: 'monthly',
+            priority: 0.1
+        },
+        {
             url: `${domain}/privacy`,
             modDate: now,
-            freq: 'daily',
+            freq: 'monthly',
             priority: 0.1
         }
     ];
