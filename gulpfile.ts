@@ -52,7 +52,7 @@ gulp.task('avoid-cache', avoidCache);
 gulp.task('build-html', gulp.series(['update-jsons', 'update-xmls', 'copy-to-dist', 'render-full-pages', 'avoid-cache']));
 
 gulp.task('build-html:watch', done => {
-    gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['render-full-pages', 'html-reload']));
+    gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['update-jsons', 'copy-to-dist', 'render-full-pages', 'html-reload']));
     done();
 });
 
