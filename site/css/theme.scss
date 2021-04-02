@@ -1,26 +1,40 @@
 @import './variables';
 
-@mixin theme($base, $highlight, $text) {
+@mixin theme($base, $highlight, $font-color, $link-color) {
     background-color: $base;
-    color: $text;
+    color: $font-color;
     transition: background-color 0.5s, color 0.5s;
 
-    nav a,
-    footer a {
-        color: $text;
+    #obfuscated-sign {
+        stroke: $font-color;
+    }
 
-        &:hover {
-            color: rgba($text, 0.7);
+    nav,
+    footer {
+
+        a {
+            color: $font-color;
+
+            &:hover,
+            &:visited,
+            &:active {
+                color: rgba($font-color, 0.7)
+            }
         }
+    }
+
+    a,
+    a:hover,
+    a:visited,
+    a:active {
+        color: $link-color;
     }
 }
 
 .light-theme {
-    // $base, $highlight, $text
-    @include theme($light-base, $light-highlight, $light-text);
+    @include theme($light-base, $light-highlight, $light-font-color, $light-link-color);
 }
 
 .dark-theme {
-    // $base, $highlight, $text
-    @include theme($dark-base, $dark-highlight, $dark-text);
+    @include theme($dark-base, $dark-highlight, $dark-font-color, $dark-link-color);
 }

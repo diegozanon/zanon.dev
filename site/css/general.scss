@@ -8,9 +8,13 @@ body {
     flex-direction: column;
     height: 100vh;
 
-    -webkit-tap-highlight-color: transparent; // avoid a blue highlight when tapping with a mobile device
+    -webkit-tap-highlight-color: transparent; // avoid a blue highlight when tapping with a mobile device    
 }
 
 .invisible {
     visibility: hidden;
+}
+
+.no-bullets {
+    list-style-type: none;
 }

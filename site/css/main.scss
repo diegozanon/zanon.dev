@@ -1,3 +1,11 @@
+@import './variables';
+
 main {
     flex-grow: 1;
+
+    #obfuscated-sign {
+        width: $font-size;
+        height: auto;
+        vertical-align: middle;
+    }
 }
