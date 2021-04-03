@@ -146,7 +146,7 @@ const adjustImageTags = async (): Promise<void> => {
     for (let file of files) {
         const imgRegex = /<img([\w\W]+?)>/g;
         const fileContents = await fs.promises.readFile(file, 'utf8');
-        const allMatches = fileContents.match(imgRegex);
+        const allMatches = fileContents.match(imgRegex) ?? [];
         for (const matched of allMatches) {
 
             const imgSrcRegex = /src="([\w\W]+?)"/;
