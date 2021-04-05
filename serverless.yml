@@ -33,7 +33,8 @@ provider:
       Resource: [
         "arn:aws:dynamodb:${self:provider.region}:*:table/Comments",
         "arn:aws:dynamodb:${self:provider.region}:*:table/Feedback",
-        "arn:aws:dynamodb:${self:provider.region}:*:table/Visits"        
+        "arn:aws:dynamodb:${self:provider.region}:*:table/Newsletter",
+        "arn:aws:dynamodb:${self:provider.region}:*:table/Visits"
       ]
     - Effect: Allow
       Action:
@@ -68,7 +69,6 @@ functions:
 plugins:
   - serverless-webpack
   - serverless-offline
-  - serverless-plugin-dynamodb-autoscaling
 
 resources:
   Resources:
@@ -87,8 +87,8 @@ resources:
           - AttributeName: GUID
             KeyType: RANGE            
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5  
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3  
     FeedbackTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -104,8 +104,21 @@ resources:
           - AttributeName: Timestamp
             KeyType: RANGE            
         ProvisionedThroughput:
-          ReadCapacityUnits: 2
-          WriteCapacityUnits: 2    
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1    
+    NewsletterTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Newsletter
+        AttributeDefinitions:
+          - AttributeName: Email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
     VisitsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -121,21 +134,12 @@ resources:
           - AttributeName: Timestamp
             KeyType: RANGE            
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
+          ReadCapacityUnits: 18
+          WriteCapacityUnits: 18
 
 custom:
   webpack:
     webpackConfig: ./webpack.config.ts
-  dynamodbAutoscaling:
-    tablesConfig:
-      CommentsTable:
-        maxCapacity: 20     
-      FeedbackTable:
-        maxCapacity: 20     
-        minCapacity: 2 
-      VisitsTable:
-        maxCapacity: 20
 
 package:
   individually: true

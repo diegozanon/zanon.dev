@@ -1,4 +1,5 @@
 import { fillComments } from './comments';
+import { configureNewsletter } from './newsletter';
 import './spa';
 import './theme-switcher';
 import { configureReadVisit } from './visits';
@@ -11,6 +12,10 @@ const notPosts = ['/', '/me', '/privacy', '/newsletter', '/404'];
 const isPost = !notPosts.includes(page);
 if (isPost) {
     fillComments(page);
+}
+
+if (page === '/newsletter') {
+    configureNewsletter();
 }
 
 // Add the service worker

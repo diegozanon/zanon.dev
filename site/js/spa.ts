@@ -1,5 +1,6 @@
 import { fillComments } from './comments';
 import { configureFeedback } from './feedback';
+import { configureNewsletter } from './newsletter';
 import { PostsJson, Page, Post, VisitType } from './types';
 import { clearReadVisit, sendVisited } from './visits';
 
@@ -66,7 +67,11 @@ const configureSPA = (): void => {
             sendVisited(href, VisitType.Clicked);
 
             // handle only local links
-            if (!href.startsWith('/') || href === '/feed') {
+            if (!href.startsWith('/')) {
+                return;
+            }
+
+            if (href === '/feed') {
                 return;
             }
 
@@ -89,6 +94,9 @@ const configureSPA = (): void => {
                 configureFeedback();
             } else if (siteJson) {
                 switchSitePage(href);
+
+                if (href === '/newsletter')
+                    configureNewsletter();
             } else {
                 window.location.href = href;
             }

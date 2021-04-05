@@ -13,6 +13,8 @@ export const buildTS = async (done, watch = false): Promise<void> => {
             onRebuild(): void {
                 gulp.src('./site/dist/bundle.min.mjs')
                     .pipe(connect.reload());
+
+                console.info('Rebuilt TS files');
             }
         } : false,
         outfile: './site/dist/bundle.min.mjs'

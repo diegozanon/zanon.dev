@@ -72,7 +72,7 @@ export const newComment = async (httpMethod: string, page: string, username: str
     validateSize(username, 2, 100);
     validateSize(comment, 10, 5000);
 
-    const timestamp = moment().format('YYYY-MM-DDThh:mm:ss.SSSZ');
+    const timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
     switch (httpMethod) {
         case 'POST':
@@ -127,7 +127,7 @@ export const insertVisit = async (page: string, action: string): Promise<void> =
         TableName: 'Visits',
         Item: {
             YearMonth: moment().format('YYYY-MM'),
-            Timestamp: moment().format('YYYY-MM-DDThh:mm:ss.SSSZ'),
+            Timestamp: moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
             Page: page,
             Action: action
         }
@@ -143,8 +143,40 @@ export const insertFeedback = async (page: string, action: string): Promise<void
         TableName: 'Feedback',
         Item: {
             Page: page,
-            Timestamp: moment().format('YYYY-MM-DDThh:mm:ss.SSSZ'),
+            Timestamp: moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
             Action: action
         }
     }).promise();
+}
+
+export const newsletter = async (httpMethod: string, email: string): Promise<void> => {
+
+    validateSize(email, 6, 100);
+
+    if (!email.includes('@'))
+        throw new Error('E-mail must contain an "@" sign.');
+    if (!email.includes('.'))
+        throw new Error('E-mail  must contain an "." sign.');
+
+    switch (httpMethod) {
+        case 'POST': // subscribe
+            await documentClient.put({
+                TableName: 'Newsletter',
+                Item: {
+                    Email: email,
+                    Timestamp: moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ')
+                }
+            }).promise();
+            break;
+        case 'DELETE': // unsubscribe
+            await documentClient.delete({
+                TableName: 'Newsletter',
+                Key: {
+                    'Email': email
+                }
+            }).promise();
+            break;
+        default:
+            throw new Error(`Unexpected http method for newsletter: ${httpMethod}`);
+    }
 }

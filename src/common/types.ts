@@ -1,6 +1,7 @@
 export enum BackendRequestType {
     Comment = 'comment',
     Feedback = 'feedback',
+    Newsletter = 'newsletter',
     Visit = 'visit'
 }
 

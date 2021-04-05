@@ -2,8 +2,8 @@ import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { successHandler, errorHandler } from '../common/http-response';
 import { BackendRequestType, HttpResponseOptions } from '../common/types';
 import { isBot } from './lib/bot';
-import { getComments, insertFeedback, insertVisit, newComment } from './lib/dynamodb';
-import { notifyComment } from './lib/ses';
+import { getComments, insertFeedback, insertVisit, newComment, newsletter } from './lib/dynamodb';
+import { notifyComment, notifyNewsletter } from './lib/ses';
 
 const validateIsPost = (event: APIGatewayProxyEvent): void => {
     if (event.httpMethod !== 'POST')
@@ -43,6 +43,10 @@ export const backend = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 case BackendRequestType.Visit:
                     validateIsPost(event);
                     await insertVisit(body.page, body.action);
+                    break;
+                case BackendRequestType.Newsletter:
+                    await newsletter(event.httpMethod, body.email);
+                    await notifyNewsletter(event.httpMethod, body.email);
                     break;
             }
         }

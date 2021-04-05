@@ -15,6 +15,10 @@ body {
     visibility: hidden;
 }
 
+.dont-display {
+    display: none;
+}
+
 .no-bullets {
     list-style-type: none;
 }
