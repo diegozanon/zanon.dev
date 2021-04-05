@@ -1,6 +1,7 @@
 import * as AWS from 'aws-sdk';
 import { PutObjectRequest } from 'aws-sdk/clients/s3';
 import * as fs from 'fs';
+import * as marked from 'marked';
 import * as path from 'path';
 
 const generateCode = (): string => {
@@ -30,12 +31,16 @@ const buildObjectToUpload = (args: ObjToUploadArgs): PutObjectRequest => {
 /** This function creates a new snippet in code.zanon.dev */
 export const newSnippet = async (code: string, filepath: string): Promise<void> => {
 
+    if (!filepath.endsWith('.md')) {
+        throw new Error('File must be a markdown file.');
+    }
+
     if (code === 'rng') {
         code = generateCode();
         console.info(`code.zanon.dev/${code}`);
     }
 
-    const file = await fs.promises.readFile(filepath, 'utf8');
+    const file = marked(await fs.promises.readFile(filepath, 'utf8'));
 
     const template = await fs.promises.readFile(path.resolve('./src/templates/snippet.html'), 'utf8');
     const textToFind = 'https://zanon.dev/snippet/';

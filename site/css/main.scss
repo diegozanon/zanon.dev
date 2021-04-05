@@ -8,4 +8,25 @@ main {
         height: auto;
         vertical-align: middle;
     }
+
+    #not-found {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: 2s fadeIn;
+        animation-fill-mode: forwards;
+        visibility: hidden;
+    }
+
+    // workaround to avoid showing "not found" when loading a snippet page
+    @keyframes fadeIn {
+        99% {
+            visibility: hidden;
+        }
+
+        100% {
+            visibility: visible;
+        }
+    }
 }
