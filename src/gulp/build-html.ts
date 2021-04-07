@@ -34,7 +34,9 @@ export const copyToDist = async (done): Promise<void> => {
     await fse.copy('site/favicon.ico', 'site/dist/favicon.ico');
     await fse.copy('site/manifest.json', 'site/dist/manifest.json');
     await fse.copy('site/robots.txt', 'site/dist/robots.txt');
-    await fse.copy('site/resources/resume.pdf', 'site/dist/resources/resume.pdf');
+    await fse.copy('site/assets/prismjs/prism.min.css', 'site/dist/assets/prismjs/prism.min.css');
+    await fse.copy('site/assets/prismjs/prism.min.js', 'site/dist/assets/prismjs/prism.min.js');
+    await fse.copy('site/assets/resume.pdf', 'site/dist/assets/resume.pdf');
 
     done();
 }
