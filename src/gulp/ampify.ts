@@ -116,8 +116,9 @@ const useCustomJsCss = async (): Promise<void> => {
     const jsHash = `<meta name="amp-script-src" content="${hashStr}"/>`;
 
     const minifiedCss = await fs.promises.readFile('./site/dist/bundle.min.css', 'utf8');
+    const prismCss = await fs.promises.readFile('./site/dist/assets/prismjs/prism.min.css', 'utf8');
     const cssTag = /<link rel="stylesheet" href="\/bundle\.min\.css\?v=(\d+)">/;
-    const cssCustom = `<style amp-custom>${minifiedCss}</style>`;
+    const cssCustom = `<style amp-custom>${minifiedCss}${prismCss}</style>`;
 
     const files = await getCanonicalHtmlFiles();
     for (let file of files) {
@@ -165,6 +166,18 @@ const adjustImageTags = async (): Promise<void> => {
             });
         }
     }
+}
+
+const removeClientSidePrism = async (): Promise<void> => {
+    const prismJSFile = '<script defer="defer" src="/assets/prismjs/prism.min.js"></script>';
+    const prismCSSFile = '<link rel="stylesheet" href="/assets/prismjs/prism.min.css">';
+    await new Promise(resolve => {
+        gulp.src('./site/dist/*.amphtml')
+            .pipe(replace(prismJSFile, ''))
+            .pipe(replace(prismCSSFile, ''))
+            .pipe(gulp.dest('./site/dist/'))
+            .on('end', resolve);
+    });
 }
 
 const removeUnusedFeatures = async (): Promise<void> => {
@@ -229,6 +242,7 @@ export const ampify = async (done): Promise<void> => {
     await buildCustomJs();
     await useCustomJsCss();
     await adjustImageTags();
+    await removeClientSidePrism();
     await removeUnusedFeatures();
 
     await validate();

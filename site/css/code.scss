@@ -1,0 +1,15 @@
+body {
+    pre[class*=language-] {
+        background: #151515;
+        border-radius: 15px;
+    }
+
+    .copy-to-clipboard-button {
+        cursor: pointer;
+    }
+
+    code[class*="language-"],
+    pre[class*="language-"] {
+        font-size: 1em;
+    }
+}

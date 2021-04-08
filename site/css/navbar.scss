@@ -9,7 +9,7 @@ nav {
         display: inline;
     }
 
-    .author {
+    .home-link {
         margin-right: auto;
     }
 
@@ -56,7 +56,7 @@ nav {
         flex-direction: column;
 
         a,
-        .author {
+        .home-link {
             margin: 0 auto;
         }
     }
