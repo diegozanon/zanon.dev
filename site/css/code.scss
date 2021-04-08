@@ -1,15 +1,43 @@
+// using "body" to increase specificity
 body {
-    pre[class*=language-] {
+
+    pre[class*="language-"],
+    code[class*="language-"] {
         background: #151515;
-        border-radius: 15px;
+        border-radius: 1em;
+        font-size: 1em;
+        outline: none;
+    }
+
+    pre[class*="language-"] ::selection,
+    code[class*="language-"]::selection {
+        background: #303030;
     }
 
     .copy-to-clipboard-button {
         cursor: pointer;
+        outline: none;
     }
 
-    code[class*="language-"],
-    pre[class*="language-"] {
-        font-size: 1em;
+    div.code-toolbar {
+        position: relative
+    }
+
+    div.code-toolbar>.toolbar {
+        position: absolute;
+        top: 1em;
+        right: 1em
+    }
+
+    div.code-toolbar>.toolbar button {
+        border: 0;
+    }
+
+    div.code-toolbar>.toolbar button {
+        color: #bbb;
+        font-size: 0.8em;
+        padding: 0.3em 0.7em;
+        background: rgba(224, 224, 224, .2);
+        border-radius: 1em
     }
 }

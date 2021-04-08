@@ -1,14 +1,18 @@
 import * as crypto from 'crypto';
+import { build } from 'esbuild';
 import * as fancyLog from 'fancy-log';
 import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as gulpAmpValidator from 'gulp-amphtml-validator';
 import * as replace from 'gulp-replace';
+import * as marked from 'marked';
 import * as path from 'path';
+import * as Prism from 'prismjs';
+import * as loadLanguages from 'prismjs/components/index.js';
 import { replaceInFile } from 'replace-in-file';
 import * as sharp from 'sharp';
 import { isDir } from '../common/fs-utils';
-import { build } from 'esbuild';
+import { PostsJson, Post } from '../common/types';
 
 const getCanonicalHtmlFilesExceptIndex = async (): Promise<string[]> => {
     const res = new Array<string>();
@@ -180,6 +184,40 @@ const removeClientSidePrism = async (): Promise<void> => {
     });
 }
 
+const renderPostsWithPrism = async (): Promise<void> => {
+
+    const postsJson = (JSON.parse(await fs.promises.readFile(`./site/dist/posts.json`, 'utf8')) as PostsJson).posts;
+    const posts = postsJson.map((post: Post) => {
+        return { mdName: `${post.header.creationDate}-${post.header.slug}.md`, ampName: `${post.header.slug}.amphtml` };
+    });
+
+    loadLanguages();
+
+    marked.setOptions({
+        highlight: function (code, lang) {
+            if (Prism.languages[lang]) {
+                return Prism.highlight(code, Prism.languages[lang], lang);
+            } else {
+                return code;
+            }
+        }
+    });
+
+    for (const post of posts) {
+        const mdFile = (await fs.promises.readFile(`./site/posts/${post.mdName}`, 'utf8')).split('---')[2];
+        const ampFile = await fs.promises.readFile(`./site/dist/${post.ampName}`, 'utf8');
+        const html = marked.parse(mdFile);
+
+        const mainRegex = /<main>([\w\W]+?)<\/main>/;
+        const matched = ampFile.match(mainRegex)[0];
+        await replaceInFile({
+            files: `./site/dist/${post.ampName}`,
+            from: matched,
+            to: `<main><article>${html}</article></main>`
+        });
+    }
+}
+
 const removeUnusedFeatures = async (): Promise<void> => {
     await new Promise(resolve => {
         gulp.src('./site/dist/*.amphtml')
@@ -193,16 +231,6 @@ const removeUnusedFeatures = async (): Promise<void> => {
         file = file.endsWith('index.html') ? file.slice(0, -5) : file; // remove the .html ending
 
         const fileContents = await fs.promises.readFile(`${file}.amphtml`, 'utf8');
-
-        const asideRegex = /<aside>([\w\W]+?)<\/aside>/;
-        const matchesAside = fileContents.match(asideRegex);
-        if (matchesAside) {
-            await replaceInFile({
-                files: `${file}.amphtml`,
-                from: matchesAside[0],
-                to: ''
-            });
-        }
 
         const themeSwitcherRegex = /<div tabindex="0"> <svg id="theme-switcher"([\w\W]+?)<\/svg> <\/div>/;
         const matchedThemeSwitcher = fileContents.match(themeSwitcherRegex)[0];
@@ -243,6 +271,7 @@ export const ampify = async (done): Promise<void> => {
     await useCustomJsCss();
     await adjustImageTags();
     await removeClientSidePrism();
+    await renderPostsWithPrism();
     await removeUnusedFeatures();
 
     await validate();
