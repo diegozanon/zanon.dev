@@ -4,6 +4,11 @@ import { configureNewsletter } from './newsletter';
 import './spa';
 import './theme-switcher';
 import { configureReadVisit } from './visits';
+import * as Prismjs from '../assets/prismjs/prism.min.js';
+
+declare global {
+    const Prism: typeof Prismjs;
+}
 
 configureReadVisit();
 

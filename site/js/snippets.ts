@@ -16,6 +16,7 @@ export const configureSnippet = (): void => {
         })
         .then(text => {
             document.getElementById('snippet').innerHTML = text;
+            Prism.highlightAll();
         })
         .catch(() => {
             notFoundElm.style.display = '';

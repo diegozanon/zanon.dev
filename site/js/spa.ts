@@ -44,6 +44,8 @@ const configureSPA = (): void => {
         const data = postsJson.template.replace('<article></article>', `<article>${post.html}</article>`);
         loadData(data);
         fillComments(targetLink);
+
+        Prism.highlightAll();
     }
 
     const switchSitePage = (targetLink: string): void => {
