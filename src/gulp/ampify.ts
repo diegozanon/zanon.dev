@@ -240,6 +240,14 @@ const removeUnusedFeatures = async (): Promise<void> => {
             to: ''
         });
     }
+
+    // Remove amp page for the newsletter
+    await fs.promises.unlink(path.resolve('./site/dist/newsletter.amphtml'));
+    await replaceInFile({
+        files: path.resolve('./site/dist/newsletter'),
+        from: '<link rel="amphtml" href="https://zanon.dev/newsletter.amphtml">',
+        to: ''
+    });
 }
 
 const validate = async (): Promise<void> => {
