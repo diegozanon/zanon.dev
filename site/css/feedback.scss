@@ -20,13 +20,31 @@
     .broken-heart {
         padding-bottom: 7px;
     }
+}
 
-    .heart:hover {
-        animation: 1.5s pulsate infinite alternate ease-in-out;
+// only for devices that implement hover properly (i.e.: desktop)
+@media (hover: hover) {
+    #feedback {
+        .heart:hover {
+            animation: 1.5s pulsate infinite alternate ease-in-out;
+        }
+
+        .broken-heart:hover {
+            animation: 1s shake infinite alternate ease-in-out;
+        }
     }
+}
 
-    .broken-heart:hover {
-        animation: 1s shake infinite alternate ease-in-out;
+// only for devices that don't implement hover properly (i.e.: mobile)
+@media (hover: none) {
+    #feedback {
+        .heart:hover {
+            animation: 1.5s pulsate 1 alternate ease-in-out;
+        }
+
+        .broken-heart:hover {
+            animation: 1s shake 1 alternate ease-in-out;
+        }
     }
 }
 
