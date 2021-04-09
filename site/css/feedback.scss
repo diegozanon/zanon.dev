@@ -16,6 +16,11 @@
         }
     }
 
+    .heart,
+    .broken-heart {
+        padding-bottom: 7px;
+    }
+
     .heart:hover {
         animation: 1.5s pulsate infinite alternate ease-in-out;
     }

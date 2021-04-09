@@ -1,6 +1,7 @@
 import { fillComments } from './comments';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
+import { hideTooltips } from './tooltips';
 import { PostsJson, Page, Post, VisitType } from './types';
 import { clearReadVisit, sendVisited } from './visits';
 
@@ -102,6 +103,8 @@ const configureSPA = (): void => {
             } else {
                 window.location.href = href;
             }
+
+            hideTooltips();
         }
     }
 }

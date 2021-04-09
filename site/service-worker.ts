@@ -8,8 +8,7 @@ const CACHE_FILES = [
     '/bundle.min.css',
     '/bundle.min.mjs',
     '/site.json',
-    '/posts.json',
-    '/imgs/layout/ko-fi.png'
+    '/posts.json'
 ];
 
 self.addEventListener('install', (event: ExtendableEvent) => {

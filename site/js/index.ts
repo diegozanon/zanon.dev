@@ -3,6 +3,7 @@ import { fillComments } from './comments';
 import { configureNewsletter } from './newsletter';
 import './spa';
 import './theme-switcher';
+import { hideTooltips } from './tooltips';
 import { configureReadVisit } from './visits';
 import * as Prismjs from '../assets/prismjs/prism.min.js';
 
@@ -35,3 +36,5 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.min.js');
     });
 }
+
+hideTooltips();
