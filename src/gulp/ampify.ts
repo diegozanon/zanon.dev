@@ -239,6 +239,15 @@ const removeUnusedFeatures = async (): Promise<void> => {
             from: matchedThemeSwitcher,
             to: ''
         });
+
+        // instead of implementing comments in a amp page, add a link to view the comments in the canonical page
+        const endOfPost = '</article></main>';
+        const linkToComments = `</article><p><a href="https://zanon.dev/${file.split('/').pop()}#comments">Comments</a></p></main>`;
+        await replaceInFile({
+            files: `${file}.amphtml`,
+            from: endOfPost,
+            to: linkToComments
+        });
     }
 
     // Remove amp page for the newsletter
