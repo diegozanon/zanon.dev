@@ -35,7 +35,7 @@ export interface PostsJson {
 
 export interface PostMeta {
     creationDate: string;
-    modificationDate: string;
+    updatedOn?: string;
     slug: string;
     title: string;
     description: string;

@@ -1,7 +1,7 @@
 ---
 title: This is a test
 description: ~
-modificationDate: ~
+updatedOn: ~
 thumbnail: ~
 tags: []
 status: draft

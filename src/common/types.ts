@@ -43,7 +43,7 @@ export interface PostsJson {
 
 export interface PostMeta extends PostHeader {
     creationDate: string;
-    modificationDate: string;
+    updatedOn?: string;
     slug: string;
 }
 

@@ -1,4 +1,5 @@
 import { fillComments } from './comments';
+import { generatePostHeader } from './common';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
@@ -41,8 +42,8 @@ const configureSPA = (): void => {
         const post = postsJson.posts.find(post => post.header.slug === targetLink.substring(1));
 
         document.title = post.header.title;
-
-        const data = postsJson.template.replace('<article></article>', `<article>${post.html}</article>`);
+        const header = generatePostHeader(post.header);
+        const data = postsJson.template.replace('<article></article>', `<article>${header + post.html}</article>`);
         loadData(data);
         fillComments(targetLink);
 

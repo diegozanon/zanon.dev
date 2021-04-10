@@ -114,7 +114,7 @@ export const updateSitemap = async (output?: string): Promise<void> => {
     const posts: PageMapOptions[] = JSON.parse(postsJson).posts.map((post: Post) => {
         return {
             url: `${domain}/${post.header.slug}`,
-            modDate: post.header.modificationDate || post.header.creationDate,
+            modDate: post.header.updatedOn || post.header.creationDate,
             freq: 'monthly',
             priority: 0.8
         }
