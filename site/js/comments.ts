@@ -39,10 +39,12 @@ const addComment = (comment: Comment): string => {
     }
 
     return `
-        <div id="comment">
-            <div class="avatar">${comment.username.substring(0, 1)}</div>
-            <div class="timestamp">${printTimestamp(comment.timestamp)}</div>
-            <h3>${comment.username}</h3>
+        <div id="comment">        
+            <div class="comment-header">    
+                <div class="avatar">${comment.username.substring(0, 1).toUpperCase()}</div>
+                <h3>${comment.username}</h3>
+                <div class="timestamp">${printTimestamp(comment.timestamp)}</div>
+            </div>
             ${comment.comment}
             ${deleteButton}
         </div>
@@ -69,9 +71,9 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
     const comment = commentElm.value;
 
     const messageElm = document.getElementById('comment-message');
-    if (username.length < 2 || username.length > 100) {
+    if (username.length < 2 || username.length > 25) {
         messageElm.classList.remove('dont-display');
-        messageElm.innerHTML = `Error: username has ${username.length} characters. It must have between 2 and 100 characters.`;
+        messageElm.innerHTML = `Error: username has ${username.length} characters. It must have between 2 and 25 characters.`;
         return;
     } else if (comment.length < 10 || comment.length > 5000) {
         messageElm.classList.remove('dont-display');

@@ -32,40 +32,64 @@ main {
 
     aside {
         display: flex;
+        position: relative;
         margin-bottom: 16px;
+    }
+}
 
-        #comments-sections {
-            width: 100%;
-        }
+#comments-sections {
+    width: 100%;
+}
 
-        #comment-widget {
+#comment-widget {
 
-            h2 {
-                margin-top: 0px;
-            }
+    h2 {
+        margin-top: 0px;
+    }
 
-            textarea {
-                width: 100%;
-                height: 150px;
-                box-sizing: border-box;
-            }
+    textarea {
+        width: 100%;
+        height: 150px;
+        box-sizing: border-box;
+    }
 
-            textarea,
-            input[type=button] {
-                margin-top: 4px;
-            }
+    textarea,
+    input[type=button] {
+        margin-top: 4px;
+    }
 
-            input[type=button] {
-                float: right;
-            }
-        }
+    input[type=button] {
+        float: right;
+    }
+}
 
-        #comments {
-            margin-top: 40px;
+#comments {
+    margin-top: 40px;
 
-            input[type=button] {
-                display: block;
-            }
-        }
+    input[type=button] {
+        display: block;
+    }
+
+    .comment-header * {
+        display: inline-block;
+    }
+
+    .avatar {
+        border-radius: 50%;
+        width: 2em;
+        line-height: 2em;
+        text-align: center;
+        margin-right: 10px;
+        background-color: red;
+    }
+
+    .timestamp {
+        font-size: 0.7em;
+        font-weight: normal;
+        font-style: italic;
+    }
+
+    p {
+        margin-top: 0px;
     }
 }
