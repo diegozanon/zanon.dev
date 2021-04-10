@@ -87,22 +87,6 @@ export const newComment = async (httpMethod: string, page: string, username: str
                 }
             }).promise();
             break;
-        case 'PUT':
-            await documentClient.update({
-                TableName: 'Comments',
-                Key: {
-                    'Page': page,
-                    'GUID': guid
-                },
-                UpdateExpression: 'set Username = :username, #C = :comment',
-                ExpressionAttributeNames: { '#C': 'Comment' }, // Comment is a reserved word
-                ExpressionAttributeValues: {
-                    ':comment': comment,
-                    ':username': username
-                },
-                ConditionExpression: 'attribute_exists(Page) and attribute_exists(GUID)'
-            }).promise();
-            break;
         case 'DELETE':
             await documentClient.delete({
                 TableName: 'Comments',

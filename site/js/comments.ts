@@ -17,24 +17,23 @@ const printTimestamp = (timestamp: string): string => {
     return `${date} at ${time}`;
 }
 
-const addEditDeleteButtons = (guid: string): string => {
+const addDeleteButton = (guid: string): string => {
     return `
-        <input type="button" class="edit-comment btn-secondary" name="edit-comment" data-guid="${guid}" value="Edit">
         <input type="button" class="delete-comment btn-danger" name="delete-comment" data-guid="${guid}" value="Delete">
     `;
 }
 
 const addComment = (comment: Comment): string => {
 
-    let editDeleteButtons = '';
+    let deleteButton = '';
     if (comment.guid) {
-        editDeleteButtons = addEditDeleteButtons(comment.guid);
+        deleteButton = addDeleteButton(comment.guid);
     } else {
         // check if the comment is saved in local storage
         const savedComments = getStorageComments();
         for (const savedComment of savedComments) {
             if (comment.page === savedComment.page && comment.timestamp === savedComment.timestamp) {
-                editDeleteButtons = addEditDeleteButtons(savedComment.guid);
+                deleteButton = addDeleteButton(savedComment.guid);
             }
         }
     }
@@ -45,7 +44,7 @@ const addComment = (comment: Comment): string => {
             <div class="timestamp">${printTimestamp(comment.timestamp)}</div>
             <h3>${comment.username}</h3>
             ${comment.comment}
-            ${editDeleteButtons}
+            ${deleteButton}
         </div>
     `;
 }
@@ -129,59 +128,6 @@ const addDeleteCommentClickEvent = (page: string): void => {
     }
 }
 
-const addEditCommentClickEvent = (page: string): void => {
-    const editElms = document.getElementsByClassName('edit-comment') as HTMLCollectionOf<HTMLElement>;
-    for (const editElm of editElms) {
-        editElm.onclick = (): void => {
-
-            const commentDiv = editElm.parentNode as HTMLElement;
-            const commentBoxDiv = document.querySelector('#comment-widget');
-            commentDiv.innerHTML = commentBoxDiv.outerHTML;
-
-            const guid = editElm.dataset.guid;
-            const savedComments = getStorageComments();
-            const commentToEdit = savedComments.find((el: Comment) => { return el.guid === guid });
-
-            const sendElm = commentDiv.querySelector('.send-comment') as HTMLInputElement;
-            const userElm = commentDiv.querySelector('.comment-username') as HTMLInputElement;
-            const commentElm = commentDiv.querySelector('.comment-text') as HTMLTextAreaElement;
-            userElm.value = commentToEdit.username;
-            commentElm.value = commentToEdit.comment;
-
-            sendElm.onclick = async (): Promise<void> => {
-
-                commentDiv.innerHTML = addComment({
-                    page,
-                    username: userElm.value,
-                    comment: commentElm.value,
-                    timestamp: commentToEdit.timestamp
-                });
-
-                const rawResponse = await fetch(lambdaURL, {
-                    method: 'PUT',
-                    headers,
-                    body: JSON.stringify({
-                        page,
-                        username: userElm.value,
-                        comment: commentElm.value,
-                        guid,
-                        requestType: BackendRequestType.Comment
-                    })
-                });
-
-                await rawResponse.json();
-
-                commentToEdit.username = userElm.value;
-                commentToEdit.comment = commentElm.value;
-                setStorageComments(savedComments);
-
-                addEditCommentClickEvent(page);
-                addDeleteCommentClickEvent(page);
-            }
-        }
-    }
-}
-
 export const fillComments = async (page: string): Promise<void> => {
 
     const url = `${lambdaURL}?requestType=${BackendRequestType.Comment}&page=${page.substring(1)}`;
@@ -201,10 +147,8 @@ export const fillComments = async (page: string): Promise<void> => {
 
     (document.querySelector('#comment-widget .send-comment') as HTMLInputElement).onclick = async (): Promise<void> => {
         await newCommentClickEvent(page);
-        addEditCommentClickEvent(page);
         addDeleteCommentClickEvent(page);
     }
 
-    addEditCommentClickEvent(page);
     addDeleteCommentClickEvent(page);
 }

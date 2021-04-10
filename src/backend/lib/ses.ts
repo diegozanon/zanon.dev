@@ -30,9 +30,6 @@ export const notifyComment = async (httpMethod: string, page: string, username: 
         case 'POST':
             action = 'added';
             break;
-        case 'PUT':
-            action = 'modified';
-            break;
         case 'DELETE':
             action = 'deleted';
             break;

@@ -28,7 +28,6 @@ provider:
         - dynamodb:Scan
         - dynamodb:Query
         - dynamodb:PutItem
-        - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: [
         "arn:aws:dynamodb:${self:provider.region}:*:table/Comments",
@@ -54,7 +53,6 @@ functions:
     events:
       - http: GET /backend
       - http: POST /backend
-      - http: PUT /backend
       - http: DELETE /backend
       - http: OPTIONS /backend
     memorySize: 512
