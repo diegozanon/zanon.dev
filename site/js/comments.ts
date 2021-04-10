@@ -67,6 +67,20 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
     const commentElm = document.querySelector('#comment-widget .comment-text') as HTMLTextAreaElement;
     const username = userElm.value;
     const comment = commentElm.value;
+
+    const messageElm = document.getElementById('comment-message');
+    if (username.length < 2 || username.length > 100) {
+        messageElm.classList.remove('dont-display');
+        messageElm.innerHTML = `Error: username has ${username.length} characters. It must have between 2 and 100 characters.`;
+        return;
+    } else if (comment.length < 10 || comment.length > 5000) {
+        messageElm.classList.remove('dont-display');
+        messageElm.innerHTML = `Error: comment has ${comment.length} characters. It must have between 10 and 5000 characters.`;
+        return;
+    } else {
+        messageElm.classList.add('dont-display');
+    }
+
     userElm.value = '';
     commentElm.value = '';
 
@@ -99,31 +113,37 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
 const addDeleteCommentClickEvent = (page: string): void => {
     const deleteElms = document.getElementsByClassName('delete-comment') as HTMLCollectionOf<HTMLElement>;
     for (const deleteElm of deleteElms) {
-        deleteElm.onclick = async (): Promise<void> => {
+        deleteElm.onclick = (): void => {
+            document.getElementById('delete-comment-modal').classList.remove('dont-display');
 
-            const guid = deleteElm.dataset.guid;
-            let savedComments = getStorageComments();
-            const commentToDelete = savedComments.find((el: Comment) => { return el.guid === guid });
+            document.getElementById('confirm-delete-comment').onclick = async (): Promise<void> => {
 
-            const commentDiv = deleteElm.parentNode;
-            commentDiv.parentNode.removeChild(commentDiv);
+                const guid = deleteElm.dataset.guid;
+                let savedComments = getStorageComments();
+                const commentToDelete = savedComments.find((el: Comment) => { return el.guid === guid });
 
-            const rawResponse = await fetch(lambdaURL, {
-                method: 'DELETE',
-                headers,
-                body: JSON.stringify({
-                    page,
-                    username: commentToDelete.username,
-                    comment: commentToDelete.comment,
-                    guid,
-                    requestType: BackendRequestType.Comment
-                })
-            });
+                const commentDiv = deleteElm.parentNode;
+                commentDiv.parentNode.removeChild(commentDiv);
 
-            await rawResponse.json();
+                const rawResponse = await fetch(lambdaURL, {
+                    method: 'DELETE',
+                    headers,
+                    body: JSON.stringify({
+                        page,
+                        username: commentToDelete.username,
+                        comment: commentToDelete.comment,
+                        guid,
+                        requestType: BackendRequestType.Comment
+                    })
+                });
 
-            savedComments = savedComments.filter((el: Comment) => { return el.guid !== guid });
-            setStorageComments(savedComments);
+                await rawResponse.json();
+
+                savedComments = savedComments.filter((el: Comment) => { return el.guid !== guid });
+                setStorageComments(savedComments);
+
+                document.getElementById('delete-comment-modal').classList.add('dont-display');
+            }
         }
     }
 }

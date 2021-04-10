@@ -1,6 +1,6 @@
 <article></article>
 <aside>
-    <div>
+    <div id="comments-sections">
         <div id="comment-widget">
             <h2>Comments</h2>
             <input type="text" class="comment-username" name="comment-username" placeholder="Your name"
@@ -9,7 +9,20 @@
                 placeholder="Your comment (accepts Markdown)"></textarea>
             <input type="button" class="send-comment" name="send-comment" value="Send">
         </div>
+        <p id="comment-message" class="dont-display"></p>
         <div id="comments"></div>
+        <div id="delete-comment-modal" class="modal dont-display">
+            <div class="modal-content">
+                <h2>Delete Comment</h2>
+                <p>Are you sure you want to delete your comment?</p>
+                <div class="btn-pair">
+                    <input type="button" class="btn-secondary" name="cancel-delete-comment" value="Cancel"
+                        onclick="document.getElementById('delete-comment-modal').classList.add('dont-display')">
+                    <input type="button" id="confirm-delete-comment" class="btn-danger" name="confirm-delete-comment"
+                        value="Delete">
+                </div>
+            </div>
+        </div>
     </div>
     <div id="feedback">
         <figure>

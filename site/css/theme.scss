@@ -37,6 +37,10 @@
     a:active {
         color: $link-color;
     }
+
+    .modal-content {
+        background-color: $base;
+    }
 }
 
 .light-theme {
