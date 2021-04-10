@@ -11,13 +11,13 @@ const validateSize = (text: string, minLimit: number, maxLimit: number): void =>
         throw new Error('Text is smaller than its limit size.')
 }
 
-interface QueryResult {
+interface CommentResult {
     username: string;
     comment: string;
     timestamp: string;
 }
 
-const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.DocumentClient.Key): Promise<QueryResult[]> => {
+const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.DocumentClient.Key): Promise<CommentResult[]> => {
 
     const params: AWS.DynamoDB.DocumentClient.QueryInput = {
         TableName: 'Comments',
@@ -41,7 +41,7 @@ const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.Docum
 
     const data = await documentClient.query(params).promise();
 
-    const result: QueryResult[] = [];
+    const result: CommentResult[] = [];
     for (const item of data.Items) {
         result.push({
             username: item.Username,
@@ -58,14 +58,14 @@ const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.Docum
     return result;
 }
 
-export const getComments = async (page: string): Promise<QueryResult[]> => {
+export const getComments = async (page: string): Promise<CommentResult[]> => {
 
     validateSize(page, 5, 150);
 
     return await queryComments(page);
 }
 
-export const newComment = async (httpMethod: string, page: string, username: string, comment: string, guid: string): Promise<string> => {
+export const newComment = async (httpMethod: string, page: string, username: string, comment: string, guid: string): Promise<CommentResult> => {
 
     validateSize(page, 5, 150);
     validateSize(guid, 36, 36);
@@ -99,7 +99,11 @@ export const newComment = async (httpMethod: string, page: string, username: str
             break;
     }
 
-    return timestamp;
+    return {
+        username,
+        comment: marked(comment),
+        timestamp
+    };
 }
 
 export const insertVisit = async (page: string, action: string): Promise<void> => {

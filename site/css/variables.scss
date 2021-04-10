@@ -1,15 +1,23 @@
+$red: #ff5e5b;
+$green: #59981a;
+$blue: #00aaee;
+$yellow: #b99b03;
+$purple: #4e1a3d;
+$orange: #Fd7f20;
+$brown: #523a28;
+
 $font-size: 16px;
-$button-color: #00AAEE;
+$button-color: $blue;
 $border-color: #505050;
 
 $dark-base: #202020;
-$dark-highlight: #81A4FF;
-$dark-font-color: #F7F7F7;
+$dark-highlight: #81a4ff;
+$dark-font-color: #f7f7f7;
 $dark-link-color: $button-color;
 $dark-border-color: $border-color;
 
-$light-base: #FFF;
-$light-highlight: #81A4FF;
+$light-base: #fff;
+$light-highlight: #81a4ff;
 $light-font-color: #202020;
-$light-link-color: #0000EE;
-$light-border-color: #CCC;
+$light-link-color: #0000ee;
+$light-border-color: #ccc;

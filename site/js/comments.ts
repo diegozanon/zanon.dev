@@ -38,10 +38,24 @@ const addComment = (comment: Comment): string => {
         }
     }
 
+    const avatar = comment.username.substring(0, 1).toUpperCase();
+    let color = 'brown';
+    const defineColor = (letters: string, colorType: string): void => {
+        if (letters.includes(avatar))
+            color = colorType;
+    }
+
+    defineColor('ABCD', 'red');
+    defineColor('EFGH', 'green');
+    defineColor('IJKL', 'blue');
+    defineColor('MNOP', 'yellow');
+    defineColor('QRSTU', 'purple');
+    defineColor('VWXYZ', 'orange');
+
     return `
         <div id="comment">        
             <div class="comment-header">    
-                <div class="avatar">${comment.username.substring(0, 1).toUpperCase()}</div>
+                <div class="avatar ${color}">${avatar}</div>
                 <h3>${comment.username}</h3>
                 <div class="timestamp">${printTimestamp(comment.timestamp)}</div>
             </div>
@@ -88,9 +102,6 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
 
     const guid = uuidv4();
     const localTimestamp = new Date().toString();
-    const newComment = { page, username, comment, timestamp: localTimestamp, guid };
-    const commentsElm = document.getElementById('comments');
-    commentsElm.innerHTML += addComment(newComment);
 
     const rawResponse = await fetch(lambdaURL, {
         method: 'POST',
@@ -104,12 +115,19 @@ const newCommentClickEvent = async (page: string): Promise<void> => {
         })
     });
 
-    const serverTimestamp = (await rawResponse.json()).data.timestamp;
+    const res = (await rawResponse.json()).data;
 
+    const newComment = { page, username, comment: res.comment, timestamp: localTimestamp, guid };
+    const commentsElm = document.getElementById('comments');
+    commentsElm.innerHTML = addComment(newComment) + commentsElm.innerHTML;
+
+    const serverTimestamp = res.timestamp;
     newComment.timestamp = serverTimestamp;
     const savedComments = getStorageComments();
     savedComments.push(newComment);
     setStorageComments(savedComments);
+
+    Prism.highlightAll();
 }
 
 const addDeleteCommentClickEvent = (page: string): void => {
@@ -173,4 +191,6 @@ export const fillComments = async (page: string): Promise<void> => {
     }
 
     addDeleteCommentClickEvent(page);
+
+    Prism.highlightAll();
 }

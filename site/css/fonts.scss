@@ -18,7 +18,10 @@
 @include font-face('Roboto', 'Roboto-Bold', normal, 700);
 
 body,
-input,
-textarea {
+input {
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+textarea {
+    font-family: Menlo, Monaco, Consolas, monospace;
 }

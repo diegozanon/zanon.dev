@@ -19,28 +19,22 @@ body {
     .copy-to-clipboard-button {
         cursor: pointer;
         outline: none;
+        border: 0;
+        color: #bbb;
+        font-size: 0.8em;
+        padding: 0.3em 0.7em;
+        background: rgba(224, 224, 224, .2);
+        border-radius: 1em;
     }
 
     div.code-toolbar {
-        position: relative
+        position: relative;
     }
 
     div.code-toolbar>.toolbar {
         position: absolute;
         top: 1em;
-        right: 1em
-    }
-
-    div.code-toolbar>.toolbar button {
-        border: 0;
-    }
-
-    div.code-toolbar>.toolbar button {
-        color: #bbb;
-        font-size: 0.8em;
-        padding: 0.3em 0.7em;
-        background: rgba(224, 224, 224, .2);
-        border-radius: 1em
+        right: 1em;
     }
 }
 
@@ -50,6 +44,16 @@ body {
         pre[class*="language-"],
         code[class*="language-"] {
             font-size: 0.7em;
+        }
+
+        .copy-to-clipboard-button {
+            font-size: 0.7em;
+            padding: 0.2em 0.4em;
+        }
+
+        div.code-toolbar>.toolbar {
+            top: 0.4em;
+            right: 0.7em;
         }
     }
 }

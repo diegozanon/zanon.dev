@@ -29,11 +29,11 @@ export const backend = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             }
         }
 
-        let timestamp = '';
+        let result;
         if (process.env.IS_OFFLINE || !isBot(event.requestContext.identity.userAgent)) {
             switch (body.requestType) {
                 case BackendRequestType.Comment:
-                    timestamp = await newComment(event.httpMethod, body.page, body.username, body.comment, body.guid);
+                    result = await newComment(event.httpMethod, body.page, body.username, body.comment, body.guid);
                     await notifyComment(event.httpMethod, body.page, body.username, body.comment);
                     break;
                 case BackendRequestType.Feedback:
@@ -53,8 +53,8 @@ export const backend = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
         const response = { message: 'success', cors: true } as HttpResponseOptions;
 
-        if (timestamp)
-            response.data = { timestamp };
+        if (result)
+            response.data = result;
 
         return successHandler(response);
     } catch (err) {
