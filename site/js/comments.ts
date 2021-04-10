@@ -19,8 +19,8 @@ const printTimestamp = (timestamp: string): string => {
 
 const addEditDeleteButtons = (guid: string): string => {
     return `
-        <input type="button" class="edit-comment" name="edit-comment" data-guid="${guid}" value="Edit">
-        <input type="button" class="delete-comment" name="delete-comment" data-guid="${guid}" value="Delete">
+        <input type="button" class="edit-comment btn-secondary" name="edit-comment" data-guid="${guid}" value="Edit">
+        <input type="button" class="delete-comment btn-danger" name="delete-comment" data-guid="${guid}" value="Delete">
     `;
 }
 

@@ -17,6 +17,8 @@
 @include font-face('Roboto', 'Roboto-RegularItalic', italic, 400);
 @include font-face('Roboto', 'Roboto-Bold', normal, 700);
 
-body {
+body,
+input,
+textarea {
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
 }

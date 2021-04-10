@@ -11,6 +11,10 @@ body {
     -webkit-tap-highlight-color: transparent; // avoid a blue highlight when tapping with a mobile device    
 }
 
+main {
+    padding: 0px 15px;
+}
+
 svg {
     margin: auto;
 }

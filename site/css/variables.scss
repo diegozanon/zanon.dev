@@ -1,11 +1,15 @@
+$font-size: 16px;
+$button-color: #00AAEE;
+$border-color: #505050;
+
 $dark-base: #202020;
 $dark-highlight: #81A4FF;
 $dark-font-color: #F7F7F7;
-$dark-link-color: #00AAEE;
+$dark-link-color: $button-color;
+$dark-border-color: $border-color;
 
 $light-base: #FFF;
 $light-highlight: #81A4FF;
 $light-font-color: #202020;
 $light-link-color: #0000EE;
-
-$font-size: 16px;
+$light-border-color: #CCC;

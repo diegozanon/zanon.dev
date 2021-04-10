@@ -1,0 +1,52 @@
+@import './variables';
+
+input,
+textarea {
+    border: 2px solid $border-color;
+    border-radius: 0.3em;
+    padding: 0.5em 1em;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+}
+
+input[type=text] {
+    width: 200px;
+}
+
+input[type=button] {
+    color: white;
+    background-color: $button-color;
+    cursor: pointer;
+
+    &.btn-secondary {
+        background-color: #707070;
+
+        &:active {
+            background-color: darken(#707070, 10%);
+        }
+    }
+
+    &.btn-danger {
+        background-color: #FF5E5B;
+
+        &:active {
+            background-color: darken(#FF5E5B, 10%);
+        }
+    }
+
+    &:active {
+        background-color: darken($button-color, 10%);
+    }
+}
+
+.btn-pair {
+    display: inline-flex;
+    margin-top: 4px;
+
+    input:first-child {
+        margin-right: 4px;
+    }
+}

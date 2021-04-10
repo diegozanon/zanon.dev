@@ -29,4 +29,36 @@ main {
             visibility: visible;
         }
     }
+
+    aside {
+        display: flex;
+        margin-bottom: 16px;
+
+        #comment-widget {
+            width: 100%;
+
+            h2 {
+                margin-top: 0px;
+            }
+
+            textarea {
+                width: 100%;
+                height: 150px;
+                box-sizing: border-box;
+            }
+
+            textarea,
+            input[type=button] {
+                margin-top: 4px;
+            }
+
+            input[type=button] {
+                float: right;
+            }
+        }
+
+        #comments {
+            margin-top: 40px;
+        }
+    }
 }

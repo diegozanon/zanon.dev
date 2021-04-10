@@ -11,21 +11,25 @@ export const configureNewsletter = (): void => {
     const newsletterMessage = document.getElementById('newsletter-message');
 
     const fetchNewsletter = async (httpMethod: string): Promise<void> => {
-        await fetch(lambdaURL, {
-            method: httpMethod,
-            headers,
-            body: JSON.stringify({
-                email: emailElm.value,
-                requestType: BackendRequestType.Newsletter
-            })
-        }).then(response => {
-            let message = httpMethod === 'POST' ? 'Subscribed!' : 'Unsubscribed.'
-            if (response.status >= 400)
-                message = "Oops! Something went wrong. I'm sorry.";
+        if (emailElm.value) {
+            await fetch(lambdaURL, {
+                method: httpMethod,
+                headers,
+                body: JSON.stringify({
+                    email: emailElm.value,
+                    requestType: BackendRequestType.Newsletter
+                })
+            }).then(response => {
+                let message = httpMethod === 'POST' ? 'Subscribed!' : 'Unsubscribed.'
+                if (response.status >= 400)
+                    message = "Oops! Something went wrong. I'm sorry.";
 
-            newsletterMessage.innerHTML = message;
-            newsletterMessage.classList.remove('dont-display');
-        });
+                newsletterMessage.innerHTML = message;
+                newsletterMessage.classList.remove('dont-display');
+
+                emailElm.value = '';
+            });
+        }
     }
 
     document.getElementById('subscribe').onclick = async (): Promise<void> => {

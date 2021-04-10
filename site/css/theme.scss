@@ -1,6 +1,6 @@
 @import './variables';
 
-@mixin theme($base, $highlight, $font-color, $link-color) {
+@mixin theme($base, $highlight, $font-color, $link-color, $border-color) {
     background-color: $base;
     color: $font-color;
     transition: background-color 0.5s, color 0.5s;
@@ -23,6 +23,14 @@
         }
     }
 
+    nav {
+        border-bottom: 2px solid $border-color;
+    }
+
+    footer {
+        border-top: 2px solid $border-color;
+    }
+
     a,
     a:hover,
     a:visited,
@@ -32,9 +40,9 @@
 }
 
 .light-theme {
-    @include theme($light-base, $light-highlight, $light-font-color, $light-link-color);
+    @include theme($light-base, $light-highlight, $light-font-color, $light-link-color, $light-border-color);
 }
 
 .dark-theme {
-    @include theme($dark-base, $dark-highlight, $dark-font-color, $dark-link-color);
+    @include theme($dark-base, $dark-highlight, $dark-font-color, $dark-link-color, $dark-border-color);
 }

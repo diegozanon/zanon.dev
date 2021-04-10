@@ -1,8 +1,19 @@
 <article></article>
 <aside>
+    <div>
+        <div id="comment-widget">
+            <h2>Comments</h2>
+            <input type="text" class="comment-username" name="comment-username" placeholder="Your name"
+                spellcheck="false">
+            <textarea class="comment-text" name="comment-text" rows="4"
+                placeholder="Your comment (accepts Markdown)"></textarea>
+            <input type="button" class="send-comment" name="send-comment" value="Send">
+        </div>
+        <div id="comments"></div>
+    </div>
     <div id="feedback">
         <figure>
-            <svg id="feedback" class="heart grayscale" role="img" aria-labelledby="heart-title heart-desc" width="24px"
+            <svg class="heart grayscale" role="img" aria-labelledby="heart-title heart-desc" width="24px"
                 viewBox="0 0 86 78">
                 <title id="heart-title">like</title>
                 <desc id="heart-desc">a heart icon</desc>
@@ -16,8 +27,8 @@
             <figcaption>like</figcaption>
         </figure>
         <figure>
-            <svg id="feedback" class="broken-heart grayscale" role="img"
-                aria-labelledby="broken-heart-title broken-heart-desc" width="24px" viewBox="0 0 86 78">
+            <svg class="broken-heart grayscale" role="img" aria-labelledby="broken-heart-title broken-heart-desc"
+                width="24px" viewBox="0 0 86 78">
                 <title id="broken-heart-title">dislike</title>
                 <desc id="broken-heart-desc">a heart icon cut in half</desc>
                 <mask id="lightning-mask">
@@ -34,11 +45,4 @@
             <figcaption>dislike</figcaption>
         </figure>
     </div>
-    <div id="comment-widget">
-        <input type="text" class="comment-username" name="comment-username">
-        <textarea class="comment-text" name="comment-text" rows="4"></textarea>
-        <p>Accepts Markdown formatting</p>
-        <input type="button" class="send-comment" name="send-comment" value="Send">
-    </div>
-    <div id="comments"></div>
 </aside>

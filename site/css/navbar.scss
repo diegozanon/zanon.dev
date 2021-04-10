@@ -50,10 +50,9 @@ nav {
 
 @include for-mobile {
     // $height, $font-size, $img-size, $padding
-    @include set-nav-size(40px, 18px, 28px, 0px 15px);
+    @include set-nav-size(40px, 18px, 28px, 0px 5px);
 
     nav {
-        flex-direction: column;
 
         a,
         .home-link {
