@@ -1,3 +1,5 @@
+@import './media-query';
+
 // using "body" to increase specificity
 body {
 
@@ -39,5 +41,15 @@ body {
         padding: 0.3em 0.7em;
         background: rgba(224, 224, 224, .2);
         border-radius: 1em
+    }
+}
+
+@include for-mobile {
+    body {
+
+        pre[class*="language-"],
+        code[class*="language-"] {
+            font-size: 0.7em;
+        }
     }
 }
