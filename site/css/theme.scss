@@ -1,52 +1,57 @@
 @import './variables';
 
-@mixin theme($base, $highlight, $font-color, $link-color, $border-color) {
-    background-color: $base;
-    color: $font-color;
+@function get($theme, $suffix) {
+    @return map-get($theme-colors, $theme + $suffix);
+}
+
+@mixin theme($theme) {
+    background-color: get($theme, '-base');
+    color: get($theme, '-font-color');
     transition: background-color 0.5s, color 0.5s;
 
     #obfuscated-sign {
-        stroke: $font-color;
+        stroke: get($theme, '-font-color');
     }
 
     nav,
     footer {
 
         a {
-            color: $font-color;
+            color: get($theme, '-font-color');
 
             &:hover,
             &:visited,
             &:active {
-                color: rgba($font-color, 0.7)
+                color: rgba(get($theme, '-font-color'), 0.7)
             }
         }
     }
 
     nav {
-        border-bottom: 2px solid $border-color;
+        border-bottom: 2px solid get($theme, '-border-color');
     }
 
     footer {
-        border-top: 2px solid $border-color;
+        border-top: 2px solid get($theme, '-border-color');
+        ;
     }
 
     a,
     a:hover,
     a:visited,
     a:active {
-        color: $link-color;
+        color: get($theme, '-link-color');
     }
 
     .modal-content {
-        background-color: $base;
+        background-color: get($theme, '-base');
     }
 }
 
 .light-theme {
-    @include theme($light-base, $light-highlight, $light-font-color, $light-link-color, $light-border-color);
+    @include theme(light);
 }
 
 .dark-theme {
-    @include theme($dark-base, $dark-highlight, $dark-font-color, $dark-link-color, $dark-border-color);
+    @include theme(dark);
 }

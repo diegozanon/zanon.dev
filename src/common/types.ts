@@ -32,6 +32,7 @@ export interface PostHeader {
     title: string;
     description: string;
     thumbnail: string;
+    thumbnailAltTxt: string;
     tags: Array<string>;
     status: PostStatus;
 }

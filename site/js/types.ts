@@ -40,6 +40,7 @@ export interface PostMeta {
     title: string;
     description: string;
     thumbnail: string;
+    thumbnailAltTxt: string;
     tags: Array<string>;
 }
 

@@ -23,7 +23,16 @@ const insertPage = (src: string, fragment: string, htmlSelector: string): string
 const addPosts = (page: string, postsJson: PostsJson): string => {
     let links = '';
     for (const post of postsJson.posts) {
-        links += createLink(post.header.slug, post.header.title);
+        links += `
+            <div class="post">
+                <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}">
+                <div>
+                    ${createLink(post.header.slug, post.header.title)}
+                    <p>${post.header.description}</p>
+                    <div class="tags">${post.header.tags}</div>
+                </div>
+            </div>
+        `;
     }
 
     return insertPage(page, links, '#posts');

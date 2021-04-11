@@ -10,7 +10,7 @@ const buildHeaders = (response: APIGatewayProxyResult, cors: boolean, httpMethod
     if (httpMethod === 'OPTIONS') {
         response.headers = {
             ...allowOriginZanonDev,
-            'Access-Control-Allow-Methods': 'POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Methods': 'POST, DELETE, OPTIONS',
             'Access-Control-Allow-Headers': 'Accept, Content-Type, Origin'
         }
 
