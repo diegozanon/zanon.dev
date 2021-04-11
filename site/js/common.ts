@@ -9,14 +9,10 @@ export const generatePostHeader = (header: PostMeta): string => {
         'Updated on ' + formatDate(header.updatedOn) + ' - Originally published on '
         : '';
 
-    const creationDate = formatDate(header.creationDate);
-
-    const date = updatedOn + creationDate;
-
     return `
         <h1>${header.title}</h1>
         <div class="post-date">
-            ${date}
+            ${updatedOn}<time datetime="${header.creationDate}">${formatDate(header.creationDate)}</time>
         </div>
     `;
 }
