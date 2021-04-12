@@ -1,6 +1,6 @@
 <article></article>
 <aside>
-    <div id="comments-sections">
+    <!-- <div id="comments-sections">
         <div id="comment-widget">
             <h2>Comments</h2>
             <input type="text" class="comment-username" name="comment-username" placeholder="Your name"
@@ -23,14 +23,14 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div id="feedback">
         <figure>
             <svg class="heart grayscale" role="img" aria-labelledby="heart-title heart-desc" width="24px"
-                viewBox="0 0 86 78">
+                viewBox="0 0 86 86">
                 <title id="heart-title">like</title>
                 <desc id="heart-desc">a heart icon</desc>
-                <g fill="#ff5e5b">
+                <g fill="#ff5e5b" transform="translate(0, 4)">
                     <!-- transforming each element individually because I can't animate properly when transforming all in a group -->
                     <rect x="0" y="25" width="50" height="50" transform="translate(-10, 25) rotate(-45)" />
                     <circle cx="25" cy="25" r="25" transform="translate(-10, 25) rotate(-45)" />
@@ -41,20 +41,62 @@
         </figure>
         <figure>
             <svg class="broken-heart grayscale" role="img" aria-labelledby="broken-heart-title broken-heart-desc"
-                width="24px" viewBox="0 0 86 78">
+                width="24px" viewBox="0 0 86 86">
                 <title id="broken-heart-title">dislike</title>
                 <desc id="broken-heart-desc">a heart icon cut in half</desc>
                 <mask id="lightning-mask">
                     <rect width="100%" height="100%" fill="white" />
                     <polygon points="40,0 25,15 45,30 33,50 60,30 40,15 55,0" fill="black" />
                 </mask>
-                <g mask="url(#lightning-mask)" fill="#ff5e5b">
+                <g mask="url(#lightning-mask)" transform="translate(0, 4)" fill="#ff5e5b">
                     <rect x="0" y="25" width="50" height="50" transform="translate(-10, 25) rotate(-45)" />
                     <circle cx="25" cy="25" r="25" transform="translate(-10, 25) rotate(-45)" />
                     <circle cx="50" cy="50" r="25" transform="translate(-10, 25) rotate(-45)" />
                 </g>
             </svg>
             <figcaption>dislike</figcaption>
+        </figure>
+        <figure>
+            <svg class="bug grayscale" role="img" aria-labelledby="bug-title bug-desc" width="24px"
+                viewBox="0 0 100 100">
+                <title id="bug-title">bug</title>
+                <desc id="bug-desc">a bug to indicate an issue with the post</desc>
+                <mask id="body-mask">
+                    <rect width="100%" height="100%" fill="white" />
+                    <rect x="45" y="45" rx="3" width="10" height="57" fill="black" />
+                    <rect x="20" y="19" rx="5" width="60" height="10" fill="black" />
+                </mask>
+                <g mask="url(#body-mask)" fill="#5e5eff">
+                    <ellipse cx="50" cy="50" rx="30" ry="50" />
+                    <rect x="0" y="45" rx="5" width="100" height="10" />
+                    <g transform="rotate(30 50 50) ">
+                        <rect x="0" y="45" rx="5" width="100" height="10" />
+                    </g>
+                    <g transform="rotate(150 50 50)">
+                        <rect x="0" y="45" rx="5" width="100" height="10" />
+                    </g>
+                </g>
+            </svg>
+            <figcaption>report</figcaption>
+        </figure>
+        <figure>
+            <svg class="chat grayscale" role="img" aria-labelledby="chat-title chat-desc" width="24px"
+                viewBox="0 0 100 100">
+                <title id="chat-title">chat</title>
+                <desc id="chat-desc">a chat icon to indicate that you can send a message to the author</desc>
+                <mask id="chat-mask">
+                    <rect x="0" y="0" width="100" height="100" fill="white" />
+                    <circle cx="30" cy="40" r="5" fill="black" />
+                    <circle cx="50" cy="40" r="5" fill="black" />
+                    <circle cx="70" cy="40" r="5" fill="black" />
+                </mask>
+                <g mask="url(#chat-mask)" fill="#5e5eff">
+                    <rect x="10" y="0" rx="20" width="80" height="80" />
+                    <rect x="30" y="0" rx="5" width="8" height="100" />
+                    <polygon points="35,79 35,100 60,79" />
+                </g>
+            </svg>
+            <figcaption>message</figcaption>
         </figure>
     </div>
 </aside>

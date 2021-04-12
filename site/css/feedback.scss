@@ -1,58 +1,74 @@
 #feedback {
     display: flex;
-    position: absolute;
-    right: 0;
-    cursor: pointer;
+    justify-content: center;
     text-align: center;
+    cursor: pointer;
 
     figure {
         margin: 0px;
-        padding: 0px 5px;
+        width: 66px;
     }
 
-    .grayscale {
-        filter: grayscale(1);
-
-        &:hover {
-            filter: grayscale(0);
-        }
+    figcaption {
+        font-size: 0.85em;
     }
+}
 
-    .heart,
-    .broken-heart {
-        padding-bottom: 7px;
+.grayscale {
+    filter: grayscale(1);
+
+    &:hover {
+        filter: grayscale(0);
     }
+}
+
+.heart,
+.broken-heart,
+.bug,
+.chat {
+    padding-bottom: 6px;
 }
 
 // only for devices that implement hover properly (i.e.: desktop)
 @media (hover: hover) {
-    #feedback {
-        .heart:hover {
-            animation: 1.5s pulsate infinite alternate ease-in-out;
-        }
+    .heart:hover {
+        animation: 1.5s pulsate infinite alternate ease-in-out;
+    }
 
-        .broken-heart:hover {
-            animation: 1s shake infinite alternate ease-in-out;
-        }
+    .broken-heart:hover {
+        animation: 1s shake infinite alternate ease-in-out;
+    }
+
+    .bug:hover {
+        animation: 1s tremble infinite alternate ease-in-out;
+    }
+
+    .chat:hover {
+        animation: 2s grow infinite alternate linear;
     }
 }
 
 // only for devices that don't implement hover properly (i.e.: mobile)
 @media (hover: none) {
-    #feedback {
-        .heart:hover {
-            animation: 1.5s pulsate 1 alternate ease-in-out;
-        }
+    .heart:hover {
+        animation: 1.5s pulsate 1 alternate ease-in-out;
+    }
 
-        .broken-heart:hover {
-            animation: 1s shake 1 alternate ease-in-out;
-        }
+    .broken-heart:hover {
+        animation: 1s shake 1 alternate ease-in-out;
+    }
+
+    .bug:hover {
+        animation: 1s tremble 1 alternate ease-in-out;
+    }
+
+    .chat:hover {
+        animation: 2s tremble 1 alternate linear;
     }
 }
 
 @keyframes pulsate {
 
-    0%,
     100% {
         transform: scale(1);
     }
@@ -89,5 +105,33 @@
     40%,
     60% {
         transform: translate(5px, 0);
+    }
+}
+
+@keyframes tremble {
+
+    40%,
+    80%,
+    100% {
+        transform: rotate(0);
+    }
+
+    20%,
+    90% {
+        transform: rotate(45deg);
+    }
+
+    60% {
+        transform: rotate(-45deg);
+    }
+}
+
+@keyframes grow {
+    33% {
+        transform: scale(1.2);
+    }
+
+    66% {
+        transform: scale(0.8);
     }
 }
