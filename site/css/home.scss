@@ -1,17 +1,46 @@
+@import './media-query';
+
 .post {
 
     margin: 30px 30px;
 
     a {
         display: flex;
-        align-items: center;
         justify-content: center;
         text-decoration: none;
+        user-select: text;
+    }
+
+    h2 {
+        margin: 0;
     }
 
     img {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
         margin-right: 30px;
+        border-radius: 5%;
+    }
+}
+
+.post-description {
+    display: flex;
+    flex-direction: column;
+}
+
+.tags {
+    margin-left: auto;
+    border: 2px solid;
+    border-radius: 5%;
+    padding: 0.2em 0.5em;
+}
+
+@include for-mobile {
+    .post a {
+        flex-direction: column;
+
+        img {
+            margin: 0 auto 20px auto;
+        }
     }
 }

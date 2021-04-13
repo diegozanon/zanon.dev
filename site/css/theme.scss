@@ -7,13 +7,17 @@
 @mixin theme($theme) {
     background-color: get($theme, '-base');
     color: get($theme, '-font-color');
-    transition: background-color 0.5s, color 0.5s;
+
+    .post h2,
+    .tags {
+        color: get($theme, '-font-color');
+    }
 
     article p,
     article li,
-    .post-date {
+    .post-date,
+    .post p {
         color: get($theme, '-font-color-article');
-        transition: color 0.5s;
     }
 
     pre[class*="language-"],
