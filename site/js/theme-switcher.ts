@@ -3,13 +3,13 @@ import storage from './storage';
 
 const light: ThemeElement = {
     alt: 'Light Mode',
-    background: '#80B2EE',
+    background: '#80b2ee',
     class: Theme.Light
 }
 
 const dark: ThemeElement = {
     alt: 'Dark Mode',
-    background: '#595DDD',
+    background: '#595ddd',
     class: Theme.Dark
 }
 

@@ -12,11 +12,14 @@ export const configureNewsletter = (): void => {
 
     const fetchNewsletter = async (httpMethod: string): Promise<void> => {
         if (emailElm.value) {
+            const email = emailElm.value;
+            emailElm.value = '';
+
             await fetch(lambdaURL, {
                 method: httpMethod,
                 headers,
                 body: JSON.stringify({
-                    email: emailElm.value,
+                    email,
                     requestType: BackendRequestType.Newsletter
                 })
             }).then(response => {
@@ -26,8 +29,6 @@ export const configureNewsletter = (): void => {
 
                 newsletterMessage.innerHTML = message;
                 newsletterMessage.classList.remove('dont-display');
-
-                emailElm.value = '';
             });
         }
     }

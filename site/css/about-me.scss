@@ -1,0 +1,35 @@
+@import './media-query';
+@import './variables';
+
+.about-me {
+    display: flex;
+
+    &-text {
+        margin-right: 50px;
+    }
+
+    img {
+        margin-top: 25px;
+        margin-left: auto;
+        border-radius: 5%;
+        width: 230px;
+        height: 230px;
+    }
+}
+
+@include for-mobile {
+    .about-me {
+        flex-direction: column;
+
+        img {
+            margin-right: auto;
+            margin-top: 0px;
+        }
+    }
+}
+
+#obfuscated-sign {
+    width: $font-size;
+    height: auto;
+    vertical-align: middle;
+}

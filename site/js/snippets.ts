@@ -1,3 +1,5 @@
+import { configureFeedback } from './feedback';
+
 export const configureSnippet = (): void => {
     const notFoundElm = document.getElementById('not-found');
     notFoundElm.style.display = 'none';
@@ -17,6 +19,8 @@ export const configureSnippet = (): void => {
         .then(text => {
             document.getElementById('snippet').innerHTML = text;
             Prism.highlightAll();
+
+            configureFeedback();
         })
         .catch(() => {
             notFoundElm.style.display = '';

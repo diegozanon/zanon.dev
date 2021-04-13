@@ -41,6 +41,8 @@ export const newSnippet = async (code: string, filepath: string): Promise<void> 
     }
 
     const file = marked(await fs.promises.readFile(filepath, 'utf8'));
+    const postTemplate = await fs.promises.readFile(path.resolve('./site/pages/post.html'), 'utf8');
+    const processedFile = postTemplate.replace('<article></article>', `<article>${file}</article>`);
 
     const template = await fs.promises.readFile(path.resolve('./src/templates/snippet.html'), 'utf8');
     const textToFind = 'https://zanon.dev/snippet/';
@@ -48,7 +50,7 @@ export const newSnippet = async (code: string, filepath: string): Promise<void> 
 
     const s3 = new AWS.S3({ apiVersion: '2006-03-01', region: 'us-east-1' });
 
-    const fileToUpload = buildObjectToUpload({ key: `snippets/${code}`, content: file, mimeType: 'text/plain' });
+    const fileToUpload = buildObjectToUpload({ key: `snippets/${code}`, content: processedFile, mimeType: 'text/plain' });
     const htmlToUpload = buildObjectToUpload({ key: code, content: html, mimeType: 'text/html' });
 
     await s3.putObject(fileToUpload).promise();
