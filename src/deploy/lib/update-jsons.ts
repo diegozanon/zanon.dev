@@ -26,8 +26,10 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
                     <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}">
                     <div>
                         <h2>${post.header.title}</h2>
-                        <p>${post.header.description}</p>
-                        <div class="tags">${post.header.tags}</div>
+                        <div class="post-description">
+                            <p>${post.header.description}</p>
+                            <div class="tags">${post.header.tags}</div>
+                        </div>
                     </div>
                 </a>
             </div>
