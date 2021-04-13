@@ -1,9 +1,9 @@
-import { configureSnippet } from './snippets';
-import { fillComments } from './comments';
-import { configureNewsletter } from './newsletter';
-import './spa';
 import './theme-switcher';
+import { configureFeedback } from './feedback';
+import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
+import { configureSnippet } from './snippets';
+import { configureSPA } from './spa';
 import { configureReadVisit } from './visits';
 import * as Prismjs from '../assets/prismjs/prism.min.js';
 
@@ -11,30 +11,28 @@ declare global {
     const Prism: typeof Prismjs;
 }
 
-configureReadVisit();
-
-// Get the comments if the page is a post
 const page = window.location.pathname;
 
-const notPosts = ['/', '/me', '/privacy', '/newsletter', '/404'];
-const isPost = !notPosts.includes(page);
 const isSnippet = page.startsWith('/snippet/');
-
 if (isSnippet) {
     configureSnippet();
-} else if (isPost && !document.getElementById('not-found')) {
-    fillComments(page);
 }
 
-if (page === '/newsletter') {
+const isNewsletter = page === '/newsletter';
+if (isNewsletter) {
     configureNewsletter();
 }
 
 // Add the service worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.min.js');
+        // navigator.serviceWorker.register('/service-worker.min.js');
     });
 }
 
+// hide tooltips from svg images (<title> is for accessibility and should not be seen by everyone)
 hideTooltips();
+
+configureFeedback();
+configureReadVisit();
+configureSPA();

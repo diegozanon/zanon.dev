@@ -30,7 +30,6 @@ provider:
         - dynamodb:PutItem
         - dynamodb:DeleteItem
       Resource: [
-        "arn:aws:dynamodb:${self:provider.region}:*:table/Comments",
         "arn:aws:dynamodb:${self:provider.region}:*:table/Feedback",
         "arn:aws:dynamodb:${self:provider.region}:*:table/Newsletter",
         "arn:aws:dynamodb:${self:provider.region}:*:table/Visits"
@@ -51,7 +50,6 @@ functions:
   backend:
     handler: src/backend/handler.backend
     events:
-      - http: GET /backend
       - http: POST /backend
       - http: DELETE /backend
       - http: OPTIONS /backend
@@ -70,23 +68,6 @@ plugins:
 
 resources:
   Resources:
-    CommentsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: Comments
-        AttributeDefinitions:
-          - AttributeName: Page
-            AttributeType: S
-          - AttributeName: GUID
-            AttributeType: S            
-        KeySchema:
-          - AttributeName: Page
-            KeyType: HASH
-          - AttributeName: GUID
-            KeyType: RANGE            
-        ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3  
     FeedbackTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -102,8 +83,8 @@ resources:
           - AttributeName: Timestamp
             KeyType: RANGE            
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1    
+          ReadCapacityUnits: 3  
+          WriteCapacityUnits: 3   
     NewsletterTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -115,8 +96,8 @@ resources:
           - AttributeName: Email
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
     VisitsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -132,8 +113,8 @@ resources:
           - AttributeName: Timestamp
             KeyType: RANGE            
         ProvisionedThroughput:
-          ReadCapacityUnits: 18
-          WriteCapacityUnits: 18
+          ReadCapacityUnits: 17
+          WriteCapacityUnits: 17
 
 custom:
   webpack:

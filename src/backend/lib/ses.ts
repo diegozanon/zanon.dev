@@ -11,44 +11,37 @@ const buildEmailToMe = (subject: string, body: string): SendEmailRequest => {
         },
         Message: {
             Subject: {
-                Data: subject
+                Data: `${subject}`
             },
             Body: {
                 Html: {
                     Charset: 'UTF-8',
-                    Data: body
+                    Data: `${body}`
                 }
             }
         }
     }
 }
 
-export const notifyComment = async (httpMethod: string, page: string, username: string, comment: string): Promise<void> => {
-
-    let action = `<unexpected http method: ${httpMethod}>`;
-    switch (httpMethod) {
-        case 'POST':
-            action = 'added';
-            break;
-        case 'DELETE':
-            action = 'deleted';
-            break;
-    }
-
-    await ses.sendEmail(buildEmailToMe(`User "${username}" ${action} a comment on page ${page}`, comment)).promise();
+export const notifyFeedback = async (page: string, message: string): Promise<void> => {
+    if (page.length > 150 || message.length > 1000)
+        throw new Error('Text is too long.');
+    await ses.sendEmail(buildEmailToMe(`New message on page ${page}`, message)).promise();
 }
 
-export const notifyNewsletter = async (httpMethod: string, email: string): Promise<void> => {
+export const notifyNewsletter = async (httpMethod: string): Promise<void> => {
 
-    let action = `<unexpected http method: ${httpMethod}>`;
+    let subject = '';
     switch (httpMethod) {
         case 'POST':
-            action = 'subscribed';
+            subject = 'A new user has subscribed';
             break;
         case 'DELETE':
-            action = 'unsubscribed';
+            subject = 'A user has unsubscribed';
             break;
+        default:
+            subject = `<unexpected http method: ${httpMethod}>`;
     }
 
-    await ses.sendEmail(buildEmailToMe(`User "${email}" has ${action}`, '')).promise();
+    await ses.sendEmail(buildEmailToMe(subject, '')).promise();
 }

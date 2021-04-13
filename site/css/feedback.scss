@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 #feedback {
     display: flex;
     justify-content: center;
@@ -14,12 +16,8 @@
     }
 }
 
-.grayscale {
-    filter: grayscale(1);
-
-    &:hover {
-        filter: grayscale(0);
-    }
+svg.gray-icon g {
+    fill: $gray-icon;
 }
 
 .heart,
@@ -27,6 +25,20 @@
 .bug,
 .chat {
     padding-bottom: 6px;
+}
+
+#feedback-message {
+
+    textarea {
+        width: 100%;
+        height: 150px;
+        box-sizing: border-box;
+    }
+
+    input[type=button] {
+        float: right;
+        margin-bottom: 20px;
+    }
 }
 
 // only for devices that implement hover properly (i.e.: desktop)
@@ -63,7 +75,7 @@
     }
 
     .chat:hover {
-        animation: 2s tremble 1 alternate linear;
+        animation: 2s grow 1 alternate linear;
     }
 }
 

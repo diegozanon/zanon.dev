@@ -1,32 +1,8 @@
 <article></article>
 <aside>
-    <!-- <div id="comments-sections">
-        <div id="comment-widget">
-            <h2>Comments</h2>
-            <input type="text" class="comment-username" name="comment-username" placeholder="Your name"
-                spellcheck="false">
-            <textarea class="comment-text" name="comment-text" rows="4"
-                placeholder="Your comment (accepts Markdown)"></textarea>
-            <input type="button" class="send-comment" name="send-comment" value="Send">
-        </div>
-        <p id="comment-message" class="dont-display"></p>
-        <div id="comments"></div>
-        <div id="delete-comment-modal" class="modal dont-display">
-            <div class="modal-content">
-                <h2>Delete Comment</h2>
-                <p>Are you sure you want to delete your comment?</p>
-                <div class="btn-pair">
-                    <input type="button" class="btn-secondary" name="cancel-delete-comment" value="Cancel"
-                        onclick="document.getElementById('delete-comment-modal').classList.add('dont-display')">
-                    <input type="button" id="confirm-delete-comment" class="btn-danger" name="confirm-delete-comment"
-                        value="Delete">
-                </div>
-            </div>
-        </div>
-    </div> -->
     <div id="feedback">
         <figure>
-            <svg class="heart grayscale" role="img" aria-labelledby="heart-title heart-desc" width="24px"
+            <svg class="heart gray-icon" role="img" aria-labelledby="heart-title heart-desc" width="24px"
                 viewBox="0 0 86 86">
                 <title id="heart-title">like</title>
                 <desc id="heart-desc">a heart icon</desc>
@@ -40,7 +16,7 @@
             <figcaption>like</figcaption>
         </figure>
         <figure>
-            <svg class="broken-heart grayscale" role="img" aria-labelledby="broken-heart-title broken-heart-desc"
+            <svg class="broken-heart gray-icon" role="img" aria-labelledby="broken-heart-title broken-heart-desc"
                 width="24px" viewBox="0 0 86 86">
                 <title id="broken-heart-title">dislike</title>
                 <desc id="broken-heart-desc">a heart icon cut in half</desc>
@@ -48,7 +24,7 @@
                     <rect width="100%" height="100%" fill="white" />
                     <polygon points="40,0 25,15 45,30 33,50 60,30 40,15 55,0" fill="black" />
                 </mask>
-                <g mask="url(#lightning-mask)" transform="translate(0, 4)" fill="#ff5e5b">
+                <g mask="url(#lightning-mask)" fill="#ff5e5b" transform="translate(0, 4)">
                     <rect x="0" y="25" width="50" height="50" transform="translate(-10, 25) rotate(-45)" />
                     <circle cx="25" cy="25" r="25" transform="translate(-10, 25) rotate(-45)" />
                     <circle cx="50" cy="50" r="25" transform="translate(-10, 25) rotate(-45)" />
@@ -57,7 +33,7 @@
             <figcaption>dislike</figcaption>
         </figure>
         <figure>
-            <svg class="bug grayscale" role="img" aria-labelledby="bug-title bug-desc" width="24px"
+            <svg class="bug gray-icon" role="img" aria-labelledby="bug-title bug-desc" width="24px"
                 viewBox="0 0 100 100">
                 <title id="bug-title">bug</title>
                 <desc id="bug-desc">a bug to indicate an issue with the post</desc>
@@ -80,18 +56,18 @@
             <figcaption>report</figcaption>
         </figure>
         <figure>
-            <svg class="chat grayscale" role="img" aria-labelledby="chat-title chat-desc" width="24px"
+            <svg class="chat gray-icon" role="img" aria-labelledby="chat-title chat-desc" width="24px"
                 viewBox="0 0 100 100">
                 <title id="chat-title">chat</title>
                 <desc id="chat-desc">a chat icon to indicate that you can send a message to the author</desc>
                 <mask id="chat-mask">
                     <rect x="0" y="0" width="100" height="100" fill="white" />
-                    <circle cx="30" cy="40" r="5" fill="black" />
+                    <circle cx="25" cy="40" r="5" fill="black" />
                     <circle cx="50" cy="40" r="5" fill="black" />
-                    <circle cx="70" cy="40" r="5" fill="black" />
+                    <circle cx="75" cy="40" r="5" fill="black" />
                 </mask>
                 <g mask="url(#chat-mask)" fill="#5e5eff">
-                    <rect x="10" y="0" rx="20" width="80" height="80" />
+                    <rect x="0" y="0" rx="20" width="100" height="80" />
                     <rect x="30" y="0" rx="5" width="8" height="100" />
                     <polygon points="35,79 35,100 60,79" />
                 </g>
@@ -99,4 +75,10 @@
             <figcaption>message</figcaption>
         </figure>
     </div>
+    <div id="feedback-message" class="dont-display">
+        <h2>Feedback</h2>
+        <textarea name="text" rows="4" maxlength="1000" placeholder="Private comment (only for the author)"></textarea>
+        <input type="button" name="send" value="Send">
+    </div>
+    <p id="feedback-result" class="dont-display"></p>
 </aside>

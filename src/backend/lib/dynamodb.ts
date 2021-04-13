@@ -1,109 +1,13 @@
 import * as AWS from 'aws-sdk';
-import * as marked from 'marked';
 import * as moment from 'moment';
 
 const documentClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.REGION });
 
 const validateSize = (text: string, minLimit: number, maxLimit: number): void => {
     if (text.length > maxLimit)
-        throw new Error('Text is bigger than its limit size.')
+        throw new Error('Text is bigger than its limit size.');
     if (text.length < minLimit)
-        throw new Error('Text is smaller than its limit size.')
-}
-
-interface CommentResult {
-    username: string;
-    comment: string;
-    timestamp: string;
-}
-
-const queryComments = async (page: string, lastEvaluatedKey?: AWS.DynamoDB.DocumentClient.Key): Promise<CommentResult[]> => {
-
-    const params: AWS.DynamoDB.DocumentClient.QueryInput = {
-        TableName: 'Comments',
-        Select: 'SPECIFIC_ATTRIBUTES',
-        ProjectionExpression: 'Username, #C, #T',
-        ExpressionAttributeNames: { // Comment and Timestamp are reserved words
-            '#C': 'Comment',
-            '#T': 'Timestamp'
-        },
-        ExpressionAttributeValues: {
-            ':page': page
-        },
-        KeyConditionExpression: 'Page = :page',
-        ConsistentRead: false,
-        ReturnConsumedCapacity: 'TOTAL'
-    };
-
-    if (lastEvaluatedKey) {
-        params.ExclusiveStartKey = lastEvaluatedKey;
-    }
-
-    const data = await documentClient.query(params).promise();
-
-    const result: CommentResult[] = [];
-    for (const item of data.Items) {
-        result.push({
-            username: item.Username,
-            comment: marked(item.Comment),
-            timestamp: item.Timestamp
-        });
-    }
-
-    if (data.LastEvaluatedKey) {
-        const recursiveData = await queryComments(page, data.LastEvaluatedKey);
-        result.push(...recursiveData);
-    }
-
-    return result;
-}
-
-export const getComments = async (page: string): Promise<CommentResult[]> => {
-
-    validateSize(page, 5, 150);
-
-    return await queryComments(page);
-}
-
-export const newComment = async (httpMethod: string, page: string, username: string, comment: string, guid: string): Promise<CommentResult> => {
-
-    validateSize(page, 5, 150);
-    validateSize(guid, 36, 36);
-    validateSize(username, 2, 25);
-    validateSize(comment, 10, 5000);
-
-    const timestamp = moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ');
-
-    switch (httpMethod) {
-        case 'POST':
-            await documentClient.put({
-                TableName: 'Comments',
-                Item: {
-                    Page: page,
-                    GUID: guid,
-                    Username: username,
-                    Comment: comment,
-                    Timestamp: timestamp
-                }
-            }).promise();
-            break;
-        case 'DELETE':
-            await documentClient.delete({
-                TableName: 'Comments',
-                Key: {
-                    'Page': page,
-                    'GUID': guid
-                },
-                ConditionExpression: 'attribute_exists(Page) and attribute_exists(GUID)'
-            }).promise();
-            break;
-    }
-
-    return {
-        username,
-        comment: marked(comment),
-        timestamp
-    };
+        throw new Error('Text is smaller than its limit size.');
 }
 
 export const insertVisit = async (page: string, action: string): Promise<void> => {

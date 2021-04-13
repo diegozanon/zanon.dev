@@ -19,33 +19,6 @@ svg {
     margin: auto;
 }
 
-.modal {
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(black, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    padding: 20px;
-    border-radius: 1em;
-
-    h2 {
-        margin-top: 0px;
-    }
-
-    .btn-pair {
-        display: flex;
-        justify-content: center;
-    }
-}
-
 .invisible {
     visibility: hidden;
 }
@@ -56,32 +29,4 @@ svg {
 
 .no-bullets {
     list-style-type: none;
-}
-
-.red {
-    background-color: $red;
-}
-
-.green {
-    background-color: $green;
-}
-
-.blue {
-    background-color: $blue;
-}
-
-.yellow {
-    background-color: $yellow;
-}
-
-.purple {
-    background-color: $purple;
-}
-
-.orange {
-    background-color: $orange;
-}
-
-.brown {
-    background-color: $brown;
 }

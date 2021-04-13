@@ -9,6 +9,18 @@
     color: get($theme, '-font-color');
     transition: background-color 0.5s, color 0.5s;
 
+    article p,
+    article li,
+    .post-date {
+        color: get($theme, '-font-color-article');
+        transition: color 0.5s;
+    }
+
+    pre[class*="language-"],
+    code[class*="language-"] {
+        background-color: get($theme, '-code-background');
+    }
+
     #obfuscated-sign {
         stroke: get($theme, '-font-color');
     }
@@ -28,12 +40,16 @@
     }
 
     nav {
-        border-bottom: 2px solid get($theme, '-border-color');
+        border-bottom: 2px solid get($theme, '-nav-color');
     }
 
     footer {
-        border-top: 2px solid get($theme, '-border-color');
-        ;
+        border-top: 2px solid get($theme, '-nav-color');
+    }
+
+    input,
+    textarea {
+        border-color: get($theme, '-border-color');
     }
 
     a,
@@ -41,10 +57,6 @@
     a:visited,
     a:active {
         color: get($theme, '-link-color');
-    }
-
-    .modal-content {
-        background-color: get($theme, '-base');
     }
 }
 

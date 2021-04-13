@@ -1,4 +1,3 @@
-import { fillComments } from './comments';
 import { generatePostHeader } from './common';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
@@ -28,7 +27,7 @@ let siteJson: Page[];
 
 })().catch(console.error);
 
-const configureSPA = (): void => {
+export const configureSPA = (): void => {
 
     const loadData = (data: string): void => {
         document.getElementsByTagName('main')[0].innerHTML = data;
@@ -45,7 +44,6 @@ const configureSPA = (): void => {
         const header = generatePostHeader(post.header);
         const data = postsJson.template.replace('<article></article>', `<article>${header + post.html}</article>`);
         loadData(data);
-        fillComments(targetLink);
 
         Prism.highlightAll();
     }
@@ -109,5 +107,3 @@ const configureSPA = (): void => {
         }
     }
 }
-
-configureSPA();

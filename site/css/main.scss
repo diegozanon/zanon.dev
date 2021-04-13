@@ -1,12 +1,17 @@
-@import './variables';
-
 main {
     flex-grow: 1;
 
-    #obfuscated-sign {
-        width: $font-size;
-        height: auto;
-        vertical-align: middle;
+    h1 {
+        font-size: 2em;
+        margin-bottom: 0px;
+    }
+
+    p {
+        margin: 20px 0px;
+    }
+
+    .post-date {
+        margin-bottom: 30px;
     }
 
     #not-found {

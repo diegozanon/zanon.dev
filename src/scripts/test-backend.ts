@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 if (process.argv.length !== 3) { // npm run executes as `ts-node <this-file> <test-type>` (3 arguments)
-    console.info('Usage: npm run test-backend (comment | feedback | visit).');
+    console.info('Usage: npm run test-backend (feedback | newsletter | visit).');
     throw Error('Incorrect number of arguments.');
 }
 
-if (process.argv[2] !== 'comment' && process.argv[2] !== 'feedback' && process.argv[2] !== 'visit') {
-    throw Error('Last argument must be "comment", "feedback" or "visit".');
+if (!['feedback', 'newsletter', 'visit'].includes(process.argv[2])) {
+    throw Error('Last argument must be "feedback", "newsletter or "visit".');
 }
 
 (async (): Promise<void> => {

@@ -1,21 +1,13 @@
 export enum BackendRequestType {
-    Comment = 'comment',
     Feedback = 'feedback',
     Newsletter = 'newsletter',
     Visit = 'visit'
 }
 
-export interface Comment {
-    page?: string;
-    username: string;
-    comment: string;
-    timestamp: string;
-    guid?: string;
-}
-
 export enum FeedbackType {
     Like = 'like',
-    Dislike = 'dislike'
+    Dislike = 'dislike',
+    Message = 'message'
 }
 
 export interface Page {

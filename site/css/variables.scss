@@ -1,24 +1,25 @@
 $red: #ff5e5b;
-$green: #59981a;
-$blue: #00aaee;
-$yellow: #b99b03;
-$purple: #4e1a3d;
-$orange: #Fd7f20;
-$brown: #523a28;
+$blue: #595ddd;
 $gray: #505050;
 
 $font-size: 16px;
 $button-color: $blue;
-$border-color: $gray;
+$gray-icon: #6a6a6a;
 
 $theme-colors: (
-    dark-base: #202020,
+    dark-base: #1a1e24,
     dark-font-color: #f7f7f7,
-    dark-link-color: $blue,
-    dark-border-color: $gray,
+    dark-font-color-article: #c6d8ec,
+    dark-link-color: #6ab0f3,
+    dark-border-color: #ddd,
+    dark-nav-color: $gray,
+    dark-code-background: #151515,
 
     light-base: #fff,
     light-font-color: #202020,
+    light-font-color-article: #303a45,
     light-link-color: #0000ee,
-    light-border-color: #ccc
+    light-border-color: #333,
+    light-nav-color: #ccc,
+    light-code-background: #1a1e24
 );
