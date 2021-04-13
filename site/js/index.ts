@@ -2,7 +2,7 @@ import './theme-switcher';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
-import { configureSnippet } from './snippets';
+import { loadSnippet } from './snippets';
 import { configureSPA } from './spa';
 import { configureReadVisit } from './visits';
 import * as Prismjs from '../assets/prismjs/prism.min.js';
@@ -15,7 +15,7 @@ const page = window.location.pathname;
 
 const isSnippet = page.startsWith('/snippet/');
 if (isSnippet) {
-    configureSnippet();
+    loadSnippet();
 }
 
 const isNewsletter = page === '/newsletter';

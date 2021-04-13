@@ -1,6 +1,7 @@
 import { generatePostHeader } from './common';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
+import { loadSnippet } from './snippets';
 import { hideTooltips } from './tooltips';
 import { PostsJson, Page, Post, VisitType } from './types';
 import { clearReadVisit, sendVisited } from './visits';
@@ -34,9 +35,10 @@ export const configureSPA = (): void => {
         configureSPA();
     }
 
-    const switchPostPage = (targetLink: string): void => {
+    const switchPostPage = (targetLink: string, justLoad: boolean): void => {
         // rewrite url
-        window.history.pushState({}, '', targetLink);
+        if (!justLoad)
+            window.history.pushState({}, '', targetLink);
 
         const post = postsJson.posts.find(post => post.header.slug === targetLink.substring(1));
 
@@ -48,16 +50,46 @@ export const configureSPA = (): void => {
         Prism.highlightAll();
     }
 
-    const switchSitePage = (targetLink: string): void => {
+    const switchSitePage = (targetLink: string, justLoad: boolean): void => {
+
+        const isSnippet = targetLink.startsWith('/snippet/');
+        if (isSnippet) {
+            loadSnippet();
+            return;
+        }
 
         const page = siteJson.find(page => page.slug === targetLink.substring(1));
+        if (page) {
+            if (!justLoad)
+                window.history.pushState({}, '', targetLink);
 
-        if (!page) { // 404
-            window.location.href = '/404';
-        } else {
-            window.history.pushState({}, '', targetLink);
             loadData(page.html);
+
+        } else { // 404
+            window.location.href = '/404';
         }
+    }
+
+    const switchPage = (pathname: string, justLoad: boolean): void => {
+
+        clearReadVisit();
+
+        const postsPages = postsJson && postsJson.posts.map((post: Post) => { return post.header.slug });
+        const slug = pathname.substring(1);
+
+        if (postsPages.includes(slug)) {
+            switchPostPage(pathname, justLoad);
+            configureFeedback();
+        } else if (siteJson) {
+            switchSitePage(pathname, justLoad);
+
+            if (pathname === '/newsletter')
+                configureNewsletter();
+        } else if (!justLoad) {
+            window.location.href = pathname;
+        }
+
+        hideTooltips();
     }
 
     const anchors = document.getElementsByTagName('a');
@@ -65,8 +97,6 @@ export const configureSPA = (): void => {
         const href = anchor.getAttribute('href');
 
         anchor.onclick = (evt): void => {
-
-            sendVisited(href, VisitType.Clicked);
 
             // handle only local links
             if (!href.startsWith('/')) {
@@ -86,24 +116,13 @@ export const configureSPA = (): void => {
 
             evt.preventDefault();
 
-            clearReadVisit();
+            sendVisited(href, VisitType.Clicked);
 
-            const postsPages = postsJson && postsJson.posts.map((post: Post) => { return post.header.slug });
-            const slug = href.substring(1);
-
-            if (postsPages.includes(slug)) {
-                switchPostPage(href);
-                configureFeedback();
-            } else if (siteJson) {
-                switchSitePage(href);
-
-                if (href === '/newsletter')
-                    configureNewsletter();
-            } else {
-                window.location.href = href;
-            }
-
-            hideTooltips();
+            switchPage(href, false);
         }
+    }
+
+    window.onpopstate = (): void => {
+        switchPage(window.location.pathname, true);
     }
 }

@@ -1,8 +1,14 @@
 import { configureFeedback } from './feedback';
+import { configureSPA } from './spa';
 
-export const configureSnippet = (): void => {
+export const loadSnippet = (): void => {
+
     const notFoundElm = document.getElementById('not-found');
-    notFoundElm.style.display = 'none';
+    const from404page = notFoundElm != null; // if not from404, then it is from SPA back-button
+
+    if (from404page) {
+        notFoundElm.style.display = 'none';
+    }
 
     const code = window.location.pathname.replace('/snippet/', '');
     const url = `https://s3.amazonaws.com/code.zanon.dev/snippets/${code}`;
@@ -17,12 +23,20 @@ export const configureSnippet = (): void => {
             return res.text();
         })
         .then(text => {
-            document.getElementById('snippet').innerHTML = text;
-            Prism.highlightAll();
 
+            if (from404page) {
+                document.getElementById('snippet').innerHTML = text;
+            } else {
+                document.getElementsByTagName('main')[0].innerHTML = text;
+                configureSPA();
+            }
+
+            Prism.highlightAll();
             configureFeedback();
         })
         .catch(() => {
-            notFoundElm.style.display = '';
+            if (from404page) {
+                notFoundElm.style.display = '';
+            }
         });
 }
