@@ -13,6 +13,7 @@ import { replaceInFile } from 'replace-in-file';
 import * as sharp from 'sharp';
 import { isDir } from '../common/fs-utils';
 import { PostsJson, Post } from '../common/types';
+import { generatePostHeader } from '../../site/js/common';
 
 const getCanonicalHtmlFilesExceptIndex = async (): Promise<string[]> => {
     const res = new Array<string>();
@@ -188,7 +189,11 @@ const renderPostsWithPrism = async (): Promise<void> => {
 
     const postsJson = (JSON.parse(await fs.promises.readFile(`./site/dist/posts.json`, 'utf8')) as PostsJson).posts;
     const posts = postsJson.map((post: Post) => {
-        return { mdName: `${post.header.creationDate}-${post.header.slug}.md`, ampName: `${post.header.slug}.amphtml` };
+        return {
+            mdName: `${post.header.creationDate}-${post.header.slug}.md`,
+            ampName: `${post.header.slug}.amphtml`,
+            header: post.header
+        };
     });
 
     loadLanguages();
@@ -206,14 +211,16 @@ const renderPostsWithPrism = async (): Promise<void> => {
     for (const post of posts) {
         const mdFile = (await fs.promises.readFile(`./site/posts/${post.mdName}`, 'utf8')).split('---')[2];
         const ampFile = await fs.promises.readFile(`./site/dist/${post.ampName}`, 'utf8');
-        const html = marked.parse(mdFile);
+        const html = marked.parse(mdFile)
+            .replace(/<pre>/g, '<pre class="language-">'); // setting class "language-" to fix some formatting issues
+        const header = generatePostHeader(post.header);
 
         const mainRegex = /<main>([\w\W]+?)<\/main>/;
         const matched = ampFile.match(mainRegex)[0];
         await replaceInFile({
             files: `./site/dist/${post.ampName}`,
             from: matched,
-            to: `<main><article>${html}</article></main>`
+            to: `<main><article>${header}${html}</article></main>`
         });
     }
 }
