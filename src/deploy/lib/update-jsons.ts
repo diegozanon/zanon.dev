@@ -10,10 +10,6 @@ const getPageHtml = async (page: string): Promise<string> => {
     return minifyHtml(html);
 }
 
-const createLink = (slug: string, title: string): string => {
-    return `<a href="/${slug}">${title}</a>`;
-}
-
 const insertPage = (src: string, fragment: string, htmlSelector: string): string => {
     const $ = cheerio.load(src);
     $(htmlSelector).html(fragment);
@@ -25,12 +21,15 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
     for (const post of postsJson.posts) {
         links += `
             <div class="post">
-                <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}">
-                <div>
-                    ${createLink(post.header.slug, post.header.title)}
-                    <p>${post.header.description}</p>
-                    <div class="tags">${post.header.tags}</div>
-                </div>
+                <a href="/${post.header.slug}">
+                
+                    <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}">
+                    <div>
+                        <h2>${post.header.title}</h2>
+                        <p>${post.header.description}</p>
+                        <div class="tags">${post.header.tags}</div>
+                    </div>
+                </a>
             </div>
         `;
     }

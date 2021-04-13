@@ -1,5 +1,9 @@
 @import './variables.scss';
 
+main aside {
+    margin-bottom: 16px;
+}
+
 #feedback {
     display: flex;
     justify-content: center;
@@ -16,17 +20,6 @@
     }
 }
 
-svg.gray-icon g {
-    fill: $gray-icon;
-}
-
-.heart,
-.broken-heart,
-.bug,
-.chat {
-    padding-bottom: 6px;
-}
-
 #feedback-message {
 
     textarea {
@@ -39,6 +32,17 @@ svg.gray-icon g {
         float: right;
         margin-bottom: 20px;
     }
+}
+
+svg.gray-icon g {
+    fill: $gray-icon;
+}
+
+.heart,
+.broken-heart,
+.bug,
+.chat {
+    padding-bottom: 6px;
 }
 
 // only for devices that implement hover properly (i.e.: desktop)
