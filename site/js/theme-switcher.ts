@@ -58,7 +58,9 @@ const setTheme = (isLightTheme: boolean): void => {
     }
 };
 
-let isLightTheme = storage.get('theme') as Theme === Theme.Light;
+const storageTheme = storage.get('theme') as Theme;
+const preferedTheme = window.matchMedia?.('(prefers-color-scheme: dark)').matches ? Theme.Dark : Theme.Light;
+let isLightTheme = (storageTheme ?? preferedTheme) === Theme.Light;
 setTheme(isLightTheme);
 
 // make it visible after defining the current theme
