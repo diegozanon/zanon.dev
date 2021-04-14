@@ -12,6 +12,7 @@ import * as loadLanguages from 'prismjs/components/index.js';
 import { replaceInFile } from 'replace-in-file';
 import * as sharp from 'sharp';
 import { isDir } from '../common/fs-utils';
+import { sanitize } from '../common/sanitize';
 import { PostsJson, Post } from '../common/types';
 import { generatePostHeader } from '../../site/js/common';
 
@@ -211,8 +212,8 @@ const renderPostsWithPrism = async (): Promise<void> => {
     for (const post of posts) {
         const mdFile = (await fs.promises.readFile(`./site/posts/${post.mdName}`, 'utf8')).split('---')[2];
         const ampFile = await fs.promises.readFile(`./site/dist/${post.ampName}`, 'utf8');
-        const html = marked.parse(mdFile)
-            .replace(/<pre>/g, '<pre class="language-">'); // setting class "language-" to fix some formatting issues
+        const html = sanitize(marked.parse(mdFile)
+            .replace(/<pre>/g, '<pre class="language-">')); // setting class "language-" to fix some formatting issues
         const header = generatePostHeader(post.header);
 
         const mainRegex = /<main>([\w\W]+?)<\/main>/;
