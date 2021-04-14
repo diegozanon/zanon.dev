@@ -1,4 +1,5 @@
 import { lambdaURL } from './config';
+import storage from './storage';
 import { BackendRequestType, VisitType } from './types';
 
 const visits = new Array<string>();
@@ -8,16 +9,18 @@ export const sendVisited = async (href: string, action: VisitType): Promise<void
     if (!visits.includes(href)) {
         visits.push(href);
 
-        const rawResponse = await fetch(lambdaURL, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ page: href, action, requestType: BackendRequestType.Visit })
-        });
+        if (!storage.get('do-not-track')) {
+            const rawResponse = await fetch(lambdaURL, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ page: href, action, requestType: BackendRequestType.Visit })
+            });
 
-        await rawResponse.json();
+            await rawResponse.json();
+        }
     }
 }
 
