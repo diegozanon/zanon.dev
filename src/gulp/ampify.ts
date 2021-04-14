@@ -102,8 +102,8 @@ const buildCustomJs = async (): Promise<void> => {
 const useCustomJsCss = async (): Promise<void> => {
 
     const jsTag = /<script type="module" src="\/bundle\.min\.mjs\?v=(\d+)"><\/script>/;
-    const siteJson = /<link rel="preload" href="\/site.json\?v=(\d+)" as="fetch" crossorigin>/;
-    const postsJson = /<link rel="preload" href="\/posts.json\?v=(\d+)" as="fetch" crossorigin>/;
+    const siteJson = /<link rel="prefetch" href="\/site.json\?v=(\d+)" as="fetch" crossorigin>/;
+    const postsJson = /<link rel="prefetch" href="\/posts.json\?v=(\d+)" as="fetch" crossorigin>/;
 
     const ampVisits = await fs.promises.readFile('./site/dist/amp-visits.min.js', 'utf8');
     const getJsCustom = (pathname: string): string => {
