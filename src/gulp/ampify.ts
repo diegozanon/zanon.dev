@@ -162,13 +162,18 @@ const adjustImageTags = async (): Promise<void> => {
             const src = matched.match(imgSrcRegex)[0].slice(5).slice(0, -1);
 
             const srcPath = path.resolve(path.join('./site', src));
-            const metadata = await (sharp(srcPath)).metadata();
+
+            let meta = '';
+            if (!matched.includes('width')) {
+                const metadata = await (sharp(srcPath)).metadata();
+                meta = `width="${metadata.width}" height="${metadata.height}"`;
+            }
 
             file = file.endsWith('index.html') ? file.slice(0, -5) : file; // remove the .html ending
             await replaceInFile({
                 files: `${file}.amphtml`,
                 from: matched,
-                to: `<amp-${matched.slice(1).slice(0, -1)} width="${metadata.width}" height="${metadata.height}"></amp-img>`
+                to: `<amp-${matched.slice(1).slice(0, -1)}${meta}></amp-img>`
             });
         }
     }
