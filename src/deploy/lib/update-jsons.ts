@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as marked from 'marked';
 import { Page, PostsJson, PostMeta, PostStatus } from '../../common/types';
 import { minifyHtml } from '../../common/minify-html';
-import { sanitize } from '../../common/sanitize';
+import { transformHtml } from '../../common/transform';
 import { yamlToJson } from '../../common/yaml';
 
 const getPageHtml = async (page: string): Promise<string> => {
@@ -23,8 +23,7 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
         links += `
             <div class="post">
                 <a href="/${post.header.slug}">
-                
-                    <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}">
+                    <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}" width="150" height="150">
                     <div>
                         <h2>${post.header.title}</h2>
                         <div class="post-description">
@@ -65,7 +64,7 @@ export const updateJsons = async (output?: string): Promise<void> => {
             header.slug = filename.substring(11).slice(0, -3);
 
             const markdown = data.split('---')[2];
-            const html = minifyHtml(sanitize(marked(markdown)));
+            const html = minifyHtml(await transformHtml(marked(markdown)));
 
             postsJson.posts.push({
                 header,

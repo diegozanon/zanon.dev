@@ -10,9 +10,8 @@ import * as path from 'path';
 import * as Prism from 'prismjs';
 import * as loadLanguages from 'prismjs/components/index.js';
 import { replaceInFile } from 'replace-in-file';
-import * as sharp from 'sharp';
 import { isDir } from '../common/fs-utils';
-import { sanitize } from '../common/sanitize';
+import { transformHtml } from '../common/transform';
 import { PostsJson, Post } from '../common/types';
 import { generatePostHeader } from '../../site/js/common';
 
@@ -102,8 +101,8 @@ const buildCustomJs = async (): Promise<void> => {
 const useCustomJsCss = async (): Promise<void> => {
 
     const jsTag = /<script type="module" src="\/bundle\.min\.mjs\?v=(\d+)"><\/script>/;
-    const siteJson = /<link rel="prefetch" href="\/site.json\?v=(\d+)" as="fetch" crossorigin>/;
-    const postsJson = /<link rel="prefetch" href="\/posts.json\?v=(\d+)" as="fetch" crossorigin>/;
+    const siteJson = /<link rel="prefetch" href="\/site.json\?v=(\d+)" as="fetch">/;
+    const postsJson = /<link rel="prefetch" href="\/posts.json\?v=(\d+)" as="fetch">/;
 
     const ampVisits = await fs.promises.readFile('./site/dist/amp-visits.min.js', 'utf8');
     const getJsCustom = (pathname: string): string => {
@@ -148,39 +147,8 @@ const useCustomJsCss = async (): Promise<void> => {
     });
 }
 
-const adjustImageTags = async (): Promise<void> => {
-    const files = await getCanonicalHtmlFiles();
-    for (let file of files) {
-        const imgRegex = /<img([\w\W]+?)>/g;
-        const fileContents = await fs.promises.readFile(file, 'utf8');
-        const allMatches = fileContents.match(imgRegex) ?? [];
-        for (const matched of allMatches) {
-
-            const imgSrcRegex = /src="([\w\W]+?)"/;
-
-            // convert from src="path/to/file" to path/to/file
-            const src = matched.match(imgSrcRegex)[0].slice(5).slice(0, -1);
-
-            const srcPath = path.resolve(path.join('./site', src));
-
-            let meta = '';
-            if (!matched.includes('width')) {
-                const metadata = await (sharp(srcPath)).metadata();
-                meta = `width="${metadata.width}" height="${metadata.height}"`;
-            }
-
-            file = file.endsWith('index.html') ? file.slice(0, -5) : file; // remove the .html ending
-            await replaceInFile({
-                files: `${file}.amphtml`,
-                from: matched,
-                to: `<amp-${matched.slice(1).slice(0, -1)}${meta}></amp-img>`
-            });
-        }
-    }
-}
-
 const removeClientSidePrism = async (): Promise<void> => {
-    const prismJSFile = '<script defer="defer" src="/assets/prismjs/prism.min.js"></script>';
+    const prismJSFile = '<script defer="" src="/assets/prismjs/prism.min.js"></script>';
     const prismCSSFile = '<link rel="stylesheet" href="/assets/prismjs/prism.min.css">';
     await new Promise(resolve => {
         gulp.src('./site/dist/*.amphtml')
@@ -217,8 +185,8 @@ const renderPostsWithPrism = async (): Promise<void> => {
     for (const post of posts) {
         const mdFile = (await fs.promises.readFile(`./site/posts/${post.mdName}`, 'utf8')).split('---')[2];
         const ampFile = await fs.promises.readFile(`./site/dist/${post.ampName}`, 'utf8');
-        const html = sanitize(marked.parse(mdFile)
-            .replace(/<pre>/g, '<pre class="language-">')); // setting class "language-" to fix some formatting issues
+        const parsedHtml = marked.parse(mdFile).replace(/<pre>/g, '<pre class="language-">'); // setting class "language-" to fix some formatting issues
+        const html = await transformHtml(parsedHtml, true);
         const header = generatePostHeader(post.header);
 
         const mainRegex = /<main>([\w\W]+?)<\/main>/;
@@ -228,6 +196,23 @@ const renderPostsWithPrism = async (): Promise<void> => {
             from: matched,
             to: `<main><article>${header}${html}</article></main>`
         });
+    }
+}
+
+const adjustImageTags = async (): Promise<void> => {
+    const files = await getCanonicalHtmlFiles();
+    for (let file of files) {
+        const imgRegex = /<img([\w\W]+?)>/g;
+        file = `${file.endsWith('index.html') ? file.slice(0, -5) : file}.amphtml`; // remove the .html ending
+        const fileContents = await fs.promises.readFile(file, 'utf8');
+        const allMatches = fileContents.match(imgRegex) ?? [];
+        for (const matched of allMatches) {
+            await replaceInFile({
+                files: file,
+                from: matched,
+                to: `<amp-${matched.slice(1).slice(0, -1)}></amp-img>`
+            });
+        }
     }
 }
 
@@ -290,9 +275,9 @@ export const ampify = async (done): Promise<void> => {
     await replaceToAmpTags();
     await buildCustomJs();
     await useCustomJsCss();
-    await adjustImageTags();
     await removeClientSidePrism();
     await renderPostsWithPrism();
+    await adjustImageTags();
     await removeUnusedFeatures();
 
     await validate();

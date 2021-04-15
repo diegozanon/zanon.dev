@@ -3,7 +3,7 @@ import { PutObjectRequest } from 'aws-sdk/clients/s3';
 import * as fs from 'fs';
 import * as marked from 'marked';
 import * as path from 'path';
-import { sanitize } from '../common/sanitize';
+import { transformHtml } from '../common/transform';
 
 const generateCode = (): string => {
     // https://stackoverflow.com/a/44678459/1476885
@@ -41,7 +41,7 @@ export const newSnippet = async (code: string, filepath: string): Promise<void> 
         console.info(`code.zanon.dev/${code}`);
     }
 
-    const file = sanitize(marked(await fs.promises.readFile(filepath, 'utf8')));
+    const file = await transformHtml(marked(await fs.promises.readFile(filepath, 'utf8')));
     const postTemplate = await fs.promises.readFile(path.resolve('./site/pages/post.html'), 'utf8');
     const processedFile = postTemplate.replace('<article></article>', `<article>${file}</article>`);
 
