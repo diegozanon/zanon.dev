@@ -7,7 +7,6 @@ body {
     code[class*="language-"] {
         border-radius: 1em;
         font-size: 1em;
-        outline: none;
     }
 
     pre[class*="language-"] ::selection,
@@ -17,7 +16,6 @@ body {
 
     .copy-to-clipboard-button {
         cursor: pointer;
-        outline: none;
         border: 0;
         color: #bbb;
         font-size: 0.8em;

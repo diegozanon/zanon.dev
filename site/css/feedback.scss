@@ -8,11 +8,11 @@ main aside {
     display: flex;
     justify-content: center;
     text-align: center;
-    cursor: pointer;
 
     figure {
         margin: 0px;
         width: 66px;
+        cursor: pointer;
     }
 
     figcaption {

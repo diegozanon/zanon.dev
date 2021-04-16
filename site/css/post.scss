@@ -13,6 +13,18 @@ main {
     }
 }
 
+article {
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .amp-img {
+        text-align: center;
+    }
+}
+
 .post-date {
     margin-bottom: 30px;
 }

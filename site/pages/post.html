@@ -1,9 +1,9 @@
 <article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting"></article>
 <aside>
     <div id="feedback">
-        <figure>
+        <figure tabindex="0">
             <svg class="heart gray-icon" role="img" aria-labelledby="heart-title heart-desc" width="24px"
-                viewBox="0 0 86 86">
+                viewBox="0 0 86 86" tabindex="-1">
                 <title id="heart-title">like</title>
                 <desc id="heart-desc">a heart icon</desc>
                 <g fill="#ff5e5b" transform="translate(0, 4)">
@@ -15,9 +15,9 @@
             </svg>
             <figcaption>like</figcaption>
         </figure>
-        <figure>
+        <figure tabindex="0">
             <svg class="broken-heart gray-icon" role="img" aria-labelledby="broken-heart-title broken-heart-desc"
-                width="24px" viewBox="0 0 86 86">
+                width="24px" viewBox="0 0 86 86" tabindex="-1">
                 <title id="broken-heart-title">dislike</title>
                 <desc id="broken-heart-desc">a heart icon cut in half</desc>
                 <mask id="lightning-mask">
@@ -32,9 +32,9 @@
             </svg>
             <figcaption>dislike</figcaption>
         </figure>
-        <figure>
+        <figure tabindex="0">
             <svg class="bug gray-icon" role="img" aria-labelledby="bug-title bug-desc" width="24px"
-                viewBox="0 0 100 100">
+                viewBox="0 0 100 100" tabindex="-1">
                 <title id="bug-title">bug</title>
                 <desc id="bug-desc">a bug to indicate an issue with the post</desc>
                 <mask id="body-mask">
@@ -55,9 +55,9 @@
             </svg>
             <figcaption>report</figcaption>
         </figure>
-        <figure>
+        <figure tabindex="0">
             <svg class="chat gray-icon" role="img" aria-labelledby="chat-title chat-desc" width="24px"
-                viewBox="0 0 100 100">
+                viewBox="0 0 100 100" tabindex="-1">
                 <title id="chat-title">chat</title>
                 <desc id="chat-desc">a chat icon to indicate that you can send a message to the author</desc>
                 <mask id="chat-mask1">
@@ -86,7 +86,7 @@
         </figure>
     </div>
     <div id="feedback-message" class="dont-display">
-        <h2>Feedback</h2>
+        <h2 class="feedback-title">Feedback</h2>
         <textarea name="text" rows="4" maxlength="1000" placeholder="Private comment (only for the author)"></textarea>
         <input type="button" name="send" value="Send">
     </div>

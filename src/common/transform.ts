@@ -17,7 +17,7 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
 
     $('h2').each(function () {
         const elm = $(this);
-        elm.replaceWith(`<div class="anchor"><h2 id="${elm.attr('id')}">${elm.text()}</h2></div>`);
+        elm.replaceWith(`<div class="anchor"><h2 id="${elm.attr('id')}" tabindex="0">${elm.text()}</h2></div>`);
     });
 
     const elms = [];
@@ -52,7 +52,7 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
         const [widthMobile, heightMobile] = [metadataMobile.width, metadataMobile.height];
 
         if (isAmp) {
-            elm.replaceWith(`<img src="${src}" width="${width}" height="${height}" layout="responsive" srcset="${src} ${width}w, ${srcMobile} ${widthMobile}w">`);
+            elm.replaceWith(`<img src="${src}" width="${width}" height="${height}" srcset="${src} ${width}w, ${srcMobile} ${widthMobile}w">`);
         } else {
             elm.replaceWith(`
                 <picture>

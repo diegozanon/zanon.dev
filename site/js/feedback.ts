@@ -67,33 +67,62 @@ export const configureFeedback = (): void => {
             }
         }
 
-        heart.onclick = async (): Promise<void> => {
+        const keyboardClick = (event: KeyboardEvent): boolean => {
+            return event.code === 'Enter' || event.code === 'Space';
+        }
+
+        const heartClick = async (): Promise<void> => {
             heart.classList.remove('gray-icon');
             brokenHeart.classList.add('gray-icon');
 
             await sendFeedback(FeedbackType.Like);
         }
 
-        brokenHeart.onclick = async (): Promise<void> => {
+        const brokenHeartClick = async (): Promise<void> => {
             heart.classList.add('gray-icon');
             brokenHeart.classList.remove('gray-icon');
 
             await sendFeedback(FeedbackType.Dislike);
         }
 
-        bug.onclick = async (): Promise<void> => {
+        const bugClick = (): void => {
             bug.classList.remove('gray-icon');
             chat.classList.add('gray-icon');
             messageBox.classList.remove('dont-display');
             feedbackResult.classList.add('dont-display');
         }
 
-        chat.onclick = async (): Promise<void> => {
+        const chatClick = (): void => {
             bug.classList.add('gray-icon');
             chat.classList.remove('gray-icon');
             messageBox.classList.remove('dont-display');
             feedbackResult.classList.add('dont-display');
         }
+
+        heart.onclick = async (): Promise<void> => { await heartClick(); }
+        brokenHeart.onclick = async (): Promise<void> => { await brokenHeartClick(); }
+        bug.onclick = bugClick;
+        chat.onclick = chatClick;
+
+        (heart.parentNode as HTMLElement).onkeydown = async (event: KeyboardEvent): Promise<void> => {
+            if (keyboardClick(event))
+                heartClick();
+        };
+
+        (brokenHeart.parentNode as HTMLElement).onkeydown = async (event: KeyboardEvent): Promise<void> => {
+            if (keyboardClick(event))
+                await brokenHeartClick();
+        };
+
+        (bug.parentNode as HTMLElement).onkeydown = (event: KeyboardEvent): void => {
+            if (keyboardClick(event))
+                bugClick();
+        };
+
+        (chat.parentNode as HTMLElement).onkeydown = (event: KeyboardEvent): void => {
+            if (keyboardClick(event))
+                chatClick();
+        };
 
         sendMessage.onclick = async (): Promise<void> => {
             if (message.value.length <= 10) {

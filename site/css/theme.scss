@@ -68,6 +68,20 @@
             stroke: get($theme, '-link-color');
         }
     }
+
+    div,
+    a,
+    figure,
+    input,
+    textarea,
+    pre,
+    h2,
+    button {
+        &:focus {
+            outline-color: get($theme, '-link-color');
+            outline-offset: 3px;
+        }
+    }
 }
 
 .light-theme {
