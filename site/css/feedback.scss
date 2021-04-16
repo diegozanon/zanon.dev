@@ -48,38 +48,54 @@ svg.gray-icon g {
 // only for devices that implement hover properly (i.e.: desktop)
 @media (hover: hover) {
     .heart:hover {
-        animation: 1.5s pulsate infinite alternate ease-in-out;
+        animation: 1.5s pulsate infinite normal ease-in-out;
     }
 
     .broken-heart:hover {
-        animation: 1s shake infinite alternate ease-in-out;
+        animation: 1s shake infinite normal ease-in-out;
     }
 
     .bug:hover {
-        animation: 1s tremble infinite alternate ease-in-out;
+        animation: 1s tremble infinite normal ease-in-out;
     }
 
-    .chat:hover {
-        animation: 2s grow infinite alternate linear;
+    .chat:hover .chat-g1 {
+        animation: 1s write1 infinite normal linear;
+    }
+
+    .chat:hover .chat-g2 {
+        animation: 1s write2 infinite normal linear;
+    }
+
+    .chat:hover .chat-g3 {
+        animation: 1s write3 infinite normal linear;
     }
 }
 
 // only for devices that don't implement hover properly (i.e.: mobile)
 @media (hover: none) {
     .heart:hover {
-        animation: 1.5s pulsate 1 alternate ease-in-out;
+        animation: 1.5s pulsate 1 normal ease-in-out;
     }
 
     .broken-heart:hover {
-        animation: 1s shake 1 alternate ease-in-out;
+        animation: 1s shake 1 normal ease-in-out;
     }
 
     .bug:hover {
-        animation: 1s tremble 1 alternate ease-in-out;
+        animation: 1s tremble 1 normal ease-in-out;
     }
 
-    .chat:hover {
-        animation: 2s grow 1 alternate linear;
+    .chat:hover .chat-g1 {
+        animation: 1s write1 1 normal linear;
+    }
+
+    .chat:hover .chat-g2 {
+        animation: 1s write2 1 normal linear;
+    }
+
+    .chat:hover .chat-g3 {
+        animation: 1s write3 1 normal linear;
     }
 }
 
@@ -142,12 +158,20 @@ svg.gray-icon g {
     }
 }
 
-@keyframes grow {
+@keyframes write1 {
     33% {
-        transform: scale(1.2);
+        mask: none;
     }
+}
 
+@keyframes write2 {
+    50% {
+        mask: none;
+    }
+}
+
+@keyframes write3 {
     66% {
-        transform: scale(0.8);
+        mask: none;
     }
 }
