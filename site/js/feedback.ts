@@ -5,7 +5,7 @@ import { BackendRequestType, FeedbackType, Votes } from './types';
 const sendFeedback = async (action: FeedbackType, message?: string): Promise<void> => {
     let votes = JSON.parse(storage.get('votes')) as Votes;
     const page = window.location.pathname;
-    const noVotesHere = !Object.keys(votes).find(_page => _page === page);
+    const noVotesHere = !Object.keys(votes ?? {}).find(_page => _page === page);
     const isMessage = action === FeedbackType.Message;
     if (!votes || noVotesHere || isMessage) {
 
