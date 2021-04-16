@@ -45,7 +45,7 @@ export const configureSPA = (): void => {
 
         document.title = post.header.title;
         const header = generatePostHeader(post.header);
-        const data = postsJson.template.replace('<article></article>', `<article>${header + post.html}</article>`);
+        const data = postsJson.template.replace('<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting"></article>', `<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting">${header + post.html}</article>`);
         loadData(data);
 
         Prism.highlightAll();

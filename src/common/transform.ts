@@ -64,5 +64,6 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
         }
     }
 
-    return $.html();
+    const transformed = $.html();
+    return `<div itemprop="articleBody">${transformed}</div>`;
 }

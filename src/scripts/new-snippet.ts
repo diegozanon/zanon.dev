@@ -43,7 +43,7 @@ export const newSnippet = async (code: string, filepath: string): Promise<void> 
 
     const file = await transformHtml(marked(await fs.promises.readFile(filepath, 'utf8')));
     const postTemplate = await fs.promises.readFile(path.resolve('./site/pages/post.html'), 'utf8');
-    const processedFile = postTemplate.replace('<article></article>', `<article>${file}</article>`);
+    const processedFile = postTemplate.replace('<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting"></article>', `<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting">${file}</article>`);
 
     const template = await fs.promises.readFile(path.resolve('./src/templates/snippet.html'), 'utf8');
     const textToFind = 'https://zanon.dev/snippet/';

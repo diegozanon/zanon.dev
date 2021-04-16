@@ -20,12 +20,17 @@ const insertPage = (src: string, fragment: string, htmlSelector: string): string
 const addPosts = (page: string, postsJson: PostsJson): string => {
     let links = '';
     for (const post of postsJson.posts) {
+        const metaUpdatedOn = post.header.updatedOn ? `<meta itemprop="dateModified" content="${post.header.updatedOn}">` : '';
         links += `
-            <div class="post">
-                <a href="/${post.header.slug}">
+            <div class="post" itemscope itemtype="https://schema.org/BlogPosting">
+                <a href="/${post.header.slug}" itemprop="mainEntityOfPage url">
+                    
                     <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}" width="150" height="150">
                     <div>
-                        <h2>${post.header.title}</h2>
+                        <h2 itemprop="name headline">${post.header.title}</h2>
+                        <meta itemprop="author" content="Diego Zanon">
+                        <meta itemprop="datePublished" content="${post.header.creationDate}">
+                        ${metaUpdatedOn}
                         <div class="post-description">
                             <p>${post.header.description}</p>
                             <div class="tags">${post.header.tags}</div>

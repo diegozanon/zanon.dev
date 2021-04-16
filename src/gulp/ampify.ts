@@ -130,8 +130,8 @@ const useCustomJsCss = async (): Promise<void> => {
         file = file.endsWith('index.html') ? file.slice(0, -5) : file; // remove the .html ending
         await replaceInFile({
             files: `${file}.amphtml`,
-            from: '<body>',
-            to: `<body>${getJsCustom(file.split('/').pop())}`
+            from: '<body itemscope="" itemtype="https://schema.org/WebPage">',
+            to: `<body itemscope="" itemtype="https://schema.org/WebPage">${getJsCustom(file.split('/').pop())}`
         });
     }
 
@@ -189,12 +189,12 @@ const renderPostsWithPrism = async (): Promise<void> => {
         const html = await transformHtml(parsedHtml, true);
         const header = generatePostHeader(post.header);
 
-        const mainRegex = /<main>([\w\W]+?)<\/main>/;
+        const mainRegex = /<main([\w\W]+?)>([\w\W]+?)<\/main>/;
         const matched = ampFile.match(mainRegex)[0];
         await replaceInFile({
             files: `./site/dist/${post.ampName}`,
             from: matched,
-            to: `<main><article>${header}${html}</article></main>`
+            to: `<main aria-label="Main content" itemscope itemtype="https://schema.org/Blog"><article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting">${header}${html}</article></main>`
         });
     }
 }
@@ -210,7 +210,7 @@ const adjustImageTags = async (): Promise<void> => {
             await replaceInFile({
                 files: file,
                 from: matched,
-                to: `<amp-${matched.slice(1).slice(0, -1)}></amp-img>`
+                to: `<div class="amp-img"><amp-${matched.slice(1).slice(0, -1)}></amp-img></div>`
             });
         }
     }
@@ -219,7 +219,7 @@ const adjustImageTags = async (): Promise<void> => {
 const removeUnusedFeatures = async (): Promise<void> => {
     await new Promise(resolve => {
         gulp.src('./site/dist/*.amphtml')
-            .pipe(replace(`<body>`, '<body class="dark-theme">'))
+            .pipe(replace(`<body itemscope="" itemtype="https://schema.org/WebPage">`, '<body class="dark-theme" itemscope="" itemtype="https://schema.org/WebPage">'))
             .pipe(gulp.dest('./site/dist/'))
             .on('end', resolve);
     });

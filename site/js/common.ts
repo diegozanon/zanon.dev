@@ -5,14 +5,14 @@ const formatDate = (date: string): string => {
 }
 
 export const generatePostHeader = (header: PostMeta): string => {
-    const updatedOn = header.updatedOn ?
-        'Updated on ' + formatDate(header.updatedOn) + ' - Originally published on '
-        : '';
+    const updatedOn = header.updatedOn ? `Updated on ${formatDate(header.updatedOn)} - Originally published on ` : '';
+    const metaUpdatedOn = header.updatedOn ? `<meta itemprop="dateModified" content="${header.updatedOn}">` : '';
 
     return `
-        <h1>${header.title}</h1>
+        <h1 itemprop="name headline">${header.title}</h1>
+        <meta itemprop="author" content="Diego Zanon">
         <div class="post-date">
-            ${updatedOn}<time datetime="${header.creationDate}">${formatDate(header.creationDate)}</time>
+            ${updatedOn}<time datetime="${header.creationDate}" itemprop="datePublished">${formatDate(header.creationDate)}</time>${metaUpdatedOn}
         </div>
     `;
 }
