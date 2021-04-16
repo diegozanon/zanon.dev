@@ -1,4 +1,5 @@
 import './theme-switcher';
+import { configureAnchors } from './anchor';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
@@ -26,13 +27,14 @@ if (isNewsletter) {
 // Add the service worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // navigator.serviceWorker.register('/service-worker.min.js');
+        // navigator.serviceWorker.register('/service-worker.min.js'); 
     });
 }
-
-// hide tooltips from svg images (<title> is for accessibility and should not be seen by everyone)
-hideTooltips();
 
 configureFeedback();
 configureReadVisit();
 configureSPA();
+configureAnchors();
+
+// hide tooltips from svg images (<title> is for accessibility and should not be seen by everyone)
+hideTooltips();

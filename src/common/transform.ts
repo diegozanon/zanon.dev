@@ -15,6 +15,11 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
         }
     });
 
+    $('h2').each(function () {
+        const elm = $(this);
+        elm.replaceWith(`<div class="anchor"><h2 id="${elm.attr('id')}">${elm.text()}</h2></div>`);
+    });
+
     const elms = [];
     $('img').each(function () {
         const elm = $(this);

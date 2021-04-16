@@ -1,3 +1,4 @@
+import { configureAnchors } from './anchor';
 import { configureFeedback } from './feedback';
 import { configureSPA } from './spa';
 
@@ -32,6 +33,7 @@ export const loadSnippet = (): void => {
             }
 
             Prism.highlightAll();
+            configureAnchors();
             configureFeedback();
         })
         .catch(() => {

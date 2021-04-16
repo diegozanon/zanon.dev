@@ -1,3 +1,5 @@
+@import './media-query';
+
 main {
     flex-grow: 1;
 
@@ -9,29 +11,65 @@ main {
     p {
         margin: 20px 0px;
     }
+}
 
-    .post-date {
-        margin-bottom: 30px;
+.post-date {
+    margin-bottom: 30px;
+}
+
+.anchor {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin: -20px 0px;
+
+    a {
+        margin-right: 5px;
+    }
+}
+
+@include for-large-devices {
+
+    article {
+        position: relative;
+
+        & .anchor+* {
+            margin-top: 72px;
+        }
     }
 
-    #not-found {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        animation: 2s fadeIn;
-        animation-fill-mode: forwards;
+    .anchor {
+        position: absolute;
+        left: -30px;
+
+        a {
+            visibility: hidden;
+        }
+    }
+
+    .anchor:hover a {
+        visibility: visible;
+    }
+}
+
+#not-found {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: 2s fadeIn;
+    animation-fill-mode: forwards;
+    visibility: hidden;
+}
+
+// workaround to avoid showing "not found" when loading a snippet page
+@keyframes fadeIn {
+    99% {
         visibility: hidden;
     }
 
-    // workaround to avoid showing "not found" when loading a snippet page
-    @keyframes fadeIn {
-        99% {
-            visibility: hidden;
-        }
-
-        100% {
-            visibility: visible;
-        }
+    100% {
+        visibility: visible;
     }
 }

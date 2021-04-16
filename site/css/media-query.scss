@@ -9,3 +9,9 @@
         @content;
     }
 }
+
+@mixin for-large-devices {
+    @media screen and (min-width: 950px) {
+        @content;
+    }
+}

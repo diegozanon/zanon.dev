@@ -62,6 +62,12 @@
     a:active {
         color: get($theme, '-link-color');
     }
+
+    .anchor {
+        svg {
+            stroke: get($theme, '-link-color');
+        }
+    }
 }
 
 .light-theme {
