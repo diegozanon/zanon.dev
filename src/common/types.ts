@@ -30,6 +30,7 @@ export interface Post {
 export interface PostHeader {
     title: string;
     description: string;
+    shortDescription: string;
     thumbnail: string;
     thumbnailAltTxt: string;
     tags: Array<string>;
@@ -55,4 +56,20 @@ export enum PostStatus {
 export enum VisitType {
     Read = 'read',
     Clicked = 'clicked'
+}
+
+export interface Metatag {
+    type?: string;
+    title: string;
+    url: string;
+    description: string;
+    image: string;
+    imageAlt: string;
+}
+
+export interface Metatags {
+    twitterLabel: Metatag;
+    twitterValue: Metatag;
+    ogLabel: Metatag;
+    ogValue: Metatag;
 }

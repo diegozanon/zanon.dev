@@ -1,3 +1,4 @@
+import * as cheerio from 'cheerio';
 import * as fse from 'fs-extra';
 import * as gulp from 'gulp';
 import * as imagemin from 'gulp-imagemin';
@@ -5,6 +6,7 @@ import * as replace from 'gulp-replace';
 import * as moment from 'moment';
 import * as path from 'path';
 import { isDir } from '../common/fs-utils';
+import { Metatag, Metatags, PostsJson } from '../common/types';
 
 const getHtmlFiles = async (): Promise<string[]> => {
     const res = new Array<string>();
@@ -25,6 +27,103 @@ const getHtmlFiles = async (): Promise<string[]> => {
     }
 
     return res;
+}
+
+const buildMetatagsObj = (input: Metatag): Metatags => {
+    const domain = 'https://zanon.dev'
+    const url = `${domain}${input.url}`;
+    const image = `${domain}${input.image}`;
+    return {
+        twitterLabel: {
+            title: 'twitter:title',
+            url: 'twitter:url',
+            description: 'twitter:description',
+            image: 'twitter:image',
+            imageAlt: 'twitter:image:alt'
+        },
+        twitterValue: {
+            title: input.title,
+            url: url,
+            description: input.description,
+            image: image,
+            imageAlt: input.imageAlt
+        },
+        ogLabel: {
+            type: 'og:type',
+            title: 'og:title',
+            url: 'og:url',
+            description: 'og:description',
+            image: 'og:image',
+            imageAlt: 'og:imagem:alt'
+        },
+        ogValue: {
+            type: input.type,
+            title: input.title,
+            url: url,
+            description: input.description,
+            image: image,
+            imageAlt: input.imageAlt
+        }
+    } as Metatags;
+}
+
+const getMetatags = async (file: string): Promise<Metatags> => {
+    const filename = file.split('/').pop();
+
+    const web = 'website';
+    const article = 'article';
+    const defaultImage = '/icons/zanon-icon.png';
+    const defaultImageAlt = 'The letter Z as the icon for the blog';
+
+    switch (filename) {
+        case '404':
+            return buildMetatagsObj({
+                type: web,
+                title: 'Page not Found',
+                url: '/404',
+                description: "Oops, can't find this page",
+                image: defaultImage,
+                imageAlt: defaultImageAlt
+            });
+        case 'me':
+            return buildMetatagsObj({
+                type: web,
+                title: 'About me',
+                url: '/me',
+                description: "I'm a Full-Stack Developer, JavaScripter and AWS power-user",
+                image: '/imgs/site/me/me.jpeg',
+                imageAlt: "The site's owner photo"
+            });
+        case 'newsletter':
+            return buildMetatagsObj({
+                type: web,
+                title: 'Newsletter',
+                url: '/newsletter',
+                description: 'Subscribe to receive monthly updates',
+                image: defaultImage,
+                imageAlt: defaultImageAlt
+            });
+        case 'privacy':
+            return buildMetatagsObj({
+                type: web,
+                title: 'Privacy Statement',
+                url: '/privacy',
+                description: 'This website respects your privacy',
+                image: defaultImage,
+                imageAlt: defaultImageAlt
+            });
+        default:
+            const postsJson = (JSON.parse(await fse.promises.readFile(`./site/dist/posts.json`, 'utf8')) as PostsJson).posts;
+            const post = postsJson.find(post => post.header.slug === filename);
+            return buildMetatagsObj({
+                type: article,
+                title: post.header.title,
+                url: `/${post.header.slug}`,
+                description: post.header.shortDescription,
+                image: post.header.thumbnail,
+                imageAlt: post.header.thumbnailAltTxt
+            });
+    }
 }
 
 export const copyToDist = async (done): Promise<void> => {
@@ -60,6 +159,34 @@ export const avoidCache = async (done): Promise<void> => {
             .pipe(gulp.dest('./site/dist/'))
             .on('end', resolve);
     });
+
+    done();
+}
+
+export const prepareMetatags = async (done): Promise<void> => {
+
+    let files = await getHtmlFiles();
+    files = files.filter(file => !file.endsWith('index.html'));
+
+    for (const file of files) {
+        const html = await fse.promises.readFile(file, 'utf8');
+        const $ = cheerio.load(html);
+        const meta = await getMetatags(file);
+
+        $(`meta[name="${meta.twitterLabel.title}"]`).attr('content', meta.twitterValue.title);
+        $(`meta[name="${meta.twitterLabel.url}"]`).attr('content', meta.twitterValue.url);
+        $(`meta[name="${meta.twitterLabel.description}"]`).attr('content', meta.twitterValue.description);
+        $(`meta[name="${meta.twitterLabel.image}"]`).attr('content', meta.twitterValue.image);
+        $(`meta[name="${meta.twitterLabel.imageAlt}"]`).attr('content', meta.twitterValue.imageAlt);
+        $(`meta[property="${meta.ogLabel.type}"]`).attr('content', meta.ogValue.type);
+        $(`meta[property="${meta.ogLabel.title}"]`).attr('content', meta.ogValue.title);
+        $(`meta[property="${meta.ogLabel.url}"]`).attr('content', meta.ogValue.url);
+        $(`meta[property="${meta.ogLabel.description}"]`).attr('content', meta.ogValue.description);
+        $(`meta[property="${meta.ogLabel.image}"]`).attr('content', meta.ogValue.image);
+        $(`meta[property="${meta.ogLabel.imageAlt}"]`).attr('content', meta.ogValue.imageAlt);
+
+        await fse.promises.writeFile(file, $.html());
+    }
 
     done();
 }

@@ -31,6 +31,7 @@ export interface PostMeta {
     slug: string;
     title: string;
     description: string;
+    shortDescription: string;
     thumbnail: string;
     thumbnailAltTxt: string;
     tags: Array<string>;

@@ -7,7 +7,7 @@ import { renderFullPages } from './src/deploy/lib/render-full-pages';
 import { updateJsons } from './src/deploy/lib/update-jsons';
 import { updateRss, updateSitemap } from './src/deploy/lib/update-xmls';
 import { ampify } from './src/gulp/ampify';
-import { avoidCache, copyToDist } from './src/gulp/build-html';
+import { avoidCache, copyToDist, prepareMetatags } from './src/gulp/build-html';
 import { buildSass, buildSassWatch } from './src/gulp/build-sass';
 import { buildTS, buildTSWatch } from './src/gulp/build-ts';
 import { generateSW } from './src/gulp/build-sw';
@@ -49,10 +49,12 @@ gulp.task('html-reload', () => {
 
 gulp.task('avoid-cache', avoidCache);
 
-gulp.task('build-html', gulp.series(['update-jsons', 'update-xmls', 'copy-to-dist', 'render-full-pages', 'avoid-cache']));
+gulp.task('prepare-metatags', prepareMetatags);
+
+gulp.task('build-html', gulp.series(['update-jsons', 'update-xmls', 'copy-to-dist', 'render-full-pages', 'avoid-cache', 'prepare-metatags']));
 
 gulp.task('build-html:watch', done => {
-    gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['update-jsons', 'copy-to-dist', 'render-full-pages', 'html-reload']));
+    gulp.watch(['./site/index.html', './site/pages/*.html'], gulp.series(['update-jsons', 'copy-to-dist', 'render-full-pages', 'prepare-metatags', 'html-reload']));
     done();
 });
 
