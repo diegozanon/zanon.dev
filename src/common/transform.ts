@@ -17,7 +17,7 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
 
     $('h2').each(function () {
         const elm = $(this);
-        elm.replaceWith(`<div class="anchor"><h2 id="${elm.attr('id')}" tabindex="0">${elm.text()}</h2></div>`);
+        elm.replaceWith(`<h2 id="${elm.attr('id')}" tabindex="0">${elm.text()}</h2>`);
     });
 
     const elms = [];

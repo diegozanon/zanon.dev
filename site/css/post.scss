@@ -30,37 +30,26 @@ article {
 }
 
 .anchor {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    margin: -20px 0px;
-
-    a {
-        margin-right: 5px;
-    }
+    text-decoration: none;
 }
 
 @include for-large-devices {
 
-    article {
+    article h2 {
         position: relative;
 
-        & .anchor+* {
-            margin-top: 72px;
+        .anchor {
+            left: -30px;
+            padding-right: 10px;
+            position: absolute;
         }
     }
 
-    .anchor {
-        position: absolute;
-        left: -30px;
-
-        a {
-            visibility: hidden;
-        }
+    h2 .anchor {
+        visibility: hidden;
     }
 
-    .anchor:hover a {
+    h2:hover .anchor {
         visibility: visible;
     }
 }

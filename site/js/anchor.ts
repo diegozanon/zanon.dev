@@ -3,7 +3,7 @@ export const configureAnchors = (): void => {
 
     for (let i = 0; i < h2List.length; i++) {
         const anchor = `
-            <a href="${window.location.pathname}#${h2List[i].id}">
+            <a class="anchor" href="${window.location.pathname}#${h2List[i].id}">
                 <svg role="img" aria-labelledby="anchor-title-${i} anchor-desc-${i}" width="24px" viewBox="0 0 100 100">
                     <title id="anchor-title-${i}">anchor</title>
                     <desc id="anchor-desc-${i}">an anchor to link to this specific section</desc>
@@ -25,8 +25,6 @@ export const configureAnchors = (): void => {
             </a>
         `.trim();
 
-        const template = document.createElement('template');
-        template.innerHTML = anchor;
-        h2List[i].parentNode.insertBefore(template.content.firstChild, h2List[i]);
+        h2List[i].innerHTML = anchor + h2List[i].innerHTML;
     }
 }
