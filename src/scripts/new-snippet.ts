@@ -29,7 +29,7 @@ const buildObjectToUpload = (args: ObjToUploadArgs): PutObjectRequest => {
     } as PutObjectRequest;
 }
 
-/** This function creates a new snippet in code.zanon.dev */
+/** This function creates a new snippet for zanon.dev/snippet/<new> */
 export const newSnippet = async (code: string, filepath: string): Promise<void> => {
 
     if (!filepath.endsWith('.md')) {
@@ -38,24 +38,18 @@ export const newSnippet = async (code: string, filepath: string): Promise<void> 
 
     if (code === 'rng') {
         code = generateCode();
-        console.info(`code.zanon.dev/${code}`);
+        console.info(`zanon.dev/snippet/${code}`);
     }
 
     const file = await transformHtml(marked(await fs.promises.readFile(filepath, 'utf8')));
     const postTemplate = await fs.promises.readFile(path.resolve('./site/pages/post.html'), 'utf8');
     const processedFile = postTemplate.replace('<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting"></article>', `<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting">${file}</article>`);
 
-    const template = await fs.promises.readFile(path.resolve('./src/templates/snippet.html'), 'utf8');
-    const textToFind = 'https://zanon.dev/snippet/';
-    const html = template.replace(textToFind, textToFind + code);
-
     const s3 = new AWS.S3({ apiVersion: '2006-03-01', region: 'us-east-1' });
 
     const fileToUpload = buildObjectToUpload({ key: `snippets/${code}`, content: processedFile, mimeType: 'text/plain' });
-    const htmlToUpload = buildObjectToUpload({ key: code, content: html, mimeType: 'text/html' });
 
     await s3.putObject(fileToUpload).promise();
-    await s3.putObject(htmlToUpload).promise();
 }
 
 // Executes the function if the module is called through the command line
@@ -63,7 +57,7 @@ if (require.main === module) {
 
     // check the arguments
     if (process.argv.length != 4) { // npm run executes as `ts-node <this-file> <code> <path>` (4 arguments)
-        // (<CODE>|rng): pass the URL (example: ABC for code.zanon.dev/ABC) or rng for 'random number generator'
+        // (<CODE>|rng): pass the URL (example: ABC for zanon.dev/snippet/ABC) or rng for 'random number generator'
         // <path>: the path for the markdown file
         console.info('Usage: npm run new-snippet (<CODE>|rng) <path>');
         throw Error('Incorrect number of arguments.');
