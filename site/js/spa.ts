@@ -54,6 +54,8 @@ export const configureSPA = (): void => {
 
     const switchSitePage = (targetLink: string, justLoad: boolean): void => {
 
+        document.title = 'Zanon.dev';
+
         const isSnippet = targetLink.startsWith('/snippet/');
         if (isSnippet) {
             loadSnippet();
