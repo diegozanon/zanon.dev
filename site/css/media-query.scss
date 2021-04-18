@@ -11,7 +11,7 @@
 }
 
 @mixin for-large-devices {
-    @media screen and (min-width: 950px) {
+    @media screen and (min-width: 931px) {
         @content;
     }
 }

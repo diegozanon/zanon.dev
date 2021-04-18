@@ -30,6 +30,7 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
     });
 
     for (const elm of elms) {
+        const alt = elm.attr('alt');
         const src = elm.attr('src');
         const srcPath = path.resolve(path.join('./site', src));
 
@@ -52,13 +53,13 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
         const [widthMobile, heightMobile] = [metadataMobile.width, metadataMobile.height];
 
         if (isAmp) {
-            elm.replaceWith(`<img src="${src}" width="${width}" height="${height}" srcset="${src} ${width}w, ${srcMobile} ${widthMobile}w">`);
+            elm.replaceWith(`<img src="${src}" alt="${alt}" width="${width}" height="${height}" srcset="${src} ${width}w, ${srcMobile} ${widthMobile}w">`);
         } else {
             elm.replaceWith(`
                 <picture>
                     <source srcset="${srcMobile}" media="(max-width: 480px)" width="${widthMobile}" height="${heightMobile}">
                     <source srcset="${src}" media="(min-width: 481px)" width="${width}" height="${height}">
-                    <img src="${src}" width="${width}" height="${height}">
+                    <img src="${src}" alt="${alt}" width="${width}" height="${height}">
                 </picture>
             `);
         }
