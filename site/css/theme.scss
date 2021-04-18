@@ -16,8 +16,13 @@
     article p,
     article li,
     .post-date,
-    .post p {
+    .post p,
+    .post-ending {
         color: get($theme, '-font-color-article');
+    }
+
+    .anchor svg {
+        stroke: get($theme, '-font-color-article');
     }
 
     pre[class*="language-"],
@@ -61,10 +66,6 @@
     a:visited,
     a:active {
         color: get($theme, '-link-color');
-    }
-
-    .anchor svg {
-        stroke: get($theme, '-link-color');
     }
 
     div,
