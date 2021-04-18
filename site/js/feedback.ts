@@ -139,5 +139,9 @@ export const configureFeedback = (): void => {
             bug.classList.add('gray-icon');
             chat.classList.add('gray-icon');
         }
+
+        // twitter link
+        const share = document.getElementById('twitter-share') as HTMLAnchorElement;
+        share.href += `${window.location.href.split('#')[0]} from @diegozanon_`;
     }
 }

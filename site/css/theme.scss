@@ -56,6 +56,10 @@
         border-top: 2px solid get($theme, '-nav-color');
     }
 
+    .post-ending {
+        border: 2px solid get($theme, '-nav-color');
+    }
+
     input,
     textarea {
         border-color: get($theme, '-border-color');

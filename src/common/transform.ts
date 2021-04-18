@@ -56,8 +56,8 @@ export const transformHtml = async (html: string, isAmp = false): Promise<string
         } else {
             elm.replaceWith(`
                 <picture>
-                    <source srcset="${src}" media="(min-width: 481px)" width="${width}" height="${height}">
                     <source srcset="${srcMobile}" media="(max-width: 480px)" width="${widthMobile}" height="${heightMobile}">
+                    <source srcset="${src}" media="(min-width: 481px)" width="${width}" height="${height}">
                     <img src="${src}" width="${width}" height="${height}">
                 </picture>
             `);
