@@ -32,7 +32,7 @@ export const renderFullPages = async (output?: string): Promise<void> => {
     for (const post of postsJson.posts) {
         const header = generatePostHeader(post.header);
         const partialPostHtml = insertPage(postsJson.template, header + post.html, 'article');
-        const postHtml = changeTitle(insertPage(index, partialPostHtml, 'main'), post.header.title);
+        const postHtml = changeTitle(insertPage(index, partialPostHtml, 'main'), `${post.header.title} - Zanon.dev`);
         await fs.promises.writeFile(`${dist}/${post.header.slug}`, minifyHtml(postHtml));
     }
 }

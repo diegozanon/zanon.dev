@@ -43,7 +43,7 @@ export const configureSPA = (): void => {
 
         const post = postsJson.posts.find(post => post.header.slug === targetLink.substring(1));
 
-        document.title = post.header.title;
+        document.title = `${post.header.title} - Zanon.dev`;
         const header = generatePostHeader(post.header);
         const data = postsJson.template.replace('<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting"></article>', `<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting">${header + post.html}</article>`);
         loadData(data);
