@@ -1,5 +1,5 @@
 export const configureAnchors = (): void => {
-    const h2List = document.querySelectorAll('h2:not(.feedback-title)');
+    const h2List = document.querySelectorAll(' article h2');
 
     for (let i = 0; i < h2List.length; i++) {
         const anchor = `
