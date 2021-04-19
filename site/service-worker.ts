@@ -8,7 +8,9 @@ const CACHE_FILES = [
     '/bundle.min.css',
     '/bundle.min.mjs',
     '/site.json',
-    '/posts.json'
+    '/posts.json',
+    '/assets/prismjs/prism.min.css',
+    '/assets/prismjs/prism.min.js'
 ];
 
 self.addEventListener('install', (event: ExtendableEvent) => {
@@ -55,4 +57,11 @@ self.addEventListener('fetch', event => {
             })
         })
     )
+});
+
+self.addEventListener('message', event => {
+    if (event.data.action === 'skipWaiting') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (self as any).skipWaiting();
+    }
 });

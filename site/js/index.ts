@@ -5,6 +5,7 @@ import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
 import { loadSnippet } from './snippets';
 import { configureSPA } from './spa';
+import storage from './storage';
 import { configureReadVisit } from './visits';
 import * as Prismjs from '../assets/prismjs/prism.min.js';
 
@@ -25,9 +26,28 @@ if (isNewsletter) {
 }
 
 // Add the service worker
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && !storage.get('no-service-worker')) {
     window.addEventListener('load', () => {
-        // navigator.serviceWorker.register('/service-worker.min.js'); 
+        navigator.serviceWorker.register('/service-worker.min.js')
+            .then(registration => {
+
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed') {
+                            newWorker.postMessage({ action: 'skipWaiting' });
+                        }
+                    });
+                });
+            });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return;
+            refreshing = true;
+            window.location.reload();
+        });
     });
 }
 
