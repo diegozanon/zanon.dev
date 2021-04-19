@@ -2,7 +2,7 @@
 
 zanon.dev is my personal website where I build simple tutorials to teach programming topics.
 
-The source code available here is what I use to build and deploy. You can read and copy the source, but if you want a similar website, there are better tools for it like [Gatsby](https://www.gatsbyjs.org/) or [Hugo](https://gohugo.io).
+The source code available here is what I use to build and deploy. You can read and copy the source, but it was custom-made thinking only on my needs. If you want a similar blog, I suggest you to use [Gatsby](https://www.gatsbyjs.org/) or [Hugo](https://gohugo.io).
 
 # License
 
