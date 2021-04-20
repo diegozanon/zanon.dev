@@ -1,5 +1,4 @@
 import './theme-switcher';
-import { configureAnchors } from './anchor';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
@@ -54,7 +53,6 @@ if ('serviceWorker' in navigator && !storage.get('no-service-worker')) {
 configureFeedback();
 configureReadVisit();
 configureSPA();
-configureAnchors();
 
 // hide tooltips from svg images (<title> is for accessibility and should not be seen by everyone)
 hideTooltips();

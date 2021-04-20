@@ -5,13 +5,11 @@ import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as gulpAmpValidator from 'gulp-amphtml-validator';
 import * as replace from 'gulp-replace';
-import * as marked from 'marked';
 import * as path from 'path';
-import * as Prism from 'prismjs';
 import * as loadLanguages from 'prismjs/components/index.js';
 import { replaceInFile } from 'replace-in-file';
 import { isDir } from '../common/fs-utils';
-import { transformHtml } from '../common/transform';
+import { markArticle } from '../common/markdown';
 import { PostsJson, Post } from '../common/types';
 import { generatePostHeader } from '../../site/js/common';
 
@@ -172,21 +170,10 @@ const renderPostsWithPrism = async (isDev: boolean): Promise<void> => {
 
     loadLanguages();
 
-    marked.setOptions({
-        highlight: function (code, lang) {
-            if (Prism.languages[lang]) {
-                return Prism.highlight(code, Prism.languages[lang], lang);
-            } else {
-                return code;
-            }
-        }
-    });
-
     for (const post of posts) {
         const mdFile = (await fs.promises.readFile(`./site/posts/${post.mdName}`, 'utf8')).split('---')[2];
         const ampFile = await fs.promises.readFile(`./site/dist/${post.ampName}`, 'utf8');
-        const parsedHtml = marked.parse(mdFile).replace(/<pre>/g, '<pre class="language-">'); // setting class "language-" to fix some formatting issues
-        const html = await transformHtml(parsedHtml, true);
+        const html = markArticle(mdFile, true).replace(/<pre>/g, '<pre class="language-">'); // setting class "language-" to fix some formatting issues
         const header = generatePostHeader(post.header);
 
         const mainRegex = /<main([\w\W]+?)>([\w\W]+?)<\/main>/;

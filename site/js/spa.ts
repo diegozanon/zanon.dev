@@ -1,4 +1,3 @@
-import { configureAnchors } from './anchor';
 import { generatePostHeader } from './common';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
@@ -49,7 +48,6 @@ export const configureSPA = (): void => {
         loadData(data);
 
         Prism.highlightAll();
-        configureAnchors();
     }
 
     const switchSitePage = (targetLink: string, justLoad: boolean): void => {

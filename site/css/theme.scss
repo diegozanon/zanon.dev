@@ -21,10 +21,6 @@
         color: get($theme, '-font-color-article');
     }
 
-    .anchor svg {
-        stroke: get($theme, '-font-color-article');
-    }
-
     pre[class*="language-"],
     code[class*="language-"] {
         background-color: get($theme, '-code-background');
@@ -87,10 +83,14 @@
     }
 }
 
-.light-theme {
-    @include theme(light);
-}
-
 .dark-theme {
     @include theme(dark);
+}
+
+.light-theme {
+    @include theme(light);
+
+    .anchor img {
+        filter: invert(1);
+    }
 }

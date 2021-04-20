@@ -1,7 +1,6 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
-import * as marked from 'marked';
-import { Page, PostsJson, PostMeta, PostStatus } from '../../common/types';
+import { markArticle } from '../../common/markdown';
 import { minifyHtml } from '../../common/minify-html';
 import { transformHtml } from '../../common/transform';
 import { yamlToJson } from '../../common/yaml';
@@ -71,7 +70,7 @@ export const updateJsons = async (isDev = false, output?: string): Promise<void>
         header.slug = (isDev ? filename.substring(6) : filename.substring(11)).slice(0, -3);
 
             const markdown = data.split('---')[2];
-            const html = minifyHtml(await transformHtml(marked(markdown)));
+        const html = minifyHtml(markArticle(markdown));
 
             postsJson.posts.push({
                 header,
