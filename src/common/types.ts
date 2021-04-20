@@ -48,11 +48,6 @@ export interface PostMeta extends PostHeader {
     slug: string;
 }
 
-export enum PostStatus {
-    Draft = 'draft',
-    Publish = 'publish'
-}
-
 export enum VisitType {
     Read = 'read',
     Clicked = 'clicked'

@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as moment from 'moment';
 import { EOL } from 'os';
 import * as path from 'path';
 import slugify from 'slugify';
@@ -11,9 +10,7 @@ export const newPost = async (title: string): Promise<void> => {
 
     // build the path for the new file    
     const slug = slugify(title, { lower: true });
-    const date = moment().format('YYYY-MM-DD');
-    const fileName = `${date}-${slug}.md`;
-    const filePath = `./site/posts/${fileName}`;
+    const filePath = `./site/posts/draft-${slug}.md`;
 
     // check if directory already exists
     const dir = './site/posts';

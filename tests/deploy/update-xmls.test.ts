@@ -13,13 +13,7 @@ describe('updateXmls', () => {
     beforeAll(async () => {
 
         const filenames = await fs.promises.readdir('./site/posts');
-        for (const filename of filenames) {
-            const data = await fs.promises.readFile(`./site/posts/${filename}`, 'utf8');
-            if (data.includes('status: publish')) {
-                countExpectedPublished++;
-                continue;
-            }
-        }
+        countExpectedPublished = filenames.filter(filename => !filename.startsWith('draft')).length;
 
         await updateJsons();
     });

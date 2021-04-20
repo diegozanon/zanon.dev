@@ -1,8 +1,9 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
+import * as moment from 'moment';
+import { Page, PostsJson, PostMeta } from '../../common/types';
 import { markArticle } from '../../common/markdown';
 import { minifyHtml } from '../../common/minify-html';
-import { transformHtml } from '../../common/transform';
 import { yamlToJson } from '../../common/yaml';
 
 const getPageHtml = async (page: string): Promise<string> => {
@@ -32,7 +33,9 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
                         ${metaUpdatedOn}
                         <div class="post-description">
                             <p>${post.header.description}</p>
-                            <div class="tags">${post.header.tags}</div>
+                            <div class="video"><a target="_blank" rel="noopener noreferrer" href="${post.header.youtube}">video</a></div>
+                            <div class="demo"><a href="${post.header.demo}">demo</a></div>
+                            <div class="tags"><span>${post.header.tags.join('</span><span>')}</span></div>
                         </div>
                     </div>
                 </a>
@@ -69,14 +72,14 @@ export const updateJsons = async (isDev = false, output?: string): Promise<void>
         header.creationDate = isDev ? moment().format('YYYY-MM-DD') : filename.substring(0, 10);
         header.slug = (isDev ? filename.substring(6) : filename.substring(11)).slice(0, -3);
 
-            const markdown = data.split('---')[2];
+        const markdown = data.split('---')[2];
         const html = minifyHtml(markArticle(markdown));
 
-            postsJson.posts.push({
-                header,
-                html
-            });
-        }
+        postsJson.posts.push({
+            header,
+            html
+        });
+    }
 
     await fs.promises.mkdir(`${root}/site/dist`, { recursive: true });
     await fs.promises.writeFile(`${root}/site/dist/posts.json`, JSON.stringify(postsJson));

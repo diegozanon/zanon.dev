@@ -1,17 +1,19 @@
 import * as fs from 'fs';
-import * as moment from 'moment';
 import * as path from 'path';
 import { newPost } from '../../src/scripts/new-post';
 
 const postTitle = 'This is a test';
-const fileName = `${moment().format('YYYY-MM-DD')}-this-is-a-test.md`;
-const filePath = path.join(__dirname, '../../site/posts/', fileName);
+const filePath = path.join(__dirname, '../../site/posts/draft-this-is-a-test.md');
 
 describe('newPost', () => {
 
     it('creates a new post following the template', async () => {
         // arrange
-        const expectedData = await fs.promises.readFile(path.join(__dirname, '../data/post-template.md'), 'utf8');
+        const removeLFCR = (str: string): string => {
+            return str.replace(/[\r\n]/g, '');
+        }
+
+        const expectedData = removeLFCR(await fs.promises.readFile(path.join(__dirname, '../data/post-template.md'), 'utf8'));
 
         // act
         await newPost(postTitle);
@@ -20,7 +22,7 @@ describe('newPost', () => {
 
         // assert
         expect(fileWasCreated).toBeTruthy();
-        expect(actualData).toBe(expectedData);
+        expect(removeLFCR(actualData)).toBe(removeLFCR(expectedData));
     });
 
     it('will not overwrite an existing post', async () => {

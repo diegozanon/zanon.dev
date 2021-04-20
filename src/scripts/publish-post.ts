@@ -1,10 +1,9 @@
 import * as cliSelect from 'cli-select';
 import * as fs from 'fs';
 import * as moment from 'moment';
-import filterAsync from 'node-filter-async';
 import { EOL } from 'os';
 import { jsonToYaml, yamlToJson } from '../common/yaml';
-import { PostHeader, PostStatus } from '../common/types';
+import { PostHeader } from '../common/types';
 import { updateJsons } from '../deploy/lib/update-jsons';
 import { updateRss, updateSitemap } from '../deploy/lib/update-xmls';
 
@@ -13,28 +12,33 @@ const convertHeaderToJson = async (data: string): Promise<PostHeader> => {
     return yamlToJson(data) as PostHeader;
 }
 
-/** Select only files where status is draft */
+/** Select only draft posts */
 export const getDraftPosts = async (): Promise<Array<string>> => {
     const posts = await fs.promises.readdir('./site/posts');
-
-    return await filterAsync(posts, async post => {
-        const data = await fs.promises.readFile(`./site/posts/${post}`, 'utf8');
-        return (await convertHeaderToJson(data)).status === PostStatus.Draft;
-    });
+    return posts.filter(post => post.startsWith('draft'));
 }
 
 /** 
- * This function will set the selected post 'status' property to 'publish' and update the file date. 
- * Publish will happen when the change is pushed to the master branch with 'status': 'publish' 
- * Publishing a post will also update the posts.json file
- * @returns new file name, which will be the same if the date hasn't changed
+ * This function will set the selected post to be published by giving it a creation date in the filename. 
+ * Publish will happen when the change is pushed to the master branch.
+ * Publishing a post will also update the posts.json file.
+ * @returns new file name
  */
 export const publishPost = async (name: string): Promise<string> => {
 
-    // set status to publish
+    // check the post headers
     const data = await fs.promises.readFile(`./site/posts/${name}`, 'utf8');
     const obj = await convertHeaderToJson(data);
-    obj.status = PostStatus.Publish;
+
+    if (obj.thumbnail.includes('draft-img')) {
+        throw new Error("Can't publish a post with a draft image as thumbnail");
+    }
+
+    for (const [key, value] of Object.entries(obj)) {
+        if ((!value || (Array.isArray(value) && !value.length)) && key != 'updatedOn') {
+            throw new Error(`Can't post with key "${key}" empty`);
+        }
+    }
 
     // recreate the markdown file
     const yml = jsonToYaml(obj);
@@ -42,29 +46,20 @@ export const publishPost = async (name: string): Promise<string> => {
     const md = [splitted[0], EOL + yml + EOL, splitted[2]].join('---').trim();
 
     const currentDate = moment().format('YYYY-MM-DD');
-    const fileDate = name.substring(0, 10); // format 'YYYY-MM-DD'
-    let filename: string;
-    if (currentDate === fileDate) {
-        // overwrite current file
-        fs.promises.writeFile(`./site/posts/${name}`, md);
-        filename = name;
-    } else {
-        // create a new file to use current date
-        const newName = currentDate + name.substring(10);
-        await fs.promises.writeFile(`./site/posts/${newName}`, md);
 
-        // delete previous file
-        await fs.promises.unlink(`./site/posts/${name}`);
+    // create a new file to use the current date
+    const newName = currentDate + name.replace('draft', '');
+    await fs.promises.writeFile(`./site/posts/${newName}`, md);
 
-        filename = newName;
-    }
+    // delete previous file
+    await fs.promises.unlink(`./site/posts/${name}`);
 
     // update the posts.json file and rss/sitemap.rss
     await updateJsons();
     await updateRss();
     await updateSitemap();
 
-    return filename;
+    return newName;
 }
 
 // Executes the function if the module is called through the command line

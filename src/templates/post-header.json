@@ -3,8 +3,9 @@
     "description": null,
     "shortDescription": null,
     "updatedOn": null,
-    "thumbnail": null,
+    "thumbnail": "/imgs/site/draft-img.png",
     "thumbnailAltTxt": null,
     "tags": [],
-    "status": "draft"
+    "youtube": null,
+    "demo": null
 }

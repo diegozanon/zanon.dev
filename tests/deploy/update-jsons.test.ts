@@ -8,15 +8,8 @@ describe('updateJsons', () => {
         // arrange
         const jsonPath = './site/dist/posts.json';
 
-        let countExpectedPublished = 0;
         const filenames = await fs.promises.readdir('./site/posts');
-        for (const filename of filenames) {
-            const data = await fs.promises.readFile(`./site/posts/${filename}`, 'utf8');
-            if (data.includes('status: publish')) {
-                countExpectedPublished++;
-                continue;
-            }
-        }
+        const countExpectedPublished = filenames.filter(filename => !filename.startsWith('draft')).length;
 
         // act
         await updateJsons();
