@@ -159,12 +159,12 @@ const removeClientSidePrism = async (): Promise<void> => {
     });
 }
 
-const renderPostsWithPrism = async (): Promise<void> => {
+const renderPostsWithPrism = async (isDev: boolean): Promise<void> => {
 
     const postsJson = (JSON.parse(await fs.promises.readFile(`./site/dist/posts.json`, 'utf8')) as PostsJson).posts;
     const posts = postsJson.map((post: Post) => {
         return {
-            mdName: `${post.header.creationDate}-${post.header.slug}.md`,
+            mdName: `${isDev ? 'draft' : post.header.creationDate}-${post.header.slug}.md`,
             ampName: `${post.header.slug}.amphtml`,
             header: post.header
         };
@@ -269,14 +269,14 @@ const validate = async (): Promise<void> => {
     });
 }
 
-export const ampify = async (done): Promise<void> => {
+export const ampify = async (isDev: boolean, done): Promise<void> => {
     await fixAmpLinks();
     await duplicateHtmlFiles();
     await replaceToAmpTags();
     await buildCustomJs();
     await useCustomJsCss();
     await removeClientSidePrism();
-    await renderPostsWithPrism();
+    await renderPostsWithPrism(isDev);
     await adjustImageTags();
     await removeUnusedFeatures();
 

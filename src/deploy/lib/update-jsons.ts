@@ -45,7 +45,7 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
 }
 
 /** This function updates the posts.json and site.json files. */
-export const updateJsons = async (output?: string): Promise<void> => {
+export const updateJsons = async (isDev = false, output?: string): Promise<void> => {
 
     const root = output || '.';
     const postsPath = `${root}/site/posts`;
@@ -56,17 +56,19 @@ export const updateJsons = async (output?: string): Promise<void> => {
         template: minifyHtml(await fs.promises.readFile(templatePath, 'utf8'))
     };
 
-    const filenames = await fs.promises.readdir(postsPath);
+    let filenames = await fs.promises.readdir(postsPath);
+
+    if (!isDev) {
+        // If not dev, get only published folder. If dev, allow drafts
+        filenames = filenames.filter(filename => !filename.startsWith('draft'));
+    }
+
     for (const filename of filenames) {
         const data = await fs.promises.readFile(`${postsPath}/${filename}`, 'utf8');
         const header = yamlToJson(data.split('---')[1]) as PostMeta;
 
-        if (header.status === PostStatus.Publish) {
-
-            delete header.status;
-
-            header.creationDate = filename.substring(0, 10);
-            header.slug = filename.substring(11).slice(0, -3);
+        header.creationDate = isDev ? moment().format('YYYY-MM-DD') : filename.substring(0, 10);
+        header.slug = (isDev ? filename.substring(6) : filename.substring(11)).slice(0, -3);
 
             const markdown = data.split('---')[2];
             const html = minifyHtml(await transformHtml(marked(markdown)));
@@ -76,7 +78,6 @@ export const updateJsons = async (output?: string): Promise<void> => {
                 html
             });
         }
-    }
 
     await fs.promises.mkdir(`${root}/site/dist`, { recursive: true });
     await fs.promises.writeFile(`${root}/site/dist/posts.json`, JSON.stringify(postsJson));

@@ -13,6 +13,12 @@ import { buildTS, buildTSWatch } from './src/gulp/build-ts';
 import { generateSW } from './src/gulp/build-sw';
 import { serve } from './src/gulp/serve';
 
+let isDev = false;
+gulp.task('set-dev', async done => {
+    isDev = true;
+    done();
+});
+
 gulp.task('clean-dist', async done => {
     await fse.emptyDir('./site/dist');
     done();
@@ -25,7 +31,7 @@ gulp.task('build-sass', buildSass);
 gulp.task('build-sass:watch', buildSassWatch);
 
 gulp.task('update-jsons', async done => {
-    await updateJsons();
+    await updateJsons(isDev);
     done();
 });
 
@@ -58,7 +64,7 @@ gulp.task('build-html:watch', done => {
     done();
 });
 
-gulp.task('ampify', ampify);
+gulp.task('ampify', async done => { await ampify(isDev, done) });
 
 gulp.task('generate-service-worker', generateSW);
 
@@ -79,6 +85,6 @@ gulp.task('deploy-aws', async done => {
 gulp.task('serve', serve);
 
 gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html', 'ampify', 'generate-service-worker']));
-gulp.task('build:watch', gulp.series(['clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch', 'ampify', 'generate-service-worker']));
+gulp.task('build:watch', gulp.series(['set-dev', 'clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch', 'ampify', 'generate-service-worker']));
 gulp.task('deploy', gulp.series(['build', 'deploy-aws']));
 gulp.task('default', gulp.series(['build:watch', 'serve']));
