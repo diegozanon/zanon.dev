@@ -2,7 +2,7 @@ All code available in this repository is licensed under the MIT license and all 
 
 # MIT License
 
-Copyright (c) 2019 Diego Zanon
+Copyright (c) 2021 Diego Zanon
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
