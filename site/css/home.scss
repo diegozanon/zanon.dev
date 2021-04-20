@@ -28,9 +28,13 @@
 
 .tags {
     margin-left: auto;
-    border: 2px solid;
-    border-radius: 1em;
-    padding: 0.2em 0.5em;
+
+    span {
+        border: 2px solid;
+        border-radius: 1em;
+        padding: 0.2em 0.5em;
+        margin-left: 0.5em;
+    }
 }
 
 @include for-mobile {

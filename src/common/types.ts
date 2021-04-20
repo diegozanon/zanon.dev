@@ -34,7 +34,8 @@ export interface PostHeader {
     thumbnail: string;
     thumbnailAltTxt: string;
     tags: Array<string>;
-    status: PostStatus;
+    youtube: string;
+    demo: string;
 }
 
 export interface PostsJson {
