@@ -23,22 +23,23 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
         const metaUpdatedOn = post.header.updatedOn ? `<meta itemprop="dateModified" content="${post.header.updatedOn}">` : '';
         links += `
             <div class="post" itemscope itemtype="https://schema.org/BlogPosting">
-                <a href="/${post.header.slug}" itemprop="mainEntityOfPage url">
-                    
-                    <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}" width="150" height="150">
-                    <div>
+                <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}" width="150" height="150">
+                <div>
+                    <a href="/${post.header.slug}" itemprop="url">
                         <h2 itemprop="name headline">${post.header.title}</h2>
-                        <meta itemprop="author" content="Diego Zanon">
-                        <meta itemprop="datePublished" content="${post.header.creationDate}">
-                        ${metaUpdatedOn}
-                        <div class="post-description">
-                            <p>${post.header.description}</p>
-                            <div class="video"><a target="_blank" rel="noopener noreferrer" href="${post.header.youtube}">video</a></div>
-                            <div class="demo"><a href="${post.header.demo}">demo</a></div>
+                    </a>
+                    <meta itemprop="author" content="Diego Zanon">
+                    <meta itemprop="datePublished" content="${post.header.creationDate}">
+                    ${metaUpdatedOn}
+                    <div class="post-description">
+                        <p>${post.header.description}</p>
+                        <div>
+                            <a class="video" target="_blank" rel="noopener noreferrer" href="${post.header.youtube}"><img src="/imgs/site/light-video.svg" alt="a video related with this post" width="40" height="40" /></a>
+                            <a class="demo" href="${post.header.demo}"><img src="/imgs/site/light-controller.svg" alt="a demo related with this post" width="40" height="40" /></a>
                             <div class="tags"><span>${post.header.tags.join('</span><span>')}</span></div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         `;
     }

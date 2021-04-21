@@ -3,12 +3,11 @@
 .post {
 
     margin: 30px 30px;
+    display: flex;
+    justify-content: center;
 
     a {
-        display: flex;
-        justify-content: center;
         text-decoration: none;
-        user-select: text;
     }
 
     h2 {
@@ -24,6 +23,21 @@
 .post-description {
     display: flex;
     flex-direction: column;
+
+    div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        height: 40px;
+    }
+}
+
+.demo,
+.video {
+    img {
+        border-radius: 0;
+        margin-right: 15px;
+    }
 }
 
 .tags {
@@ -33,16 +47,20 @@
         border: 2px solid;
         border-radius: 1em;
         padding: 0.2em 0.5em;
-        margin-left: 0.5em;
+        margin: 2px 10px 1px 0px;
     }
 }
 
 @include for-mobile {
-    .post a {
+    .post {
         flex-direction: column;
 
-        img {
+        >a {
             margin: 0 auto 20px auto;
+
+            img {
+                margin-right: 0;
+            }
         }
     }
 }
