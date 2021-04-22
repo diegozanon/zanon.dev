@@ -143,6 +143,41 @@ export const copyToDist = async (done): Promise<void> => {
             .on('end', resolve);
     });
 
+    // check if there are small images for every normal image  
+    const getFiles = async (dir): Promise<string[]> => {
+        const files = [];
+        const dirents = await fse.promises.readdir(dir, { withFileTypes: true });
+        for (const dirent of dirents) {
+            const res = path.resolve(dir, dirent.name);
+            if (dirent.isDirectory()) {
+                const innerFiles = await getFiles(res);
+                files.push(...innerFiles);
+            }
+            else {
+                files.push(res);
+            }
+        }
+
+        return Array.prototype.concat(...files);
+    }
+
+    const dir = path.resolve('./site/imgs/posts');
+    const files = (await getFiles(dir)).filter(file => !file.includes('.DS_Store'));
+
+    let countOriginal = 0;
+    let countSmall = 0;
+    for (const file of files) {
+        if (file.includes('-small.'))
+            countSmall++;
+        else
+            countOriginal++;
+    }
+
+    if (countSmall != countOriginal) {
+        // If the number is different, it means that I forgot to run the scale-img script for one of them
+        throw new Error(`The number of small images (${countSmall}) is different from the number of the original images (${countOriginal}).`);
+    }
+
     done();
 }
 
