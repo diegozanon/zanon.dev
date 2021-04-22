@@ -28,6 +28,7 @@ export interface Post {
 }
 
 export interface PostHeader {
+    updatedOn?: string;
     title: string;
     description: string;
     shortDescription: string;
@@ -45,7 +46,6 @@ export interface PostsJson {
 
 export interface PostMeta extends PostHeader {
     creationDate: string;
-    updatedOn?: string;
     slug: string;
 }
 

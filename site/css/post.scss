@@ -29,20 +29,41 @@ article {
     margin-bottom: 30px;
 }
 
+article h2 {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
 .anchor {
     text-decoration: none;
+    padding-top: 5px;
+    padding-left: 7px;
+}
+
+@include for-medium-devices {
+    h2 .anchor {
+        visibility: hidden;
+    }
+
+    h2:hover .anchor {
+        visibility: visible;
+    }
 }
 
 @include for-large-devices {
 
     article h2 {
         position: relative;
+        flex-direction: row;
+        justify-content: flex-start;
     }
 
     h2 .anchor {
         visibility: hidden;
         left: -30px;
-        padding-right: 10px;
+        padding-right: 15px;
+        padding-left: 0px;
         position: absolute;
     }
 

@@ -55,12 +55,26 @@
     .post {
         flex-direction: column;
 
-        >a {
+        img {
             margin: 0 auto 20px auto;
-
-            img {
-                margin-right: 0;
-            }
         }
+    }
+
+    .demo,
+    .video {
+        img {
+            margin-right: 10px;
+            width: 28px;
+            height: 28px;
+        }
+    }
+
+    .tags span {
+        padding: 0em 0.4em;
+        margin: 0px 8px 0px 0px;
+    }
+
+    .post-description div {
+        height: 28px;
     }
 }

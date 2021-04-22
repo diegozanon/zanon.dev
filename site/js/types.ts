@@ -35,6 +35,8 @@ export interface PostMeta {
     thumbnail: string;
     thumbnailAltTxt: string;
     tags: Array<string>;
+    youtube: string;
+    demo: string;
 }
 
 export enum Theme {
