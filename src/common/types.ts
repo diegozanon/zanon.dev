@@ -17,6 +17,22 @@ export interface HttpResponseOptions {
     httpMethod?: string;
 }
 
+export interface Metatag {
+    type?: string;
+    title: string;
+    url: string;
+    description: string;
+    image: string;
+    imageAlt: string;
+}
+
+export interface Metatags {
+    twitterLabel: Metatag;
+    twitterValue: Metatag;
+    ogLabel: Metatag;
+    ogValue: Metatag;
+}
+
 export interface Page {
     slug: string;
     html: string;
@@ -52,20 +68,4 @@ export interface PostMeta extends PostHeader {
 export enum VisitType {
     Read = 'read',
     Clicked = 'clicked'
-}
-
-export interface Metatag {
-    type?: string;
-    title: string;
-    url: string;
-    description: string;
-    image: string;
-    imageAlt: string;
-}
-
-export interface Metatags {
-    twitterLabel: Metatag;
-    twitterValue: Metatag;
-    ogLabel: Metatag;
-    ogValue: Metatag;
 }

@@ -4,6 +4,11 @@ export enum BackendRequestType {
     Visit = 'visit'
 }
 
+export interface Demo {
+    title: string;
+    html: string;
+}
+
 export enum FeedbackType {
     Like = 'like',
     Dislike = 'dislike',

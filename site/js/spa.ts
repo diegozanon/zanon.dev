@@ -1,4 +1,5 @@
 import { generatePostHeader } from './common';
+import { loadDemo } from './demo';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { loadSnippet } from './snippets';
@@ -55,8 +56,14 @@ export const configureSPA = (): void => {
         document.title = 'Zanon.dev';
 
         const isSnippet = targetLink.startsWith('/snippet/');
+        const isDemo = targetLink.startsWith('/demo/');
         if (isSnippet) {
             loadSnippet();
+            return;
+        } else if (isDemo) {
+            if (!justLoad)
+                window.history.pushState({}, '', targetLink);
+            loadDemo();
             return;
         }
 
@@ -100,6 +107,8 @@ export const configureSPA = (): void => {
 
         anchor.onclick = (evt): void => {
 
+            sendVisited(href, VisitType.Clicked);
+
             // handle only local links
             if (!href.startsWith('/')) {
                 return;
@@ -117,8 +126,6 @@ export const configureSPA = (): void => {
             }
 
             evt.preventDefault();
-
-            sendVisited(href, VisitType.Clicked);
 
             switchPage(href, false);
         }

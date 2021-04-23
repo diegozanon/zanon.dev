@@ -1,4 +1,5 @@
 import './theme-switcher';
+import { loadDemo } from './demo';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
@@ -15,14 +16,20 @@ declare global {
 const page = window.location.pathname;
 
 const isSnippet = page.startsWith('/snippet/');
+const isDemo = page.startsWith('/demo/');
+const isNewsletter = page === '/newsletter';
 if (isSnippet) {
     loadSnippet();
-}
-
-const isNewsletter = page === '/newsletter';
-if (isNewsletter) {
+} else if (isDemo) {
+    loadDemo();
+} else if (isNewsletter) {
     configureNewsletter();
 }
+
+configureReadVisit();
+configureFeedback();
+configureSPA();
+hideTooltips();
 
 // Add the service worker
 if ('serviceWorker' in navigator && !storage.get('no-service-worker')) {
@@ -49,10 +56,3 @@ if ('serviceWorker' in navigator && !storage.get('no-service-worker')) {
         });
     });
 }
-
-configureFeedback();
-configureReadVisit();
-configureSPA();
-
-// hide tooltips from svg images (<title> is for accessibility and should not be seen by everyone)
-hideTooltips();

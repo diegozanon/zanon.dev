@@ -1,0 +1,15 @@
+{
+    "name": "serverless-multiplayer-game",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "serve"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "serve": "^11.3.2"
+    }
+}

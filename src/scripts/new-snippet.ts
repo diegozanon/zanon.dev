@@ -3,6 +3,7 @@ import { PutObjectRequest } from 'aws-sdk/clients/s3';
 import * as fs from 'fs';
 import * as path from 'path';
 import { markArticle } from '../common/markdown';
+import { minifyHtml } from '../common/minify-html';
 
 const generateCode = (): string => {
     // https://stackoverflow.com/a/44678459/1476885
@@ -40,7 +41,7 @@ export const newSnippet = async (code: string, filepath: string): Promise<void> 
         console.info(`zanon.dev/snippet/${code}`);
     }
 
-    const file = markArticle(await fs.promises.readFile(filepath, 'utf8'));
+    const file = minifyHtml(markArticle(await fs.promises.readFile(filepath, 'utf8')));
     const postTemplate = await fs.promises.readFile(path.resolve('./site/pages/post.html'), 'utf8');
     const processedFile = postTemplate.replace('<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting"></article>', `<article itemprop="mainEntity blogPost" itemscope itemtype="https://schema.org/BlogPosting">${file}</article>`);
 

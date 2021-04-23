@@ -1,14 +1,9 @@
 import { configureFeedback } from './feedback';
+import { moveTo404 } from './notFound';
 import { configureSPA } from './spa';
+import { hideTooltips } from './tooltips';
 
 export const loadSnippet = (): void => {
-
-    const notFoundElm = document.getElementById('not-found');
-    const from404page = notFoundElm != null; // if not from404, then it is from SPA back-button
-
-    if (from404page) {
-        notFoundElm.style.display = 'none';
-    }
 
     const code = window.location.pathname.replace('/snippet/', '');
     const url = `https://s3.amazonaws.com/code.zanon.dev/snippets/${code}`;
@@ -24,19 +19,12 @@ export const loadSnippet = (): void => {
         })
         .then(text => {
 
-            if (from404page) {
-                document.getElementById('snippet').innerHTML = text;
-            } else {
-                document.getElementsByTagName('main')[0].innerHTML = text;
-                configureSPA();
-            }
+            document.getElementsByTagName('main')[0].innerHTML = text;
 
             Prism.highlightAll();
             configureFeedback();
+            configureSPA();
+            hideTooltips();
         })
-        .catch(() => {
-            if (from404page) {
-                notFoundElm.style.display = '';
-            }
-        });
+        .catch(moveTo404);
 }

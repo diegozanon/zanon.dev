@@ -48,7 +48,7 @@ const scrollEvent = async (): Promise<void> => {
 export const configureReadVisit = (): void => {
 
     const notPosts = ['/', '/me', '/privacy', '/newsletter', '/404'];
-    const isPost = !notPosts.includes(page);
+    const isPost = !notPosts.includes(page) && !page.startsWith('/demo') && !page.startsWith('/snippet');
 
     if (isPost) {
         // send read event after 3 scrolls        
