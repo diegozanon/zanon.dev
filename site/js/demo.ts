@@ -1,6 +1,7 @@
 import { moveTo404 } from './notFound';
 import { configureSPA } from './spa';
-import { Demo } from './types';
+import { Demo, VisitType } from './types';
+import { sendVisited } from './visits';
 
 export const loadDemo = (inline?: boolean, slug?: string): void => {
     const name = inline ? slug : window.location.pathname.replace('/demo/', '');
@@ -65,6 +66,7 @@ export const configureDemoButton = (): void => {
     if (button) {
         button.onclick = (): void => {
             loadDemo(true, button.id);
+            sendVisited(`/demo/${button.id}#button`, VisitType.Clicked);
         }
     }
 }
