@@ -6,6 +6,8 @@ export enum BackendRequestType {
 
 export interface Demo {
     title: string;
+    hasJS: boolean;
+    hasCSS: boolean;
     html: string;
 }
 

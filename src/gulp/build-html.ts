@@ -6,7 +6,6 @@ import * as replace from 'gulp-replace';
 import * as moment from 'moment';
 import * as path from 'path';
 import { isDir } from '../common/fs-utils';
-import { minifyHtml } from '../common/minify-html';
 import { Metatag, Metatags, PostsJson } from '../common/types';
 
 const getHtmlFiles = async (): Promise<string[]> => {
@@ -127,27 +126,6 @@ const getMetatags = async (file: string): Promise<Metatags> => {
     }
 }
 
-const copyDemos = async (): Promise<void> => {
-    await fse.copy('site/demos', 'site/dist/demos');
-
-    // Besides copying all files to the demos folder, it is necessary to create a new file with the
-    // demo body to be loaded dynamically
-    const folders = await fse.promises.readdir(path.resolve('./site/dist/demos'));
-    for (const folder of folders) {
-        const html = await fse.promises.readFile(path.resolve(`./site/dist/demos/${folder}/index.html`), 'utf8');
-        const $ = cheerio.load(html);
-        const title = $('head > title').text();
-        const body = $('body').html().trim();
-        const contentToWrite = {
-            title,
-            html: minifyHtml(body)
-        }
-
-        const filename = `${folder}.json`;
-        await fse.promises.writeFile(path.resolve(`./site/dist/demos/${folder}/${filename}`), JSON.stringify(contentToWrite));
-    }
-}
-
 const copyImages = async (): Promise<void> => {
     await new Promise(async resolve => {
         gulp.src('site/imgs/**')
@@ -194,7 +172,7 @@ const copyImages = async (): Promise<void> => {
 
 export const copyToDist = async (done): Promise<void> => {
     await fse.copy('site/assets', 'site/dist/assets');
-    await copyDemos();
+    await fse.copy('site/demos', 'site/dist/demos');
     await fse.copy('site/fonts', 'site/dist/fonts');
     await fse.copy('site/icons', 'site/dist/icons');
     await copyImages();

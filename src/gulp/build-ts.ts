@@ -1,6 +1,6 @@
+import { build } from 'esbuild';
 import * as gulp from 'gulp';
 import * as connect from 'gulp-connect';
-import { build } from 'esbuild';
 
 export const buildTS = async (done, watch = false): Promise<void> => {
 
