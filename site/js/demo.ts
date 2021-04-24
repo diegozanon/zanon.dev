@@ -2,8 +2,8 @@ import { moveTo404 } from './notFound';
 import { configureSPA } from './spa';
 import { Demo } from './types';
 
-export const loadDemo = (): void => {
-    const name = window.location.pathname.replace('/demo/', '');
+export const loadDemo = (inline?: boolean, slug?: string): void => {
+    const name = inline ? slug : window.location.pathname.replace('/demo/', '');
     const url = `/demos/${name}/${name}.json`;
 
     fetch(url)
@@ -17,10 +17,17 @@ export const loadDemo = (): void => {
         })
         .then((demo: Demo): void => {
 
-            const html = `<h1>${demo.title}</h1>${demo.html}`;
-            document.getElementsByTagName('main')[0].innerHTML = html;
+            const html = inline ? demo.html : `<h1>${demo.title}</h1>${demo.html}`;
 
-            document.title = `${demo.title} - Zanon.dev`;
+            if (inline) {
+                document.getElementById('play-demo').innerHTML = html;
+            } else {
+                document.getElementsByTagName('main')[0].innerHTML = html;
+            }
+
+            if (!inline) {
+                document.title = `${demo.title} - Zanon.dev`;
+            }
 
             if (demo.hasCSS) {
                 const linkID = `${name}-link`;
@@ -50,4 +57,14 @@ export const loadDemo = (): void => {
             configureSPA();
         })
         .catch(moveTo404);
+}
+
+export const configureDemoButton = (): void => {
+    const button = document.querySelector('#play-demo input[type=button]') as HTMLInputElement;
+
+    if (button) {
+        button.onclick = (): void => {
+            loadDemo(true, button.id);
+        }
+    }
 }

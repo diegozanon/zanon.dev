@@ -1,5 +1,5 @@
 import './theme-switcher';
-import { loadDemo } from './demo';
+import { configureDemoButton, loadDemo } from './demo';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
@@ -27,6 +27,7 @@ if (isSnippet) {
 }
 
 configureReadVisit();
+configureDemoButton();
 configureFeedback();
 configureSPA();
 hideTooltips();

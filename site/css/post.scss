@@ -83,6 +83,11 @@ article img {
     max-width: 75%;
 }
 
+#play-demo>input[type="button"] {
+    display: block;
+    margin: 0 auto;
+}
+
 #not-found {
     height: 100%;
     display: flex;

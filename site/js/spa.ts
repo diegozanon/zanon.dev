@@ -1,5 +1,5 @@
 import { generatePostHeader } from './common';
-import { loadDemo } from './demo';
+import { configureDemoButton, loadDemo } from './demo';
 import { configureFeedback } from './feedback';
 import { configureNewsletter } from './newsletter';
 import { loadSnippet } from './snippets';
@@ -88,6 +88,7 @@ export const configureSPA = (): void => {
 
         if (postsPages.includes(slug)) {
             switchPostPage(pathname, justLoad);
+            configureDemoButton();
             configureFeedback();
         } else if (siteJson) {
             switchSitePage(pathname, justLoad);

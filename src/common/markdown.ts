@@ -35,6 +35,14 @@ const mark = (html: string, ampify = false): string => {
     }
 
     renderer.link = (href: string, title: string, text: string): string => {
+
+        if (href.startsWith('/demo/') && text == 'play') {
+            return `
+                <div id="play-demo">
+                    <input id="${href.replace('/demo/', '')}" type="button" name="play" value="Play Demo">
+                </div>`;
+        }
+
         if (href.includes('http')) {
             // Not a local link. Always open external links in a new window with noopener noreferrer
             return `<a target="_blank" rel="noopener noreferrer" href="${href}">${text}</a>`;
