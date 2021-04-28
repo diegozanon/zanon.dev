@@ -9,3 +9,6 @@ downloaded/
 
 # macOS
 .DS_Store
+
+# local settings
+.vscode/settings.json
