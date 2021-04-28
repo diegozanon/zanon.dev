@@ -4,8 +4,7 @@ try {
     localStorage.setItem('storage_test', '');
     localStorage.removeItem('storage_test');
     isAvailable = true;
-}
-catch (e) {
+} catch (e) {
     console.warn('localStorage is not available.', e);
     isAvailable = false;
 }

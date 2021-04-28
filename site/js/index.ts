@@ -18,19 +18,22 @@ const page = window.location.pathname;
 const isSnippet = page.startsWith('/snippet/');
 const isDemo = page.startsWith('/demo/');
 const isNewsletter = page === '/newsletter';
-if (isSnippet) {
-    loadSnippet();
-} else if (isDemo) {
-    loadDemo();
-} else if (isNewsletter) {
-    configureNewsletter();
-}
 
-configureReadVisit();
-configureDemoButton();
-configureFeedback();
-configureSPA();
-hideTooltips();
+window.onload = (): void => {
+    if (isSnippet) {
+        loadSnippet();
+    } else if (isDemo) {
+        loadDemo();
+    } else if (isNewsletter) {
+        configureNewsletter();
+    }
+
+    configureReadVisit();
+    configureDemoButton();
+    configureFeedback();
+    configureSPA();
+    hideTooltips();
+}
 
 // Add the service worker
 if ('serviceWorker' in navigator && !storage.get('no-service-worker')) {
