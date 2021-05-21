@@ -142,6 +142,6 @@ export const configureFeedback = (): void => {
 
         // twitter link
         const share = document.getElementById('twitter-share') as HTMLAnchorElement;
-        share.href += `${window.location.href.split('#')[0]} from @diegozanon_`;
+        share.href += `${window.location.href.split('#')[0]} from @zanon_dev`;
     }
 }
