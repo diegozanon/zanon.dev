@@ -6,7 +6,6 @@ import { uploadAll, invalidateCache } from './src/deploy/lib/aws';
 import { renderFullPages } from './src/deploy/lib/render-full-pages';
 import { updateJsons } from './src/deploy/lib/update-jsons';
 import { updateRss, updateSitemap } from './src/deploy/lib/update-xmls';
-import { ampify } from './src/gulp/ampify';
 import { buildDemo } from './src/gulp/build-demo';
 import { avoidCache, copyToDist, prepareMetatags } from './src/gulp/build-html';
 import { buildSass, buildSassWatch } from './src/gulp/build-sass';
@@ -67,8 +66,6 @@ gulp.task('build-html:watch', done => {
 
 gulp.task('build-demo', async done => { await buildDemo(done) });
 
-gulp.task('ampify', async done => { await ampify(isDev, done) });
-
 gulp.task('generate-service-worker', generateSW);
 
 gulp.task('deploy-aws', async done => {
@@ -87,7 +84,7 @@ gulp.task('deploy-aws', async done => {
 
 gulp.task('serve', serve);
 
-gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html', 'build-demo', 'ampify', 'generate-service-worker']));
-gulp.task('build:watch', gulp.series(['set-dev', 'clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch', 'build-demo', 'ampify', 'generate-service-worker']));
+gulp.task('build', gulp.series(['clean-dist', 'build-ts', 'build-sass', 'build-html', 'build-demo', 'generate-service-worker']));
+gulp.task('build:watch', gulp.series(['set-dev', 'clean-dist', 'build-ts:watch', 'build-sass', 'build-sass:watch', 'build-html', 'build-html:watch', 'build-demo', 'generate-service-worker']));
 gulp.task('deploy', gulp.series(['build', 'deploy-aws']));
 gulp.task('default', gulp.series(['build:watch', 'serve']));

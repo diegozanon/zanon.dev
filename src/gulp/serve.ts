@@ -11,8 +11,8 @@ export const serve = (done): void => {
         middleware: () => {
             return [cors(), (req, res, next): void => {
 
-                // if doesn't have an extension or is amphtml, treat as html
-                if ((req.url !== '/' && req.url.split('.').length === 1) || req.url.endsWith('.amphtml')) {
+                // if doesn't have an extension, treat as html
+                if (req.url !== '/' && req.url.split('.').length === 1) {
                     res.setHeader('Content-Type', 'text/html')
                 }
 

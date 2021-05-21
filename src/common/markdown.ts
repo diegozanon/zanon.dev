@@ -1,7 +1,6 @@
 import * as marked from 'marked';
-import * as Prism from 'prismjs';
 
-const mark = (html: string, ampify = false): string => {
+const mark = (html: string): string => {
     const renderer = new marked.Renderer();
 
     renderer.image = (href: string, title: string, text: string): string => {
@@ -21,17 +20,13 @@ const mark = (html: string, ampify = false): string => {
         const imageExtension = href.split('.').pop();
         const hrefMobile = href.replace(`.${imageExtension}`, `-small.${imageExtension}`);
 
-        if (ampify) {
-            return `<img src="${href}" alt="${text}" width="${width}" height="${height}" srcset="${href} ${width}w, ${hrefMobile} ${smallWidth}w">`;
-        } else {
-            return `
-                <picture>
-                    <source srcset="${hrefMobile}" media="(max-width: 480px)" width="${smallWidth}" height="${smallHeight}">
-                    <source srcset="${href}" media="(min-width: 481px)" width="${width}" height="${height}">
-                    <img src="${href}" alt="${text}" width="${width}" height="${height}">
-                </picture>
-            `;
-        }
+        return `
+            <picture>
+                <source srcset="${hrefMobile}" media="(max-width: 480px)" width="${smallWidth}" height="${smallHeight}">
+                <source srcset="${href}" media="(min-width: 481px)" width="${width}" height="${height}">
+                <img src="${href}" alt="${text}" width="${width}" height="${height}">
+            </picture>
+        `;
     }
 
     renderer.link = (href: string, title: string, text: string): string => {
@@ -70,21 +65,9 @@ const mark = (html: string, ampify = false): string => {
         renderer
     });
 
-    if (ampify) {
-        marked.setOptions({
-            highlight: (code, lang) => {
-                if (Prism.languages[lang]) {
-                    return Prism.highlight(code, Prism.languages[lang], lang);
-                } else {
-                    return code;
-                }
-            }
-        });
-    }
-
     return marked(html);
 }
 
-export const markArticle = (html: string, ampify = false): string => {
-    return `<div itemprop="articleBody">${mark(html, ampify)}</div>`;
+export const markArticle = (html: string): string => {
+    return `<div itemprop="articleBody">${mark(html)}</div>`;
 };
