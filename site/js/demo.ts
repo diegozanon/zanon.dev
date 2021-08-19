@@ -1,4 +1,4 @@
-import { moveTo404 } from './notFound';
+import { moveTo404 } from './not-found';
 import { configureSPA } from './spa';
 import { Demo, VisitType } from './types';
 import { sendVisited } from './visits';

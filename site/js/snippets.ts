@@ -1,5 +1,5 @@
 import { configureFeedback } from './feedback';
-import { moveTo404 } from './notFound';
+import { moveTo404 } from './not-found';
 import { configureSPA } from './spa';
 import { hideTooltips } from './tooltips';
 
