@@ -72,6 +72,9 @@ const toggleTheme = (): void => {
 
     // set the theme        
     setTheme(isLightTheme);
+
+    const event = new CustomEvent('themeSwitched');
+    switcher.dispatchEvent(event);
 }
 
 switcher.onclick = (): void => {

@@ -1,6 +1,10 @@
 import { build } from 'esbuild';
+import * as glob from 'glob';
 import * as gulp from 'gulp';
 import * as connect from 'gulp-connect';
+import * as util from 'util';
+
+const globPromise = util.promisify(glob);
 
 export const buildTS = async (done, watch = false): Promise<void> => {
 
@@ -19,6 +23,19 @@ export const buildTS = async (done, watch = false): Promise<void> => {
         } : false,
         outfile: './site/dist/bundle.min.mjs'
     });
+
+    const postScripts = await globPromise('./site/js/posts/*.ts');
+    for (const postScript of postScripts) {
+        const filename = postScript.split('/').pop().replace('.ts', '.min.mjs')
+        await build({
+            entryPoints: [postScript],
+            target: ['es2018'],
+            bundle: true,
+            minify: true,
+            watch: false,
+            outfile: `./site/dist/${filename}`
+        });
+    }
 
     done();
 }

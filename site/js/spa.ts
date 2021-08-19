@@ -32,7 +32,17 @@ let siteJson: Page[];
 export const configureSPA = (): void => {
 
     const loadData = (data: string): void => {
-        document.getElementsByTagName('main')[0].innerHTML = data;
+        const mainElm = document.getElementsByTagName('main')[0];
+        mainElm.innerHTML = data;
+
+        mainElm.querySelectorAll('script').forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes)
+                .forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+
         configureSPA();
     }
 
