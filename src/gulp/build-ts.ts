@@ -24,6 +24,16 @@ export const buildTS = async (done, watch = false): Promise<void> => {
         outfile: './site/dist/bundle.min.mjs'
     });
 
+    // tree shaked asset
+    await build({
+        entryPoints: ['./site/assets/chartjs/chartjs.ts'],
+        target: ['es2018'],
+        bundle: true,
+        minify: true,
+        watch: false,
+        outfile: `./site/dist/assets/chartjs/chartjs.min.mjs`
+    });
+
     const postScripts = await globPromise('./site/js/posts/*.ts');
     for (const postScript of postScripts) {
         const filename = postScript.split('/').pop().replace('.ts', '.min.mjs')
