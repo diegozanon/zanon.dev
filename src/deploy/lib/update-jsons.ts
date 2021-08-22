@@ -21,6 +21,8 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
     let links = '';
     for (const post of postsJson.posts) {
         const metaUpdatedOn = post.header.updatedOn ? `<meta itemprop="dateModified" content="${post.header.updatedOn}">` : '';
+        const video = post.header.youtube ? `<a class="video" target="_blank" rel="noopener noreferrer" href="${post.header.youtube}"><img src="/imgs/site/light-video.svg" alt="a video related with this post" width="40" height="40" /></a>` : '';
+        const demo = post.header.demo ? `<a class="demo" href="${post.header.demo}"><img src="/imgs/site/light-controller.svg" alt="a demo related with this post" width="40" height="40" /></a>` : '';
         links += `
             <div class="post" itemscope itemtype="https://schema.org/BlogPosting">
                 <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}" width="150" height="150">
@@ -34,8 +36,8 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
                     <div class="post-description">
                         <p>${post.header.description}</p>
                         <div>
-                            <a class="video" target="_blank" rel="noopener noreferrer" href="${post.header.youtube}"><img src="/imgs/site/light-video.svg" alt="a video related with this post" width="40" height="40" /></a>
-                            <a class="demo" href="${post.header.demo}"><img src="/imgs/site/light-controller.svg" alt="a demo related with this post" width="40" height="40" /></a>
+                            ${video}
+                            ${demo}
                             <div class="tags"><span>${post.header.tags.join('</span><span>')}</span></div>
                         </div>
                     </div>

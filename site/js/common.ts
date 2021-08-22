@@ -8,13 +8,14 @@ export const generatePostHeader = (header: PostMeta): string => {
     const isShort = header.updatedOn != null;
     const updatedOn = header.updatedOn ? `(updated on ${formatDate(header.updatedOn, isShort)})` : '';
     const metaUpdatedOn = header.updatedOn ? `<meta itemprop="dateModified" content="${header.updatedOn}">` : '';
+    const video = header.youtube ? `- <a target="_blank" rel="noopener noreferrer" href="${header.youtube}">video</a>` : '';
 
     return `
         <h1 itemprop="name headline">${header.title}</h1>
         <meta itemprop="author" content="Diego Zanon">
         <div class="post-date">
             <time datetime="${header.creationDate}" itemprop="datePublished">${formatDate(header.creationDate, isShort)}</time>
-            ${updatedOn} - <a target="_blank" rel="noopener noreferrer" href="${header.youtube}">video version</a>
+            ${updatedOn} ${video}
             ${metaUpdatedOn}
         </div>
     `;
