@@ -13,8 +13,7 @@ parser: "@typescript-eslint/parser"
 extends:
   - "plugin:@typescript-eslint/recommended"
 
-globals:
-  swal: readonly
+ignorePatterns: ["prism.min.js", "chart.esm.js"]
 
 rules:
   array-bracket-spacing: warn
