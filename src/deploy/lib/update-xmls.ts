@@ -47,7 +47,7 @@ export const updateRss = async (output?: string): Promise<void> => {
         <atom:link href="https://zanon.dev/feed" rel="self" type="application/rss+xml" />
         <title>Diego Zanon's Blog</title>
         <link>https://zanon.dev</link>
-        <description>A dev experimentation blog</description>
+        <description>Using artificial intelligence in game development</description>
         <language>en-us</language>
         ${posts.map(post => buildPageRss(post)).join('')}
     </channel>
