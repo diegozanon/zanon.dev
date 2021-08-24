@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+const loadCharts = (): void => {
     const scalabilityText = {
         labelText1: 'Available Capacity',
-        labelText2: 'Actual Usage',
+        labelText2: 'Actual Need',
         xTitle: 'Time',
         yTitle: 'Capacity'
     }
@@ -64,4 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
     charts.push(globalThis.Chartjs.buildChart('chart-cost-right', configCostRight));
 
     globalThis.Chartjs.setEvent(charts);
-});
+};
+
+// Executed when the post page is loaded directly
+document.addEventListener('DOMContentLoaded', loadCharts);
+
+// Executed when navigating to the post page (SPA)
+document.addEventListener('chartjsLoaded', loadCharts);

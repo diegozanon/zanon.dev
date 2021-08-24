@@ -151,3 +151,6 @@ globalThis.Chartjs = {
     buildChart: buildChart,
     setEvent: setEvent
 }
+
+const event = new CustomEvent('chartjsLoaded');
+document.dispatchEvent(event);
