@@ -11,6 +11,12 @@
     .post h2,
     .tags {
         color: get($theme, '-font-color');
+
+        span.active {
+            color: get($theme, '-base');
+            border-color: get($theme, '-font-color');
+            background-color: get($theme, '-font-color');
+        }
     }
 
     article p,

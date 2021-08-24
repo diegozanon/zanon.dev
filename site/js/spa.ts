@@ -1,6 +1,7 @@
 import { generatePostHeader } from './common';
 import { configureDemoButton, loadDemo } from './demo';
 import { configureFeedback } from './feedback';
+import { configureFilter } from './filter';
 import { configureNewsletter } from './newsletter';
 import { loadSnippet } from './snippets';
 import { hideTooltips } from './tooltips';
@@ -102,7 +103,7 @@ export const configureSPA = (): void => {
             configureFeedback();
         } else if (siteJson) {
             switchSitePage(pathname, justLoad);
-
+            configureFilter();
             if (pathname === '/newsletter')
                 configureNewsletter();
         } else if (!justLoad) {

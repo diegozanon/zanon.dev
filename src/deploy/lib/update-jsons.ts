@@ -25,7 +25,9 @@ const addPosts = (page: string, postsJson: PostsJson): string => {
         const demo = post.header.demo ? `<a class="demo" href="${post.header.demo}"><img src="/imgs/site/light-controller.svg" alt="a demo related with this post" width="40" height="40" /></a>` : '';
         links += `
             <div class="post" itemscope itemtype="https://schema.org/BlogPosting">
-                <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}" width="150" height="150">
+                <a href="/${post.header.slug}" itemprop="url">
+                    <img src="${post.header.thumbnail}" alt="${post.header.thumbnailAltTxt}" width="150" height="150">
+                </a>
                 <div>
                     <a href="/${post.header.slug}" itemprop="url">
                         <h2 itemprop="name headline">${post.header.title}</h2>

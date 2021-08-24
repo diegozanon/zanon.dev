@@ -1,6 +1,7 @@
 import './theme-switcher';
 import { configureDemoButton, loadDemo } from './demo';
 import { configureFeedback } from './feedback';
+import { configureFilter } from './filter';
 import { configureNewsletter } from './newsletter';
 import { hideTooltips } from './tooltips';
 import { loadSnippet } from './snippets';
@@ -31,6 +32,7 @@ window.onload = (): void => {
     configureReadVisit();
     configureDemoButton();
     configureFeedback();
+    configureFilter();
     configureSPA();
     hideTooltips();
 }

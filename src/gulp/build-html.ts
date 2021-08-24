@@ -115,6 +115,14 @@ const getMetatags = async (file: string): Promise<Metatags> => {
         default:
             const postsJson = (JSON.parse(await fse.promises.readFile(`./site/dist/posts.json`, 'utf8')) as PostsJson).posts;
             const post = postsJson.find(post => post.header.slug === filename);
+
+            // check if thumbnailAltTxt was set if thumb is not a draft
+            const notDraft = !post.header.thumbnail.includes('draft');
+            const hasthumbAltTxt = post.header.thumbnailAltTxt?.length > 0;
+            if (notDraft && !hasthumbAltTxt) {
+                throw new Error(`Thumbnail alt text is missing for post "${post.header.title}"`);
+            }
+
             return buildMetatagsObj({
                 type: article,
                 title: post.header.title,

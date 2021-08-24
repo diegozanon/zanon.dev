@@ -2,8 +2,11 @@
 
 .post {
 
+    &:not(.dont-display) {
+        display: flex;
+    }
+
     margin: 30px 30px;
-    display: flex;
     justify-content: center;
 
     a {
@@ -48,6 +51,8 @@
     margin-left: auto;
 
     span {
+        cursor: pointer;
+        user-select: none;
         border: 2px solid;
         border-radius: 1em;
         padding: 0.2em 0.5em;
