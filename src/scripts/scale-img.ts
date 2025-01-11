@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as sharp from 'sharp';
+const sharp = require('sharp');
 
 /** This function creates a new image small with the given width and same aspect ratio */
 export const scaleImg = async (filePath: string, width: number): Promise<void> => {

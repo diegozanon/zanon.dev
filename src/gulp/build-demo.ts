@@ -4,9 +4,12 @@ import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as cleanCSS from 'gulp-clean-css';
 import * as rename from 'gulp-rename';
-import * as sass from 'gulp-sass';
+import * as gulpSass from 'gulp-sass';
+import * as sassCompiler from 'sass';
 import * as path from 'path';
 import { minifyHtml } from '../common/minify-html';
+
+const sass = gulpSass(sassCompiler);
 
 const isDirEmpty = async (dir: string): Promise<boolean> => {
     try {

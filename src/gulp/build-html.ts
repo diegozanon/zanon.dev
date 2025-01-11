@@ -2,7 +2,7 @@ import * as cheerio from 'cheerio';
 import * as fse from 'fs-extra';
 import * as gulp from 'gulp';
 import * as imagemin from 'gulp-imagemin';
-import * as replace from 'gulp-replace';
+const replace = require('gulp-replace');
 import * as moment from 'moment';
 import * as path from 'path';
 import { isDir } from '../common/fs-utils';
@@ -30,7 +30,7 @@ const getHtmlFiles = async (): Promise<string[]> => {
 }
 
 const buildMetatagsObj = (input: Metatag): Metatags => {
-    const domain = 'https://zanon.dev'
+    const domain = 'https://zanon.dev';
     const url = `${domain}${input.url}`;
     const image = `${domain}${input.image}`;
     return {
@@ -113,8 +113,12 @@ const getMetatags = async (file: string): Promise<Metatags> => {
                 imageAlt: defaultImageAlt
             });
         default:
-            const postsJson = (JSON.parse(await fse.promises.readFile(`./site/dist/posts.json`, 'utf8')) as PostsJson).posts;
-            const post = postsJson.find(post => post.header.slug === filename);
+            const postsJson = (
+                JSON.parse(
+                    await fse.promises.readFile(`./site/dist/posts.json`, 'utf8')
+                ) as PostsJson
+            ).posts;
+            const post = postsJson.find((post) => post.header.slug === filename);
 
             // check if thumbnailAltTxt was set if thumb is not a draft
             const notDraft = !post.header.thumbnail.includes('draft');
@@ -151,8 +155,7 @@ const copyImages = async (): Promise<void> => {
             if (dirent.isDirectory()) {
                 const innerFiles = await getFiles(res);
                 files.push(...innerFiles);
-            }
-            else {
+            } else {
                 files.push(res);
             }
         }
@@ -166,10 +169,8 @@ const copyImages = async (): Promise<void> => {
     let countOriginal = 0;
     let countSmall = 0;
     for (const file of files) {
-        if (file.includes('-small.'))
-            countSmall++;
-        else
-            countOriginal++;
+        if (file.includes('-small.')) countSmall++;
+        else countOriginal++;
     }
 
     if (countSmall != countOriginal) {
