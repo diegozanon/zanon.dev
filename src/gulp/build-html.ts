@@ -90,7 +90,7 @@ const getMetatags = async (file: string): Promise<Metatags> => {
                 type: web,
                 title: 'About me',
                 url: '/me',
-                description: "I'm a Full-Stack Developer, JavaScripter and AWS power-user",
+                description: "I'm a Full-Stack Developer with 15 years of experience",
                 image: '/imgs/site/me/me.jpeg',
                 imageAlt: "The site's owner photo"
             });
@@ -118,7 +118,7 @@ const getMetatags = async (file: string): Promise<Metatags> => {
                     await fse.promises.readFile(`./site/dist/posts.json`, 'utf8')
                 ) as PostsJson
             ).posts;
-            const post = postsJson.find((post) => post.header.slug === filename);
+            const post = postsJson.find(post => post.header.slug === filename);
 
             // check if thumbnailAltTxt was set if thumb is not a draft
             const notDraft = !post.header.thumbnail.includes('draft');
