@@ -164,7 +164,7 @@ const copyImages = async (): Promise<void> => {
     }
 
     const dir = path.resolve('./site/imgs/posts');
-    const files = (await getFiles(dir)).filter(file => !file.includes('.DS_Store'));
+    const files = (await getFiles(dir)).filter(file => !file.includes('.DS_Store') && !file.includes('.gitkeep'));
 
     let countOriginal = 0;
     let countSmall = 0;
